@@ -1,12 +1,19 @@
 package view_controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import utilities.DBConnection;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,8 +53,15 @@ public class LoginViewController implements Initializable {
         return queryResult;
     }
 
+    public void changeSceneMainWindowView(ActionEvent event) throws IOException {
+        Parent mainWindowViewParent = FXMLLoader.load(getClass().getResource("MainWindowView.fxml"));
+        Scene addPartViewScene = new Scene(mainWindowViewParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(addPartViewScene);
+        window.show();
+    }
 
-    public void loginButtonClickEvent() {
+    public void loginButtonClickEvent(ActionEvent event) {
         String userNameEntered = usernameTextField.getText();
         String passwordEntered = passwordTextField.getText();
 
@@ -57,12 +71,13 @@ public class LoginViewController implements Initializable {
                 if (determineIfUserExists(userNameEntered, passwordEntered)) {
                     System.out.println("user found");
                     loginInvalidWarningText.setText("");
+                    changeSceneMainWindowView(event);
                 }
                 else {
                     System.out.println("user not found");
                     loginInvalidWarningText.setText("Username and Password combination is invalid.");
                 }
-            } catch (NullPointerException | SQLException ex) {
+            } catch (NullPointerException | SQLException | IOException ex) {
                 ex.printStackTrace();
             }
         } else {
