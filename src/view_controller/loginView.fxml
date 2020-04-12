@@ -7,8 +7,8 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.LoginViewController">
    <children>
-      <TextField fx:id="usernameTextField" layoutX="217.0" layoutY="117.0" />
-      <TextField fx:id="passwordTextField" layoutX="217.0" layoutY="161.0" />
+      <TextField fx:id="usernameTextField" layoutX="217.0" layoutY="117.0" text="Olga" />
+      <TextField fx:id="passwordTextField" layoutX="217.0" layoutY="161.0" text="pass123" />
       <Button fx:id="loginButton" layoutX="325.0" layoutY="212.0" mnemonicParsing="false" onAction="#loginButtonClickEvent" text="Log In" />
       <Text fx:id="loginInvalidWarningText" layoutX="217.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" />
    </children>

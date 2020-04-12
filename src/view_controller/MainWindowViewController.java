@@ -1,20 +1,14 @@
 package view_controller;
 
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainWindowViewController implements Initializable {
@@ -36,25 +30,57 @@ public class MainWindowViewController implements Initializable {
     private Button mainViewReportsButton;
 
 
-    //
+
+    @FXML
+    public void onBtnAClick(){
+        CustomersPane customersPane = new CustomersPane();
+        mainViewBorderPane.setCenter(customersPane);
+    }
+    @FXML
+    public void onBtnBClick(){
+        AppointmentsPane contentB = new AppointmentsPane();
+        mainViewBorderPane.setCenter(contentB);
+    }
+
+    @FXML
+    public void onBtnCClick(){
+        ReportsPane contentC = new ReportsPane();
+        mainViewBorderPane.setCenter(contentC);
+    }
+
+
+    //    public void mainViewCustomersButtonClicked(ActionEvent event) {
+//        System.out.println(mainViewStackPane.getChildren().size());
+//        if (mainViewStackPane.getChildren().size() > 0) {
+//            System.out.println("Inside the if statement");
+//            System.out.println(mainViewStackPane.getChildren().size());
+//            mainViewStackPane.getChildren().removeAll();
+//            System.out.println(mainViewStackPane.getChildren().size());
+//        }
+//        mainViewStackPane.getChildren().add(mainViewCustomersPane);
+//        System.out.println(mainViewStackPane.getChildren().size());
+//    }
 //
-    public void mainViewCustomersButtonClicked(ActionEvent event) {
-        if (mainViewStackPane.getChildren().isEmpty())  mainViewStackPane.getChildren().add(mainViewCustomersPane);
-    }
-
-
-
-    public void mainViewAppointmentsButtonClicked(ActionEvent event) {
-        if (mainViewStackPane.getChildren().isEmpty())  mainViewStackPane.getChildren().add(mainViewAppointmentsPane);
-    }
-
-
-    public void mainViewReportsButtonClicked(ActionEvent event) {
-        if (mainViewStackPane.getChildren().isEmpty())  mainViewStackPane.getChildren().add(mainViewReportsPane);
-    }
+//
+//
+//    public void mainViewAppointmentsButtonClicked(ActionEvent event) {
+//        if (mainViewStackPane.getChildren().size() > 0) {
+//            mainViewStackPane.getChildren().removeAll();
+//        }
+//        mainViewStackPane.getChildren().add(mainViewAppointmentsPane);
+//    }
+//
+//
+//    public void mainViewReportsButtonClicked(ActionEvent event) {
+//        if (mainViewStackPane.getChildren().size() > 0) {
+//            mainViewStackPane.getChildren().removeAll();
+//        }
+//        mainViewStackPane.getChildren().add(mainViewReportsPane);
+//    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 //        List<Node> paneChildren = mainViewStackPane.getChildren();
+
         mainViewStackPane.getChildren().remove(0,3);
 
 
