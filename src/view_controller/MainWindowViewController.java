@@ -1,8 +1,10 @@
 package view_controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -29,10 +31,19 @@ public class MainWindowViewController implements Initializable {
     @FXML
     private Button mainViewReportsButton;
 
+    @FXML
+    private Button btn;
+    @FXML
+    private TextField tfield;
+
 
 
     @FXML
     public void onBtnAClick(){
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AppointmentsPane.fxml"));
+       // fxmlLoader.setRoot(this);
+      //  fxmlLoader.setController(this);
         CustomersPane customersPane = new CustomersPane();
         mainViewBorderPane.setCenter(customersPane);
     }
@@ -48,6 +59,10 @@ public class MainWindowViewController implements Initializable {
         mainViewBorderPane.setCenter(contentC);
     }
 
+        @FXML
+    public void onButtonClick(ActionEvent event){
+        System.out.println("In controller");
+    }
 
     //    public void mainViewCustomersButtonClicked(ActionEvent event) {
 //        System.out.println(mainViewStackPane.getChildren().size());
