@@ -30,6 +30,7 @@ public class MainWindowController implements Initializable {
         Scene customersMainWindow = new Scene(root);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(customersMainWindow);
+        window.centerOnScreen();
         window.show();
     }
 

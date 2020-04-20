@@ -19,7 +19,7 @@
             <TableColumn fx:id="customerPhoneNumber" prefWidth="137.0" text="Phone Number" />
         </columns>
       </TableView>
-      <Button fx:id="addCustomerButton" layoutX="742.0" layoutY="64.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="124.0" text="Add Customer" />
+      <Button fx:id="addCustomerButton" layoutX="742.0" layoutY="64.0" mnemonicParsing="false" onAction="#openAddCustomerWindow" prefHeight="27.0" prefWidth="124.0" text="Add Customer" />
       <Button fx:id="modifyCustomerButton" layoutX="742.0" layoutY="140.0" mnemonicParsing="false" text="Modify Customer" />
       <Button fx:id="deleteCustomerButton" layoutX="742.0" layoutY="215.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="124.0" text="Delete Customer" />
       <Button fx:id="returnToMainWindowButton" layoutX="603.0" layoutY="529.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="242.0" text="Return To Main View" />

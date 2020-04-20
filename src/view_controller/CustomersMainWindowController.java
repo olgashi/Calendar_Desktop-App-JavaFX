@@ -61,6 +61,21 @@ public class CustomersMainWindowController implements Initializable {
         window.show();
     }
 
+    public void openAddCustomerWindow(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("CustomerAddNew.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 430, 450);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.centerOnScreen();
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Override

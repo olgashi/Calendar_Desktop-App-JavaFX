@@ -59,6 +59,7 @@ public class LoginWindowController implements Initializable {
         Scene addPartViewScene = new Scene(mainWindowViewParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(addPartViewScene);
+        window.centerOnScreen();
         window.show();
     }
 
