@@ -5,12 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Customer {
-    private final SimpleStringProperty customerName;
-    private final SimpleStringProperty customerAddress;
-    private final SimpleStringProperty customerCity;
-    private final SimpleStringProperty customerZipCode;
-    private final SimpleStringProperty customerCountry;
-    private final SimpleStringProperty customerPhoneNumber;
+    private SimpleStringProperty customerName;
+    private SimpleStringProperty customerAddress;
+    private SimpleStringProperty customerCity;
+    private SimpleStringProperty customerZipCode;
+    private SimpleStringProperty customerCountry;
+    private SimpleStringProperty customerPhoneNumber;
 
     private static ObservableList<Customer> customerList = FXCollections.observableArrayList();
 
