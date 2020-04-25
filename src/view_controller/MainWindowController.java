@@ -34,6 +34,18 @@ public class MainWindowController implements Initializable {
         window.show();
     }
 
+    @FXML
+    private void loadAppointmentsWindow(ActionEvent event) throws IOException {
+        System.out.println(event);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("AppointmentsMainWindow.fxml"));
+        Parent root = loader.load();
+        Scene customersMainWindow = new Scene(root);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(customersMainWindow);
+        window.centerOnScreen();
+        window.show();
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
