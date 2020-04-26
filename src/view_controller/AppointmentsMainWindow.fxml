@@ -21,10 +21,10 @@
             <TableColumn fx:id="appointmentEnd" prefWidth="86.0" text="End" />
         </columns>
       </TableView>
-      <Button fx:id="addAppointmentButton" layoutX="72.0" layoutY="416.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="143.0" text="Add Appointment" />
+      <Button fx:id="addAppointmentButton" layoutX="72.0" layoutY="416.0" mnemonicParsing="false" onAction="#openAddAppointmentWindow" prefHeight="27.0" prefWidth="143.0" text="Add Appointment" />
       <Button fx:id="modifyAppointmentButton" layoutX="378.0" layoutY="416.0" mnemonicParsing="false" text="Modify Appointment" />
       <Button fx:id="deleteAppointmentButton" layoutX="619.0" layoutY="416.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="143.0" text="Delete Appointment" />
-      <Button fx:id="returnToMainWindowButton" layoutX="704.0" layoutY="576.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="242.0" text="Return To Main View" />
+      <Button fx:id="returnToMainWindowButton" layoutX="704.0" layoutY="576.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="242.0" text="Return To Main View" />
       <Text fx:id="appointmentMainWindowLabel" layoutX="452.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointments" textAlignment="CENTER" wrappingWidth="137.2060546875">
          <font>
             <Font size="18.0" />

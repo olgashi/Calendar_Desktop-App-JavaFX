@@ -53,7 +53,7 @@ public class LoginWindowController implements Initializable {
         }
         return queryResult;
     }
-
+// TODO: again, this method is in many other places, extract/refactor to use just one for all the cases
     public void changeSceneMainWindowView(ActionEvent event) throws IOException {
         Parent mainWindowViewParent = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
         Scene addPartViewScene = new Scene(mainWindowViewParent);

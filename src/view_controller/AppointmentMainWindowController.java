@@ -56,9 +56,9 @@ public class AppointmentMainWindowController implements Initializable {
     @FXML
     private Button returnToMainWindowButton;
 // TODO:This method is also in CustomerMainWindow Controller, extract?,
-//  look if can grab info from event and load an appropriate file based on that
+//  look if can grab info from event and load an appropriate file based on that (also look at openAddAppointmentWindow())
     @FXML
-    private void loadMainWindow(ActionEvent event) throws IOException {
+    public void loadMainWindow(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("MainWindow.fxml"));
         Parent root = loader.load();
@@ -71,7 +71,7 @@ public class AppointmentMainWindowController implements Initializable {
     public void openAddAppointmentWindow(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("AppoinmentAddNew.fxml"));
+            fxmlLoader.setLocation(getClass().getResource("AppointmentAddNew.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 430, 450);
             Stage stage = new Stage();
             stage.setScene(scene);
