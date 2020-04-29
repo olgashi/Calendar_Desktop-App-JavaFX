@@ -8,46 +8,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class dbQuery {
-@FXML
-//    public static List<String> getAllCustomers() throws SQLException {
-//        List<String> allCustomers = new ArrayList<String>();
-//        PreparedStatement pstmt = DBConnection.getConnection().prepareStatement("SELECT * FROM U071A3.customer");
-//        try {
-//            ResultSet rs = pstmt.e
-//                    executeQuery();
-//
-//            while (rs.next()) {
-//                String current = rs.getString("customerName");
-//                allCustomers.add(current);
-//            }
-//        }
-//        catch (SQLException ex) {
-//            ex.printStackTrace();
-//        }
-//        finally {
-//            if (pstmt != null) pstmt.close();
-//        }
-//        return allCustomers;
-//    }
-
-
-    private static String queryToExecute;
-    private static Statement stmt;
+    private static Statement selectStmt, duiStmt;
     private static ResultSet result;
+    private static int numRowsAffected;
     private static Connection conn = DBConnection.getConnection();
 
     public static void createQuery(String q) {
-//        query = q;
-
         try {
-            //create Statement object
-            stmt = conn.createStatement();
-
+                selectStmt = conn.createStatement();
+                duiStmt = conn.createStatement();
             //determine query execution
             if(q.toLowerCase().startsWith("select"))
-                result = stmt.executeQuery(q);
+                //create Statement object for select
+                result = selectStmt.executeQuery(q);
             if(q.toLowerCase().startsWith("delete") || q.toLowerCase().startsWith("update") || q.toLowerCase().startsWith("insert"))
-                stmt.executeUpdate(q);
+                //create Statement object for delete, update, insert
+                numRowsAffected = duiStmt.executeUpdate(q, Statement.RETURN_GENERATED_KEYS);
         }
         catch(SQLException ex) {
             ex.printStackTrace();
@@ -57,5 +33,19 @@ public class dbQuery {
     public static ResultSet getQueryResultSet() {
         return result;
     }
+    // For delete, update, insert check number of rows affected to see if query was successful
+    public static int queryNumRowsAffected() {
+        return numRowsAffected;
+    }
 
+    public static int getInsertedRowId() throws SQLException {
+        try (ResultSet generatedKeys = duiStmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);
+            }
+            else {
+                throw new SQLException("Executing query failed, no ID obtained.");
+            }
+        }
+    }
 }

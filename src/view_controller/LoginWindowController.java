@@ -45,8 +45,8 @@ public class LoginWindowController implements Initializable {
             ResultSet rs = pstmt.executeQuery();
             queryResult = rs.next();
         }
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         finally {
             if (pstmt != null) pstmt.close();
@@ -79,8 +79,8 @@ public class LoginWindowController implements Initializable {
                     System.out.println("user not found");
                     loginInvalidWarningText.setText("Username and Password combination is invalid.");
                 }
-            } catch (NullPointerException | SQLException | IOException ex) {
-                ex.printStackTrace();
+            } catch (NullPointerException | SQLException | IOException e) {
+                e.printStackTrace();
             }
         } else {
             loginInvalidWarningText.setText("Username and Password cannot be empty.");

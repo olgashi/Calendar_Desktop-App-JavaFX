@@ -2,146 +2,145 @@ package view_controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import model.Customer;
-import utilities.DBConnection;
 import utilities.dbQuery;
 import utilities.AlertMessage;
 // TODO: research about import statements whats more efficient, and about *
+// TODO: add concurrent execution to optimize
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 //TODO:when finished add tests
+//TODO later update admin to an actual user creating customer and update time to local time
 public class CustomerAddNewController implements Initializable {
     @FXML
-    private Text customerAddNewMainWindowLabel;
+    private Text customerAddNewMainWindowLabel, newCustomerNameText, newCustomerAddressText, newCustomerCityText,
+            newCustomerZipText, newCustomerCountryText, newCustomerNumberText;
     @FXML
-    private Text newCustomerNameText;
+    private TextField newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
+            newCustomerZipTextField, newCustomerCountryTextField, newCustomerNumberTextField;
     @FXML
-    private Text newCustomerAddressText;
-    @FXML
-    private Text newCustomerCityText;
-    @FXML
-    private Text newCustomerZipText;
-    @FXML
-    private Text newCustomerCountryText;
-    @FXML
-    private Text newCustomerNumberText;
-    @FXML
-    private TextField newCustomerNameTextField;
-    @FXML
-    private TextField newCustomerAddressTextField;
-    @FXML
-    private TextField newCustomerCityTextField;
-    @FXML
-    private TextField newCustomerZipTextField;
-    @FXML
-    private TextField newCustomerCountryTextField;
-    @FXML
-    private TextField newCustomerNumberTextField;
+    private Button addCustomerCancelButton, addCustomerCreateButton;
+// REFACTOR!!!!!!!!!
+        int cityCreatedSuccess, addressCreatedSuccess, CreatedSuccess, countryCreatedSuccess, countryId, cityId, addressId;
+        ResultSet existingCustomer, existingCountry, existingCity, existingAddress, existingPostalCode, existingPhoneNumber;
+        ResultSet existingCountryId;
+    public void createCustomer(ActionEvent event) throws SQLException, IOException {
+//        ResultSet rs;
+//        cityId = -99;
 
-    @FXML
-    private Button addCustomerCancelButton;
-    @FXML
-    private Button addCustomerCreateButton;
-
-    public void createCustomer() {
-        ResultSet rs;
-        if(!validateEmptyInputsAddNewCustomer()) {
-        AlertMessage.display("All Fields are required. Make sure Zip Code and Phone number are of correct format.");
+        if (!validateEmptyInputsAddNewCustomer()) {
+            AlertMessage.display("All Fields are required.");
         } else {
-            try {
-                // add a check if customer already exists, partial match for address line?
-
-                // check if country exists
-                PreparedStatement pstmt = DBConnection.getConnection().prepareStatement("SELECT country FROM country WHERE country.country=?");
-                pstmt.setString(1, newCustomerCountryTextField.getText());
-                rs = pstmt.executeQuery();
+            // check if customer already exists TODO:partial match for address line?
+            dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country" +
+                    " WHERE customerName = " + "'" + newCustomerNameTextField.getText() + "'" + " AND address = " + "'" + newCustomerAddressTextField.getText() + "'" +
+                    " AND city = " + "'" + newCustomerCityTextField.getText() + "'" + " AND postalCode = " + "'" + newCustomerZipTextField.getText() + "'" + " AND country = " +
+                    "'" + newCustomerCountryTextField.getText() + "'" + " AND phone = " + "'" + newCustomerNumberTextField.getText() + "'");
+            existingCustomer = dbQuery.getQueryResultSet();
+            // if customer exists, display a warning to the user
+            if (existingCustomer.next()) {
+                AlertMessage.display("Customer already exists.");
+            } else { //If customer doesn't exist, proceed with creating a new customer
+                // first check if country exists
+                dbQuery.createQuery("SELECT country, countryId FROM country WHERE country.country= " + "'" + newCustomerCountryTextField.getText() + "'");
+                existingCountry = dbQuery.getQueryResultSet();
                 // if country that user specified doesn't exists, create a new country
-                if (!rs.next()) {
-                    System.out.println("Country doesn't exist");
-                    try {
+                if (!existingCountry.next()) {
+                    // Country doesnt exist, create a new country
 //                        TODO: research statement vs prepared statement
-                        PreparedStatement createCountryPstmt = DBConnection.getConnection().prepareStatement("INSERT INTO countr (country, createDate, createdBy, lastUpdateBy) values (?, NOW(), ?, ?)");
-                        createCountryPstmt.setString(1, newCustomerCountryTextField.getText());
-                        createCountryPstmt.setString(2, "admin");
-                        createCountryPstmt.setString(3, "admin");
+                    dbQuery.createQuery("INSERT INTO country (country, createDate, createdBy, lastUpdateBy) values (" + "'" + newCustomerCountryTextField.getText() + "'" + " , NOW(), 'admin', 'admin')");
+                    countryCreatedSuccess = dbQuery.queryNumRowsAffected();
+                    if (countryCreatedSuccess > 0){ // if country was created successfully
+                            // get id for that country
+                        dbQuery.getInsertedRowId();
+//                            dbQuery.createQuery("SELECT countryId FROM country WHERE country.country= " + "'" + newCustomerCountryTextField.getText() + "'");
+//                            countryId = Integer.parseInt(dbQuery.getQueryResultSet().getString("countryId"));
+                    } else AlertMessage.display("There was an error when creating country " + newCustomerCountryTextField.getText());
+                   // if country exists grab country id and typecast to int
+                } else countryId = Integer.parseInt(existingCountry.getString("countryId"));
+                System.out.println("Country exists, id " + countryId);
+                // check if city exists
+                dbQuery.createQuery("SELECT city, cityId FROM city WHERE city.city= " + "'" + newCustomerCityTextField.getText() + "'");
+                existingCity = dbQuery.getQueryResultSet();
+                if (!existingCity.next()) {// City doesn't exist, create a new city
+                    System.out.println("City doesn't exist");
+                    dbQuery.createQuery("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) values (" +
+                                "'" + newCustomerCityTextField.getText() + "'" +","+ "'" + countryId  + "'" + ", NOW(), 'admin', NOW(), 'admin')");
+                    cityCreatedSuccess = dbQuery.queryNumRowsAffected();
+                    if (cityCreatedSuccess > 0){ // get id for that city
+                        cityId = dbQuery.getInsertedRowId();
+//                            dbQuery.createQuery("SELECT cityId FROM city WHERE city.city= " + "'" + newCustomerCityTextField.getText() + "'");
+//                            cityId = Integer.parseInt(dbQuery.getQueryResultSet().getString("cityId"));
+                    } else AlertMessage.display("There was an error when creating city " + newCustomerCityTextField.getText());
+                } else cityId = Integer.parseInt(existingCity.getString("cityId"));
+                // check if address with given street address (address.address), postalCode, cityId, phone exists
+                dbQuery.createQuery("SELECT address, postalCode, phone FROM address WHERE address = " + "'" + newCustomerAddressTextField.getText() + "'" + " AND" +
+                        " postalCode = " + "'" + newCustomerZipTextField.getText() + "'" + " AND"+ " phone = " + "'" + newCustomerNumberTextField.getText() + "'");
+                existingAddress = dbQuery.getQueryResultSet();
+                if (!existingAddress.next()) {
+                    // if address doesn't exist, create customer with address
+//                    TODO update 'test' value for address2
+                    dbQuery.createQuery("INSERT INTO address (cityId, address, address2, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy)" +
+                                " VALUES (" + "'" + cityId + "'" + ", " + "'" + newCustomerAddressTextField.getText() + "'" + ", 'test', " + "'" + newCustomerZipTextField.getText() + "'" +
+                                ", " + "'" + newCustomerNumberTextField.getText() + "'" + ", NOW(), 'admin', NOW(), 'admin')");
+                    addressCreatedSuccess = dbQuery.queryNumRowsAffected();
+                    System.out.println("Address was created: " + addressCreatedSuccess);
+                    if (addressCreatedSuccess > 0) {
+                        addressId = dbQuery.getInsertedRowId();
+                    } else AlertMessage.display("There was an error when creating address ");
 
-                        int countryCreated = createCountryPstmt.executeUpdate();
-//                    how to check if country was created successfully
-                    } catch (SQLException e) {
-                        AlertMessage.display("There was an error when creating customer, please reenter values and try again.");
-                        e.printStackTrace();
-                    }
-                } else {
-//                    proceed with the rest: City, Address
-                        System.out.println("Country exists");
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
+        dbQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
+                " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), 'admin', NOW(), 'admin')");
+        if (dbQuery.queryNumRowsAffected() <= 0) {
+            AlertMessage.display("There was an error when creating customer. Please try again.");
+        } else {
+            closeCustomerAddNew(event);
+
         }
+        }
+        return;
+
     }
+
 
     public boolean validateEmptyInputsAddNewCustomer() {
+        String cName,cAddress, cCity, cZip, cCountry, cNumber;
         try {
-            String cName = newCustomerNameTextField.getText();
-        } catch (NumberFormatException | NullPointerException e) {
+            cName = newCustomerNameTextField.getText();
+            cAddress = newCustomerAddressTextField.getText();
+            cCity = newCustomerCityTextField.getText();
+            cZip = newCustomerZipTextField.getText();
+            cCountry = newCustomerCountryTextField.getText();
+            cNumber = newCustomerNumberTextField.getText();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
             return false;
         }
-        try {
-            String cAddress = newCustomerAddressTextField.getText();
-        } catch (NumberFormatException | NullPointerException e) {
+        if (cName.isEmpty() || cAddress.isEmpty() || cCity.isEmpty() || cZip.isEmpty() || cCountry.isEmpty() || cNumber.isEmpty()) {
             return false;
+        } else {
+            return true;
         }
-        try {
-            String cCity = newCustomerCityTextField.getText();
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-        try {
-            int cZip = Integer.parseInt(newCustomerZipTextField.getText());
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-        try {
-            String cCountry = newCustomerCountryTextField.getText();
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-        try {
-            int cNumber = Integer.parseInt(newCustomerNumberTextField.getText());
-        } catch (NumberFormatException | NullPointerException e) {
-            return false;
-        }
-        return true;
     }
-
-
-
-
 
     // close window
     public void closeCustomerAddNew(ActionEvent event) throws IOException {
         ((Node)(event.getSource())).getScene().getWindow().hide();
     }
 
-    @Override
 
+
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
 
     }

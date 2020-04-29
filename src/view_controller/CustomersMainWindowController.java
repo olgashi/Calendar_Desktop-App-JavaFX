@@ -84,7 +84,7 @@ public class CustomersMainWindowController implements Initializable {
                 "WHERE customer.addressId = address.addressId " +
                 "AND address.cityId = city.cityId AND city.countryId = country.countryId");
         ResultSet rs = dbQuery.getQueryResultSet();
-
+//TODO refactor this
         while(true) {
             try {
                 if (!rs.next()) break;
