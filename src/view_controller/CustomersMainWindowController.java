@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
+import utilities.NewWindow;
 import utilities.dbQuery;
 
 import java.io.IOException;
@@ -48,31 +49,15 @@ public class CustomersMainWindowController implements Initializable {
     @FXML
     private Button returnToMainWindowButton;
 
-
     @FXML
     private void loadMainWindow(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("MainWindow.fxml"));
-        Parent root = loader.load();
-        Scene customersMainWindow = new Scene(root);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(customersMainWindow);
-        window.show();
+        NewWindow.display((Stage) customerMainWindowLabel.getScene().getWindow(),
+                getClass().getResource("MainWindow.fxml"));
     }
 
-    public void openAddCustomerWindow(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("CustomerAddNew.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 430, 450);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void openAddCustomerWindow(ActionEvent event) throws IOException {
+        NewWindow.display((Stage) customerMainWindowLabel.getScene().getWindow(),
+                getClass().getResource("CustomerAddNew.fxml"));
     }
 
 
@@ -87,31 +72,20 @@ public class CustomersMainWindowController implements Initializable {
 //TODO refactor this
         while(true) {
             try {
-                if (!rs.next()) break;
+                if (!dbQuery.getQueryResultSet().next()) break;
+                Customer.getCustomerList().add(new Customer(rs.getString("customerName"),
+                        rs.getString("address"), rs.getString("city"),
+                        rs.getString("postalCode"), rs.getString("country"), rs.getString("phone")));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            try{
-              Customer.getCustomerList().add(new Customer(rs.getString("customerName"),
-                      rs.getString("address"), rs.getString("city"),
-                      rs.getString("postalCode"), rs.getString("country"), rs.getString("phone")));
-
-          } catch (SQLException e) {
-              e.printStackTrace();
-          }
         }
-
-
         customerName.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerName"));
         customerAddress.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerAddress"));
         customerCity.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerCity"));
         customerZipCode.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerZipCode"));
         customerCountry.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerCountry"));
         customerPhoneNumber.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerPhoneNumber"));
-
         customerTable.setItems(Customer.getCustomerList());
-//        System.out.println(Customer.getCustomerList());
-
-
     }
 }

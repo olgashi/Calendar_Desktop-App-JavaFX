@@ -1,13 +1,8 @@
 package view_controller;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -15,9 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
-import model.Customer;
+import utilities.NewWindow;
 import utilities.dbQuery;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -45,8 +39,6 @@ public class AppointmentMainWindowController implements Initializable {
     private TableColumn<Appointment, String> appointmentStart;
     @FXML
     private TableColumn<Appointment, String> appointmentEnd;
-//    @FXML
-//    private TableColumn<Customer, String> customerName;
     @FXML
     private Button addAppointmentButton;
     @FXML
@@ -59,28 +51,13 @@ public class AppointmentMainWindowController implements Initializable {
 //  look if can grab info from event and load an appropriate file based on that (also look at openAddAppointmentWindow())
     @FXML
     public void loadMainWindow(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("MainWindow.fxml"));
-        Parent root = loader.load();
-        Scene customersMainWindow = new Scene(root);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(customersMainWindow);
-        window.show();
+        NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
+                getClass().getResource("MainWindow.fxml"));
     }
 
-    public void openAddAppointmentWindow(ActionEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("AppointmentAddNew.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 430, 450);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void openAddAppointmentWindow(ActionEvent event) throws IOException {
+        NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
+                getClass().getResource("AppointmentAddNew.fxml"));
     }
 
     @Override
@@ -88,13 +65,8 @@ public class AppointmentMainWindowController implements Initializable {
         Appointment.clearAppointmentList();
         dbQuery.createQuery("SELECT title, description, location, contact, type, url, start, end FROM U071A3.appointment");
         ResultSet rs = dbQuery.getQueryResultSet();
-
+//TODO refactor this
         while(true) {
-//            try {
-//                if (!rs.next()) break;
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
             try{
                 if (!rs.next()) break;
                 Appointment.getAppointmentList().add(new Appointment(rs.getString("title"),
@@ -109,7 +81,6 @@ public class AppointmentMainWindowController implements Initializable {
             }
         }
 
-
         appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
         appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
@@ -118,14 +89,6 @@ public class AppointmentMainWindowController implements Initializable {
         appointmentUrl.setCellValueFactory(new PropertyValueFactory<>("appointmentUrl"));
         appointmentStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
-
         appointmentTable.setItems(Appointment.getAppointmentList());
-//        System.out.println(Customer.getCustomerList());
-
-
     }
-
 }
-
-
-

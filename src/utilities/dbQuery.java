@@ -1,11 +1,9 @@
 package utilities;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class dbQuery {
     private static Statement selectStmt, duiStmt;

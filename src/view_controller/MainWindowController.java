@@ -2,19 +2,18 @@ package view_controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+import utilities.NewWindow;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
+    @FXML
+    private AnchorPane mainWindowView;
     @FXML
     private Button customersMainWindowViewButton;
     @FXML
@@ -24,27 +23,14 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void loadCustomersWindow(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("CustomersMainWindow.fxml"));
-        Parent root = loader.load();
-        Scene customersMainWindow = new Scene(root);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(customersMainWindow);
-        window.centerOnScreen();
-        window.show();
+        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
+                getClass().getResource("CustomersMainWindow.fxml"));
     }
 
     @FXML
     private void loadAppointmentsWindow(ActionEvent event) throws IOException {
-        System.out.println(event);
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("AppointmentsMainWindow.fxml"));
-        Parent root = loader.load();
-        Scene customersMainWindow = new Scene(root);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(customersMainWindow);
-        window.centerOnScreen();
-        window.show();
+        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
+                getClass().getResource("AppointmentsMainWindow.fxml"));
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

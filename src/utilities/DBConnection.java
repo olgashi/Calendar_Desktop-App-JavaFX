@@ -15,8 +15,6 @@ public class DBConnection {
 
     private static Connection conn = null;
     private static Statement stmt = null;
-    //private String dbUser = null;
-    //private String dbPass = null;
 
     public static Connection startConnection() {
 

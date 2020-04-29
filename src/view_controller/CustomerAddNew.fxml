@@ -26,6 +26,6 @@
       <Text fx:id="newCustomerCountryText" layoutX="51.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Country" />
       <Text fx:id="newCustomerNumberText" layoutX="50.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number" />
       <Button fx:id="addCustomerCreateButton" layoutX="250.0" layoutY="403.0" mnemonicParsing="false" onAction="#createCustomer" prefHeight="27.0" prefWidth="103.0" text="Create" />
-      <Button fx:id="addCustomerCancelButton" layoutX="66.0" layoutY="403.0" mnemonicParsing="false" onAction="#closeCustomerAddNew" prefHeight="27.0" prefWidth="103.0" text="Cancel" />
+      <Button fx:id="addCustomerCancelButton" layoutX="66.0" layoutY="403.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="103.0" text="Cancel" />
    </children>
 </AnchorPane>
