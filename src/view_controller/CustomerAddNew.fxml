@@ -6,26 +6,44 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="430.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.CustomerAddNewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="617.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.CustomerAddNewController">
    <children>
-      <Text fx:id="customerAddNewMainWindowLabel" layoutX="142.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Customer" wrappingWidth="164.77734375">
+      <Text fx:id="customerAddNewMainWindowLabel" layoutX="218.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Customer" wrappingWidth="164.77734375">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="newCustomerNameTextField" layoutX="176.0" layoutY="72.0" prefHeight="27.0" prefWidth="141.0" />
-      <TextField fx:id="newCustomerAddressTextField" layoutX="177.0" layoutY="121.0" prefHeight="27.0" prefWidth="141.0" />
-      <TextField fx:id="newCustomerCityTextField" layoutX="177.0" layoutY="173.0" prefHeight="27.0" prefWidth="117.0" />
-      <TextField fx:id="newCustomerZipTextField" layoutX="177.0" layoutY="225.0" prefHeight="27.0" prefWidth="67.0" />
-      <TextField fx:id="newCustomerCountryTextField" layoutX="177.0" layoutY="278.0" prefHeight="27.0" prefWidth="141.0" />
-      <TextField fx:id="newCustomerNumberTextField" layoutX="177.0" layoutY="331.0" prefHeight="27.0" prefWidth="141.0" />
-      <Text fx:id="newCustomerNameText" layoutX="52.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="125.2060546875" />
-      <Text fx:id="newCustomerAddressText" layoutX="50.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Street Address" />
-      <Text fx:id="newCustomerCityText" layoutX="52.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="City" />
-      <Text fx:id="newCustomerZipText" layoutX="50.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zip Code" />
-      <Text fx:id="newCustomerCountryText" layoutX="51.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Country" />
-      <Text fx:id="newCustomerNumberText" layoutX="50.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number" />
-      <Button fx:id="addCustomerCreateButton" layoutX="250.0" layoutY="403.0" mnemonicParsing="false" onAction="#createCustomer" prefHeight="27.0" prefWidth="103.0" text="Create" />
-      <Button fx:id="addCustomerCancelButton" layoutX="66.0" layoutY="403.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="103.0" text="Cancel" />
+      <TextField fx:id="newCustomerNameTextField" layoutX="338.0" layoutY="82.0" prefHeight="27.0" prefWidth="141.0" />
+      <TextField fx:id="newCustomerAddressTextField" layoutX="339.0" layoutY="131.0" prefHeight="27.0" prefWidth="141.0" />
+      <TextField fx:id="newCustomerCityTextField" layoutX="339.0" layoutY="183.0" prefHeight="27.0" prefWidth="117.0" />
+      <TextField fx:id="newCustomerZipTextField" layoutX="339.0" layoutY="235.0" prefHeight="27.0" prefWidth="67.0" />
+      <TextField fx:id="newCustomerCountryTextField" layoutX="339.0" layoutY="288.0" prefHeight="27.0" prefWidth="141.0" />
+      <TextField fx:id="newCustomerNumberTextField" layoutX="339.0" layoutY="341.0" prefHeight="27.0" prefWidth="141.0" />
+      <Text fx:id="newCustomerNameText" layoutX="130.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="125.2060546875">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Text fx:id="newCustomerAddressText" layoutX="128.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Street Address">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Text fx:id="newCustomerCityText" layoutX="130.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="City">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Text fx:id="newCustomerZipText" layoutX="128.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zip Code">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Text fx:id="newCustomerCountryText" layoutX="129.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Country">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Text fx:id="newCustomerNumberText" layoutX="128.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number">
+         <font>
+            <Font size="18.0" />
+         </font></Text>
+      <Button fx:id="addCustomerCreateButton" layoutX="456.0" layoutY="400.0" mnemonicParsing="false" onAction="#createCustomer" prefHeight="27.0" prefWidth="103.0" text="Create" />
+      <Button fx:id="addCustomerCancelButton" layoutX="157.0" layoutY="400.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="103.0" text="Cancel" />
    </children>
 </AnchorPane>
