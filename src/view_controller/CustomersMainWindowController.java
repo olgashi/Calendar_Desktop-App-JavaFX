@@ -68,12 +68,12 @@ public class CustomersMainWindowController implements Initializable {
         }
     }
     @FXML
-    private void loadMainWindow(ActionEvent event) throws IOException {
+    private void loadMainWindow() throws IOException {
         NewWindow.display((Stage) customerMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("MainWindow.fxml"));
     }
 
-    public void openAddCustomerWindow(ActionEvent event) throws IOException {
+    public void openAddCustomerWindow() throws IOException {
         NewWindow.display((Stage) customerMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("CustomerAddNew.fxml"));
     }
@@ -95,10 +95,8 @@ public class CustomersMainWindowController implements Initializable {
             }
     }
 
-    public void deleteCustomer(ActionEvent event) {
-        //TODO refactor this if possible to still use NewWindow.display
+    public void deleteCustomer() {
             Customer customer = customerTable.getSelectionModel().getSelectedItem();
-// TODO refactor, because this code also is in the initialize
             if (customer != null) {
                 if (AlertMessage.display("Are you sure you want to delete customer " + customer.getCustomerName(), "confirmation")){
                     dbQuery.createQuery("DELETE FROM customer WHERE customerName = " + "'" + customer.getCustomerName()  + "'");

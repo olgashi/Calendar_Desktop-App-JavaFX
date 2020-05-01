@@ -57,7 +57,7 @@ public class CustomerAddNewController implements Initializable {
                         System.out.println("Country created, id " + countryId);
                     } else AlertMessage.display("There was an error when creating country " + newCustomerCountryTextField.getText(), "warning");
                    // if country exists get country id
-                } else countryId = Integer.parseInt(existingCountry.getString("countryId"));
+                } else countryId = Integer.parseInt(dbQuery.getQueryResultSet().getString("countryId"));
                 System.out.println("Country exists, id " + countryId);
                 // check if city exists
                 dbQuery.createQuery("SELECT city, cityId FROM city WHERE city.city= " + "'" + newCustomerCityTextField.getText() + "'");
@@ -69,9 +69,9 @@ public class CustomerAddNewController implements Initializable {
                         System.out.println("City created, rows affected " + cityCreatedSuccess );
                         cityId = dbQuery.getInsertedRowId();
                     } else AlertMessage.display("There was an error when creating city " + newCustomerCityTextField.getText(), "warning");
-                } else cityId = Integer.parseInt(existingCity.getString("cityId"));
+                } else cityId = Integer.parseInt(dbQuery.getQueryResultSet().getString("cityId"));
                 // check if address with given street address (address.address), postalCode, cityId, phone exists
-                dbQuery.createQuery("SELECT address, postalCode, phone FROM address WHERE address = " + "'" + newCustomerAddressTextField.getText() + "'" + " AND" +
+                dbQuery.createQuery("SELECT address, addressId, postalCode, phone FROM address WHERE address = " + "'" + newCustomerAddressTextField.getText() + "'" + " AND" +
                         " postalCode = " + "'" + newCustomerZipTextField.getText() + "'" + " AND"+ " phone = " + "'" + newCustomerNumberTextField.getText() + "'");
                 if (!dbQuery.getQueryResultSet().next()) {
                     // if address doesn't exist, create customer with address
@@ -83,8 +83,9 @@ public class CustomerAddNewController implements Initializable {
                     if (dbQuery.queryNumRowsAffected() > 0) {
                         addressId = dbQuery.getInsertedRowId();
                     } else AlertMessage.display("There was an error when creating address ", "warning");
+                } else {
+                    addressId = Integer.parseInt(dbQuery.getQueryResultSet().getString("addressId"));
                 }
-            }
         dbQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
                 " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), 'admin', NOW(), 'admin')");
         if (dbQuery.queryNumRowsAffected() <= 0) {
@@ -93,6 +94,7 @@ public class CustomerAddNewController implements Initializable {
             AlertMessage.display("Customer was created successfully!", "warning");
             loadMainWindow(event);
         }
+            }
         }
         return;
     }
