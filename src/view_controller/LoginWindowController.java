@@ -39,7 +39,7 @@ public class LoginWindowController implements Initializable {
         PreparedStatement pstmt = DBConnection.getConnection().prepareStatement("SELECT user.userId FROM U071A3.user WHERE userName=? AND password=?");
         pstmt.setString(1, userN);
         pstmt.setString(2, pass);
-
+//TODO what does this try catch do???
         try {
             ResultSet rs = pstmt.executeQuery();
             queryResult = rs.next();

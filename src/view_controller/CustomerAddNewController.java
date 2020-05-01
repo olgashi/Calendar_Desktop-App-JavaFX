@@ -35,7 +35,7 @@ public class CustomerAddNewController implements Initializable {
     public void createCustomer(ActionEvent event) throws SQLException, IOException {
 
         if (!validateEmptyInputsAddNewCustomer()) {
-            AlertMessage.display("All Fields are required.");
+            AlertMessage.display("All Fields are required.", "warning");
         } else {
             // check if customer already exists TODO:partial match for address line?
             dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country" +
@@ -44,7 +44,7 @@ public class CustomerAddNewController implements Initializable {
                     "'" + newCustomerCountryTextField.getText() + "'" + " AND phone = " + "'" + newCustomerNumberTextField.getText() + "'");
             // if customer exists, display a warning to the user
             if (dbQuery.getQueryResultSet().next()) {
-                AlertMessage.display("Customer already exists.");
+                AlertMessage.display("Customer already exists.", "warning");
             } else { //If customer doesn't exist, proceed with creating a new customer, first check if country exists
                 dbQuery.createQuery("SELECT country, countryId FROM country WHERE country.country= " + "'" + newCustomerCountryTextField.getText() + "'");
                 // if country that user specified doesn't exists, create a new country
@@ -55,7 +55,7 @@ public class CustomerAddNewController implements Initializable {
                             // get id for that country
                         countryId = dbQuery.getInsertedRowId();
                         System.out.println("Country created, id " + countryId);
-                    } else AlertMessage.display("There was an error when creating country " + newCustomerCountryTextField.getText());
+                    } else AlertMessage.display("There was an error when creating country " + newCustomerCountryTextField.getText(), "warning");
                    // if country exists get country id
                 } else countryId = Integer.parseInt(existingCountry.getString("countryId"));
                 System.out.println("Country exists, id " + countryId);
@@ -68,7 +68,7 @@ public class CustomerAddNewController implements Initializable {
                     if (dbQuery.queryNumRowsAffected() > 0){ // get id for that city
                         System.out.println("City created, rows affected " + cityCreatedSuccess );
                         cityId = dbQuery.getInsertedRowId();
-                    } else AlertMessage.display("There was an error when creating city " + newCustomerCityTextField.getText());
+                    } else AlertMessage.display("There was an error when creating city " + newCustomerCityTextField.getText(), "warning");
                 } else cityId = Integer.parseInt(existingCity.getString("cityId"));
                 // check if address with given street address (address.address), postalCode, cityId, phone exists
                 dbQuery.createQuery("SELECT address, postalCode, phone FROM address WHERE address = " + "'" + newCustomerAddressTextField.getText() + "'" + " AND" +
@@ -82,17 +82,16 @@ public class CustomerAddNewController implements Initializable {
                     System.out.println("Address was created: " + addressCreatedSuccess);
                     if (dbQuery.queryNumRowsAffected() > 0) {
                         addressId = dbQuery.getInsertedRowId();
-                    } else AlertMessage.display("There was an error when creating address ");
+                    } else AlertMessage.display("There was an error when creating address ", "warning");
                 }
             }
         dbQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
                 " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), 'admin', NOW(), 'admin')");
         if (dbQuery.queryNumRowsAffected() <= 0) {
-            AlertMessage.display("There was an error when creating customer. Please try again.");
+            AlertMessage.display("There was an error when creating customer. Please try again.", "warning");
         } else {
-            AlertMessage.display("Customer was created successfully!");
+            AlertMessage.display("Customer was created successfully!", "warning");
             loadMainWindow(event);
-
         }
         }
         return;
