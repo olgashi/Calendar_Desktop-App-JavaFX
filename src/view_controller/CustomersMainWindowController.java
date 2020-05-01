@@ -52,6 +52,22 @@ public class CustomersMainWindowController implements Initializable {
     private Button returnToMainWindowButton;
 
     @FXML
+    private void loadCustomerTableData (){
+        Customer.clearCustomerList();
+        dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
+                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
+        ResultSet rs = dbQuery.getQueryResultSet();
+        try {
+            while(dbQuery.getQueryResultSet().next()) {
+                Customer.getCustomerList().add(new Customer(rs.getString("customerName"),
+                        rs.getString("address"), rs.getString("city"),
+                        rs.getString("postalCode"), rs.getString("country"), rs.getString("phone")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
     private void loadMainWindow(ActionEvent event) throws IOException {
         NewWindow.display((Stage) customerMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("MainWindow.fxml"));
@@ -86,19 +102,7 @@ public class CustomersMainWindowController implements Initializable {
             if (customer != null) {
                 if (AlertMessage.display("Are you sure you want to delete customer " + customer.getCustomerName(), "confirmation")){
                     dbQuery.createQuery("DELETE FROM customer WHERE customerName = " + "'" + customer.getCustomerName()  + "'");
-                    Customer.clearCustomerList();
-                    dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
-                            "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
-                    ResultSet rs = dbQuery.getQueryResultSet();
-                    try {
-                        while(dbQuery.getQueryResultSet().next()) {
-                            Customer.getCustomerList().add(new Customer(rs.getString("customerName"),
-                                    rs.getString("address"), rs.getString("city"),
-                                    rs.getString("postalCode"), rs.getString("country"), rs.getString("phone")));
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    loadCustomerTableData();
                 }
             }
             else AlertMessage.display("Please select customer you want to delete", "warning");
@@ -106,20 +110,7 @@ public class CustomersMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Customer.clearCustomerList();
-        dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
-                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
-        ResultSet rs = dbQuery.getQueryResultSet();
-        try {
-            while(dbQuery.getQueryResultSet().next()) {
-                Customer.getCustomerList().add(new Customer(rs.getString("customerName"),
-                    rs.getString("address"), rs.getString("city"),
-                    rs.getString("postalCode"), rs.getString("country"), rs.getString("phone")));
-            }
-        } catch (SQLException e) {
-                e.printStackTrace();
-        }
-//    }
+        loadCustomerTableData();
         // populate customer table
         customerName.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerName"));
         customerAddress.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerAddress"));
@@ -130,3 +121,4 @@ public class CustomersMainWindowController implements Initializable {
         customerTable.setItems(Customer.getCustomerList());
     }
 }
+//TODO doublecheck all alertmessage's text
