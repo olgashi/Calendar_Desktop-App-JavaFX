@@ -40,6 +40,8 @@ public class AppointmentMainWindowController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> appointmentEnd;
     @FXML
+    private TableColumn<Appointment, String> appointmentCustomerName;
+    @FXML
     private Button addAppointmentButton;
     @FXML
     private Button modifyAppointmentButton;
@@ -63,7 +65,7 @@ public class AppointmentMainWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Appointment.clearAppointmentList();
-        dbQuery.createQuery("SELECT title, description, location, contact, type, url, start, end FROM U071A3.appointment");
+        dbQuery.createQuery("SELECT title, description, location, contact, type, url, start, end, customerName, customer.customerId FROM appointment, customer");
         ResultSet rs = dbQuery.getQueryResultSet();
 //TODO refactor this
         while(true) {
@@ -73,9 +75,10 @@ public class AppointmentMainWindowController implements Initializable {
                         rs.getString("description"), rs.getString("location"),
                         rs.getString("contact"), rs.getString("type"),
                         rs.getString("url"), rs.getString("start"),
-                        rs.getString("end")));
+                        rs.getString("end"),
+                        rs.getString("customerId"),
+                        rs.getString("customerName")));
 //                System.out.println(Appointment.getAppointmentList().get(0).toString());
-//TODO:Contact column is not showing any data, investigate
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -89,6 +92,7 @@ public class AppointmentMainWindowController implements Initializable {
         appointmentUrl.setCellValueFactory(new PropertyValueFactory<>("appointmentUrl"));
         appointmentStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
+        appointmentCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
         appointmentTable.setItems(Appointment.getAppointmentList());
     }
 }

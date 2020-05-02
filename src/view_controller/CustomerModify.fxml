@@ -25,7 +25,7 @@
       <Text fx:id="modifyCustomerZipCodeText" layoutX="50.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zip Code" />
       <Text fx:id="modifyCustomerCountryText" layoutX="51.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Country" />
       <Text fx:id="modifyCustomerPhoneText" layoutX="50.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number" />
-      <Button fx:id="modifyCustomerUpdateButton" layoutX="250.0" layoutY="403.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="141.0" text="Modify Customer" />
+      <Button fx:id="modifyCustomerUpdateButton" layoutX="250.0" layoutY="403.0" mnemonicParsing="false" onAction="#updateCustomer" prefHeight="27.0" prefWidth="141.0" text="Modify Customer" />
       <Button fx:id="modifyCustomerCancelButton" layoutX="50.0" layoutY="403.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="141.0" text="Cancel" />
    </children>
 </AnchorPane>

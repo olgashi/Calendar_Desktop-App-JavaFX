@@ -11,10 +11,12 @@ public class Customer {
     private SimpleStringProperty customerZipCode;
     private SimpleStringProperty customerCountry;
     private SimpleStringProperty customerPhoneNumber;
+    private SimpleStringProperty customerId;
 
     private static ObservableList<Customer> customerList = FXCollections.observableArrayList();
 
-    public Customer(String cName, String cAddress, String cCity, String cZipCode, String cCountry, String cPhoneNumber) {
+    public Customer(String cId, String cName, String cAddress, String cCity, String cZipCode, String cCountry, String cPhoneNumber) {
+        this.customerId = new SimpleStringProperty(cId);
         this.customerName = new SimpleStringProperty(cName);
         this.customerAddress = new SimpleStringProperty(cAddress);
         this.customerCity = new SimpleStringProperty(cCity);
@@ -25,6 +27,12 @@ public class Customer {
 
     public static ObservableList<Customer> getCustomerList() {
         return customerList;
+    }
+    public String getCustomerId() {
+        return customerId.get();
+    }
+    public void setCustomerId(String cId) {
+        customerId.set(cId);
     }
 
     public String getCustomerName() {

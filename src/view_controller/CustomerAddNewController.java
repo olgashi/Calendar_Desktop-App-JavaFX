@@ -28,12 +28,9 @@ public class CustomerAddNewController implements Initializable {
             newCustomerZipTextField, newCustomerCountryTextField, newCustomerNumberTextField;
     @FXML
     private Button addCustomerCancelButton, addCustomerCreateButton;
-// REFACTOR!!!!!!!!!
-        int cityCreatedSuccess, addressCreatedSuccess, CreatedSuccess, countryCreatedSuccess, countryId, cityId, addressId;
-        ResultSet existingCustomer, existingCountry, existingCity, existingAddress, existingPostalCode, existingPhoneNumber;
-        ResultSet existingCountryId;
-    public void createCustomer(ActionEvent event) throws SQLException, IOException {
+    int cityCreatedSuccess, addressCreatedSuccess, countryId, cityId, addressId;
 
+    public void createCustomer(ActionEvent event) throws SQLException, IOException {
         if (!validateEmptyInputsAddNewCustomer()) {
             AlertMessage.display("All Fields are required.", "warning");
         } else {
@@ -86,14 +83,14 @@ public class CustomerAddNewController implements Initializable {
                 } else {
                     addressId = Integer.parseInt(dbQuery.getQueryResultSet().getString("addressId"));
                 }
-        dbQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
+            dbQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
                 " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), 'admin', NOW(), 'admin')");
-        if (dbQuery.queryNumRowsAffected() <= 0) {
-            AlertMessage.display("There was an error when creating customer. Please try again.", "warning");
-        } else {
-            AlertMessage.display("Customer was created successfully!", "warning");
-            loadMainWindow(event);
-        }
+            if (dbQuery.queryNumRowsAffected() <= 0) {
+                AlertMessage.display("There was an error when creating customer. Please try again.", "warning");
+            } else {
+                AlertMessage.display("Customer was created successfully!", "warning");
+                loadMainWindow(event);
+            }
             }
         }
         return;
@@ -112,11 +109,8 @@ public class CustomerAddNewController implements Initializable {
             e.printStackTrace();
             return false;
         }
-        if (cName.isEmpty() || cAddress.isEmpty() || cCity.isEmpty() || cZip.isEmpty() || cCountry.isEmpty() || cNumber.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        if (cName.isEmpty() || cAddress.isEmpty() || cCity.isEmpty() || cZip.isEmpty() || cCountry.isEmpty() || cNumber.isEmpty()) return false;
+        else return true;
     }
 
     public void loadMainWindow(ActionEvent event) throws IOException {

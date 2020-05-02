@@ -31,6 +31,8 @@ public class CustomersMainWindowController implements Initializable {
     @FXML
     private TableView<Customer> customerTable;
     @FXML
+    private TableColumn<Customer, String> customerId;
+    @FXML
     private TableColumn<Customer, String> customerName;
     @FXML
     private TableColumn<Customer, String> customerAddress;
@@ -54,14 +56,14 @@ public class CustomersMainWindowController implements Initializable {
     @FXML
     private void loadCustomerTableData (){
         Customer.clearCustomerList();
-        dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
+        dbQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
                 "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
         ResultSet rs = dbQuery.getQueryResultSet();
         try {
             while(dbQuery.getQueryResultSet().next()) {
-                Customer.getCustomerList().add(new Customer(rs.getString("customerName"),
-                        rs.getString("address"), rs.getString("city"),
-                        rs.getString("postalCode"), rs.getString("country"), rs.getString("phone")));
+                Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
+                        rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
+                        rs.getString("country"), rs.getString("phone")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,19 +82,22 @@ public class CustomersMainWindowController implements Initializable {
 
     public void openModifyCustomerWindow(ActionEvent event) throws IOException {
         //TODO refactor this if possible to still use NewWindow.display
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("CustomerModify.fxml"));
-            Parent mainViewParent = loader.load();
-            Scene modifyCustomerView = new Scene(mainViewParent);
-            CustomerModifyController controller = loader.getController();
-            controller.initModifyCustomerData(customerTable.getSelectionModel().getSelectedItem());
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(modifyCustomerView);
-            window.show();
-        } catch (NullPointerException e) {
-            AlertMessage.display("Please select customer in a table and then click 'Modify Customer'.", "warning");
+        Customer customer = customerTable.getSelectionModel().getSelectedItem();
+        if (customer != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("CustomerModify.fxml"));
+                Parent mainViewParent = loader.load();
+                Scene modifyCustomerView = new Scene(mainViewParent);
+                CustomerModifyController controller = loader.getController();
+                controller.initModifyCustomerData(customer);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(modifyCustomerView);
+                window.show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
+        } else AlertMessage.display("Please select customer in a table and then click 'Modify Customer'.", "warning");
     }
 
     public void deleteCustomer() {
@@ -110,6 +115,7 @@ public class CustomersMainWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loadCustomerTableData();
         // populate customer table
+        customerId.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerId"));
         customerName.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerName"));
         customerAddress.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerAddress"));
         customerCity.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerCity"));

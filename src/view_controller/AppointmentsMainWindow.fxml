@@ -12,23 +12,25 @@
       <TableView fx:id="appointmentTable" layoutX="51.0" layoutY="64.0" prefHeight="301.0" prefWidth="895.0">
         <columns>
             <TableColumn fx:id="appointmentTitle" prefWidth="75.0" text="Title" />
-            <TableColumn fx:id="appointmentDescription" prefWidth="144.0" text="Description" />
-          <TableColumn fx:id="appointmentLocation" prefWidth="119.0" text="Location" />
-          <TableColumn fx:id="appointmentContact" prefWidth="104.0" text="Contact" />
-            <TableColumn fx:id="appointmentType" minWidth="0.0" prefWidth="147.0" text="Type" />
-            <TableColumn fx:id="appointmentUrl" prefWidth="106.0" text="Url" />
-            <TableColumn fx:id="appointmentStart" minWidth="7.0" prefWidth="113.0" text="Start" />
-            <TableColumn fx:id="appointmentEnd" prefWidth="86.0" text="End" />
+            <TableColumn fx:id="appointmentDescription" prefWidth="109.0" text="Description" />
+          <TableColumn fx:id="appointmentLocation" prefWidth="85.0" text="Location" />
+          <TableColumn fx:id="appointmentContact" prefWidth="102.0" text="Contact" />
+            <TableColumn fx:id="appointmentType" minWidth="0.0" prefWidth="124.0" text="Type" />
+            <TableColumn fx:id="appointmentUrl" prefWidth="103.0" text="Url" />
+            <TableColumn fx:id="appointmentStart" minWidth="7.0" prefWidth="76.0" text="Start" />
+            <TableColumn fx:id="appointmentEnd" prefWidth="99.0" text="End" />
+            <TableColumn fx:id="appointmentCustomerName" prefWidth="120.0" text="Customer" />
         </columns>
       </TableView>
       <Button fx:id="addAppointmentButton" layoutX="72.0" layoutY="416.0" mnemonicParsing="false" onAction="#openAddAppointmentWindow" prefHeight="27.0" prefWidth="143.0" text="Add Appointment" />
-      <Button fx:id="modifyAppointmentButton" layoutX="378.0" layoutY="416.0" mnemonicParsing="false" text="Modify Appointment" />
-      <Button fx:id="deleteAppointmentButton" layoutX="619.0" layoutY="416.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="143.0" text="Delete Appointment" />
+      <Button fx:id="modifyAppointmentButton" layoutX="295.0" layoutY="416.0" mnemonicParsing="false" text="Modify Appointment" />
+      <Button fx:id="deleteAppointmentButton" layoutX="527.0" layoutY="416.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="143.0" text="Delete Appointment" />
       <Button fx:id="returnToMainWindowButton" layoutX="704.0" layoutY="576.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="242.0" text="Return To Main View" />
       <Text fx:id="appointmentMainWindowLabel" layoutX="452.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointments" textAlignment="CENTER" wrappingWidth="137.2060546875">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
+      <Button layoutX="756.0" layoutY="416.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="190.0" text="See customer's record" />
    </children>
 </AnchorPane>

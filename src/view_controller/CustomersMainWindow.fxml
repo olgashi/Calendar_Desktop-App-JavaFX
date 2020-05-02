@@ -11,8 +11,9 @@
    <children>
       <TableView fx:id="customerTable" layoutX="23.0" layoutY="67.0" prefHeight="301.0" prefWidth="649.0">
         <columns>
-          <TableColumn fx:id="customerName" prefWidth="127.0" text="Name" />
-          <TableColumn fx:id="customerAddress" prefWidth="130.0" text="Address" />
+            <TableColumn fx:id="customerId" prefWidth="88.0" text="Customer Id" />
+          <TableColumn fx:id="customerName" prefWidth="95.0" text="Name" />
+          <TableColumn fx:id="customerAddress" prefWidth="149.0" text="Address" />
             <TableColumn fx:id="customerCity" prefWidth="92.0" text="City" />
             <TableColumn fx:id="customerZipCode" prefWidth="87.0" text="Zip Code" />
             <TableColumn fx:id="customerCountry" prefWidth="75.0" text="Country" />

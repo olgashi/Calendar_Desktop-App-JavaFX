@@ -13,12 +13,14 @@ public class Appointment {
     private SimpleStringProperty appointmentUrl;
     private SimpleStringProperty appointmentStart;
     private SimpleStringProperty appointmentEnd;
+    private SimpleStringProperty appointmentCustomerName;
+    private SimpleStringProperty appointmentCustomerId;
 
 
     private static ObservableList<Appointment> appointmentList = FXCollections.observableArrayList();
 
     public Appointment(String appTitle, String appDescription, String appLocation, String appContact,
-                    String appType, String appUrl, String appStart, String appEnd) {
+                    String appType, String appUrl, String appStart, String appEnd, String customerId, String customerName) {
         this.appointmentTitle = new SimpleStringProperty(appTitle);
         this.appointmentDescription = new SimpleStringProperty(appDescription);
         this.appointmentLocation = new SimpleStringProperty(appLocation);
@@ -27,6 +29,8 @@ public class Appointment {
         this.appointmentUrl = new SimpleStringProperty(appUrl);
         this.appointmentStart = new SimpleStringProperty(appStart);
         this.appointmentEnd = new SimpleStringProperty(appEnd);
+        this.appointmentCustomerId = new SimpleStringProperty(customerId);
+        this.appointmentCustomerName = new SimpleStringProperty(customerName);
     }
 
     public static ObservableList<Appointment> getAppointmentList() {
@@ -56,7 +60,7 @@ public class Appointment {
         appointmentLocation.set(appLocation);
     }
 
-    public String getAppointmentCopntact() {
+    public String getAppointmentContact() {
         return appointmentContact.get();
     }
 
@@ -96,6 +100,21 @@ public class Appointment {
         appointmentEnd.set(appEnd);
     }
 
+    public String getAppointmentCustomerName() {
+        return appointmentCustomerName.get();
+    }
+
+    public void setAppointmentCustomerName(String appCustName) {
+        appointmentCustomerName.set(appCustName);
+    }
+
+    public String getAppointmentCustomerId() {
+        return appointmentCustomerId.get();
+    }
+
+    public void setAppointmentCustomerId(String appCustId) {
+        appointmentCustomerId.set(appCustId);
+    }
 
     public static void clearAppointmentList(){
         appointmentList.clear();
