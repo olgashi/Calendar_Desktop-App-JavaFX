@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -9,44 +10,46 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="744.0" prefWidth="434.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.AppointmentAddNewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="940.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.AppointmentAddNewController">
    <children>
-      <DatePicker fx:id="newAppointmentDatePicker" layoutX="118.0" layoutY="157.0" prefHeight="27.0" prefWidth="97.0" />
-      <TableView fx:id="locationTable" layoutX="120.0" layoutY="353.0" prefHeight="85.0" prefWidth="215.0">
-        <columns>
-          <TableColumn fx:id="appointmentLocationColumn" prefWidth="214.0" text="Location" />
-        </columns>
-      </TableView>
-      <Text fx:id="appointmentAddNewMainWindowLabel" layoutX="32.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Appointment" textAlignment="CENTER" wrappingWidth="318.24072265625">
+      <DatePicker fx:id="newAppointmentDatePicker" layoutX="135.0" layoutY="146.0" prefHeight="27.0" prefWidth="120.0" />
+      <Text fx:id="appointmentAddNewMainWindowLabel" layoutX="311.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Appointment" textAlignment="CENTER" wrappingWidth="318.24072265625">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <TextField fx:id="newAppointmentTitleTextField" layoutX="121.0" layoutY="90.0" prefHeight="27.0" prefWidth="215.0" />
-      <TextField fx:id="newAppointmentDescriptionTextField" layoutX="123.0" layoutY="552.0" prefHeight="99.0" prefWidth="215.0" />
-      <TableView fx:id="customerTable" layoutX="120.0" layoutY="223.0" prefHeight="85.0" prefWidth="215.0">
+      <TextField fx:id="newAppointmentTitleTextField" layoutX="134.0" layoutY="90.0" prefHeight="27.0" prefWidth="191.0" />
+      <TextField fx:id="newAppointmentDescriptionTextField" layoutX="136.0" layoutY="358.0" prefHeight="76.0" prefWidth="191.0" />
+      <TableView fx:id="appointmentCustomerTable" layoutX="468.0" layoutY="90.0" prefHeight="240.0" prefWidth="446.0">
          <columns>
-            <TableColumn fx:id="appointmentCustomerNameColumn" prefWidth="214.0" text="Customer" />
+            <TableColumn fx:id="appointmentCustomerNameColumn" prefWidth="130.0" text="Customer Name" />
+            <TableColumn fx:id="appointmentCustomerLocationColumn" prefWidth="156.0" text="Customer Location" />
+            <TableColumn fx:id="appointmentCustomerPhoneNumberColumn" prefWidth="159.0" text="Customer Phone" />
          </columns>
       </TableView>
-      <Text fx:id="newAppointmentTitleText" layoutX="53.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title">
+      <Text fx:id="newAppointmentTitleText" layoutX="44.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <Text fx:id="newAppointmentDescriptionText" layoutX="42.0" layoutY="565.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="75.2158203125" />
-      <Text fx:id="newAppointmentDateText" layoutX="49.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date">
+      <Text fx:id="newAppointmentDescriptionText" layoutX="41.0" layoutY="371.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="75.2158203125" />
+      <Text fx:id="newAppointmentDateText" layoutX="44.0" layoutY="165.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <Button fx:id="addAppointmentCreateButton" layoutX="225.0" layoutY="691.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="109.0" text="Create" />
-      <Button fx:id="addAppointmentCancelButton" layoutX="51.0" layoutY="691.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
-      <Text fx:id="newAppointmentLocationText" layoutX="47.0" layoutY="366.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" />
-      <Text fx:id="newAppointmentTypeText" layoutX="48.0" layoutY="496.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
-      <Text fx:id="newAppointmentCustomerText" layoutX="47.0" layoutY="236.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
-      <Text fx:id="newAppointmentTimeText" layoutX="234.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" wrappingWidth="39.1767578125" />
-      <TextField fx:id="newAppointmentTimeTextField" layoutX="273.0" layoutY="157.0" prefHeight="27.0" prefWidth="60.0" />
-      <TextField fx:id="newAppointmentTypeTextField" layoutX="119.0" layoutY="478.0" />
+      <Button fx:id="addAppointmentCreateButton" layoutX="797.0" layoutY="443.0" mnemonicParsing="false" onAction="#createAppointment" prefHeight="27.0" prefWidth="109.0" text="Create" />
+      <Button fx:id="addAppointmentCancelButton" layoutX="629.0" layoutY="443.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
+      <Text fx:id="newAppointmentLocationText" layoutX="42.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" />
+      <Text fx:id="newAppointmentTypeText" layoutX="43.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
+      <Text fx:id="newAppointmentCustomerText" layoutX="393.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
+      <Text fx:id="newAppointmentTimeText" layoutX="41.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" wrappingWidth="39.1767578125" />
+      <TextField fx:id="newAppointmentTimeHoursTextField" layoutX="135.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
+      <TextField fx:id="newAppointmentTypeTextField" layoutX="136.0" layoutY="303.0" prefHeight="27.0" prefWidth="191.0" />
+      <TextField fx:id="newAppointmentLocationTextField" layoutX="135.0" layoutY="244.0" prefHeight="27.0" prefWidth="191.0" />
+      <TextField fx:id="newAppointmentTimeMinutesTextField" layoutX="188.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
+      <Text layoutX="181.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":" />
+      <RadioButton fx:id="timeAM" layoutX="240.0" layoutY="201.0" mnemonicParsing="false" text="AM" />
+      <RadioButton fx:id="timePM" layoutX="289.0" layoutY="201.0" mnemonicParsing="false" text="PM" />
    </children>
 </AnchorPane>
