@@ -8,10 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
-import utilities.AlertMessage;
-import utilities.NewWindow;
-import utilities.dbQuery;
-
+import utilities.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -43,11 +40,11 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private DatePicker newAppointmentDatePicker;
     @FXML
-    private RadioButton timeAM;
+    private RadioButton newAppointmentTimeAM;
     @FXML
-    private RadioButton timePM;
+    private RadioButton newAppointmentTimePM;
     @FXML
-    private ToggleGroup amPMtoggleGroup;
+    private ToggleGroup newAppointmentAmPMtoggleGroup;
     @FXML
     private TextField newAppointmentTimeHoursTextField;
     @FXML
@@ -81,40 +78,23 @@ public class AppointmentAddNewController implements Initializable {
 //    TODO user should not be able to add appointments outside business hours and on the weekends
 //    TODO add length of the appointment
 
-    private boolean validateTime(){
-        String tHours;
-        String tMinutes;
-        String regexDigits = "[0-9]+";
-        try {
-            tHours = newAppointmentTimeHoursTextField.getText();
-            tMinutes = newAppointmentTimeMinutesTextField.getText();
-        } catch (NumberFormatException e) {
-            AlertMessage.display("Please enter numbers only in hour and minute fields.", "warning");
-            e.printStackTrace();
-            return false;
-        }
-
-        if ((tHours.length() < 3 && tMinutes.length() < 3) && (Pattern.matches(regexDigits, tHours) && Pattern.matches(regexDigits,tMinutes))) return true;
-        else return false;
-    }
-
-    public boolean validateEmptyInputsAddNewAppointment() {
-        try {
-            aTitle = newAppointmentTitleTextField.getText();
-            aDate = newAppointmentDateText.getText();
-            aTimeHours = newAppointmentTimeHoursTextField.getText();
-            aTimeMinutes = newAppointmentTimeMinutesTextField.getText();
-            aLocation = newAppointmentLocationTextField.getText();
-            aType = newAppointmentTypeTextField.getText();
-            aDescription = newAppointmentDescriptionTextField.getText();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return false;
-        }
-        if (aTitle.isEmpty() || aDate.isEmpty() || aTimeHours.isEmpty() || aTimeMinutes.isEmpty() ||
-                aLocation.isEmpty() || aType.isEmpty() || aDescription.isEmpty()) return false;
-        else return true;
-    }
+// TODO extract this method to a class?
+//    private boolean validateTime(TextField ... timeArgs){
+////        break this in two separate methods
+//        String regexDigits = "[0-9]+";
+//
+//        for (TextField tme: timeArgs) {
+//            if (!Pattern.matches(regexDigits, tme.getText()) || tme.getText().isEmpty()) return false;
+//        }
+//
+//        for (TextField tme: timeArgs) {
+//            if ((tme.getText().length() < 3 || tme.getText().isEmpty())) return false;
+//        }
+//
+//
+//        return true;
+//
+//    }
 
     private void loadCustomerTableData (){
         Customer.clearCustomerList();
@@ -136,12 +116,21 @@ public class AppointmentAddNewController implements Initializable {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = appointmentCustomerTable.getSelectionModel().getSelectedItem();
 
-        if (!validateEmptyInputsAddNewAppointment()) {
+        if (!InputValidation.checkForEmptyInputs(newAppointmentTimeHoursTextField, newAppointmentTimeMinutesTextField, newAppointmentTypeTextField,
+       newAppointmentDescriptionTextField, newAppointmentTitleTextField, newAppointmentLocationTextField)) {
             AlertMessage.display("All fields are required. Please make try again.", "warning");
             return;
         }
-        if (!validateTime()) {
-            AlertMessage.display("Time has to be numbers only. Please make try again.", "warning");
+        if (newAppointmentDatePicker.getValue() == null) {
+            AlertMessage.display("Date cannot be empty", "warning");
+            return;
+        }
+        if (!InputValidation.timeInputNumbersOnly(newAppointmentTimeHoursTextField, newAppointmentTimeMinutesTextField)) {
+            AlertMessage.display("Time has to be numbers only. Please correct and try again.", "warning");
+            return;
+        }
+        if (!InputValidation.timeInputProperLength(newAppointmentTimeHoursTextField, newAppointmentTimeMinutesTextField)) {
+            AlertMessage.display("Time has to be numbers only, not longer than 2 digits. Please correct and try again.", "warning");
             return;
         }
         if (selectedCustomer == null) {
@@ -171,23 +160,22 @@ public class AppointmentAddNewController implements Initializable {
                     ", " + "'" + LocalDateTime.now() + "'"+ ", 'admin', " + "'" + LocalDateTime.now() + "'" + ", 'admin')");
             if (dbQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
             else AlertMessage.display("There was a problem creating an appointment", "warning");
-
         }
     }
 //TODO am pm is not considered when adding appointment, add
+//    TODO add check that time entered is within business hours and date entered is not on the weekend
     @FXML
     private void loadMainWindowAppointmentAddNew(ActionEvent event) throws IOException {
         NewWindow.display((Stage) appointmentAddNewMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("AppointmentsMainWindow.fxml"));
     }
 
-//Table is not populating
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        amPMtoggleGroup = new ToggleGroup();
-        this.timeAM.setToggleGroup(amPMtoggleGroup);
-        this.timePM.setToggleGroup(amPMtoggleGroup);
-        timeAM.setSelected(true);
+        newAppointmentAmPMtoggleGroup = new ToggleGroup();
+        this.newAppointmentTimeAM.setToggleGroup(newAppointmentAmPMtoggleGroup);
+        this.newAppointmentTimePM.setToggleGroup(newAppointmentAmPMtoggleGroup);
+        newAppointmentTimeAM.setSelected(true);
 
         loadCustomerTableData();
         appointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));

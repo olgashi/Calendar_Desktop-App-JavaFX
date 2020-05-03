@@ -49,7 +49,7 @@
       <TextField fx:id="newAppointmentLocationTextField" layoutX="135.0" layoutY="244.0" prefHeight="27.0" prefWidth="191.0" />
       <TextField fx:id="newAppointmentTimeMinutesTextField" layoutX="188.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
       <Text layoutX="181.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":" />
-      <RadioButton fx:id="timeAM" layoutX="240.0" layoutY="201.0" mnemonicParsing="false" text="AM" />
-      <RadioButton fx:id="timePM" layoutX="289.0" layoutY="201.0" mnemonicParsing="false" text="PM" />
+      <RadioButton fx:id="newAppointmentTimeAM" layoutX="240.0" layoutY="201.0" mnemonicParsing="false" text="AM" />
+      <RadioButton fx:id="newAppointmentTimePM" layoutX="289.0" layoutY="201.0" mnemonicParsing="false" text="PM" />
    </children>
 </AnchorPane>
