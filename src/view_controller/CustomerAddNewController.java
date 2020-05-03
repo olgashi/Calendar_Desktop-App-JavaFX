@@ -14,7 +14,6 @@ import utilities.AlertMessage;
 // TODO: add concurrent execution to optimize
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 //TODO:when finished add tests
@@ -89,7 +88,7 @@ public class CustomerAddNewController implements Initializable {
                 AlertMessage.display("There was an error when creating customer. Please try again.", "warning");
             } else {
                 AlertMessage.display("Customer was created successfully!", "warning");
-                loadMainWindow(event);
+                loadMainWindowCustomerAddNew(event);
             }
             }
         }
@@ -113,7 +112,7 @@ public class CustomerAddNewController implements Initializable {
         else return true;
     }
 
-    public void loadMainWindow(ActionEvent event) throws IOException {
+    public void loadMainWindowCustomerAddNew(ActionEvent event) throws IOException {
         NewWindow.display((Stage) customerAddNewMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("CustomersMainWindow.fxml"));
     }

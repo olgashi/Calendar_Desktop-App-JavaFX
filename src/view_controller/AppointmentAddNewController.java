@@ -1,23 +1,22 @@
 package view_controller;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import model.Customer;
 import utilities.AlertMessage;
+import utilities.NewWindow;
 import utilities.dbQuery;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
@@ -170,9 +169,16 @@ public class AppointmentAddNewController implements Initializable {
                     "'" + "test" + "'" + ", "+ "'" + newAppointmentTypeTextField.getText() + "'" + ", " +
                     "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
                     ", " + "'" + LocalDateTime.now() + "'"+ ", 'admin', " + "'" + LocalDateTime.now() + "'" + ", 'admin')");
-            if (dbQuery.queryNumRowsAffected() > 0) System.out.println("appointment created successfully " + dbQuery.getInsertedRowId());
+            if (dbQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
+            else AlertMessage.display("There was a problem creating an appointment", "warning");
 
         }
+    }
+//TODO am pm is not considered when adding appointment, add
+    @FXML
+    private void loadMainWindowAppointmentAddNew(ActionEvent event) throws IOException {
+        NewWindow.display((Stage) appointmentAddNewMainWindowLabel.getScene().getWindow(),
+                getClass().getResource("AppointmentsMainWindow.fxml"));
     }
 
 //Table is not populating

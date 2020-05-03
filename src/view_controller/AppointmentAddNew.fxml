@@ -39,7 +39,7 @@
          </font>
       </Text>
       <Button fx:id="addAppointmentCreateButton" layoutX="797.0" layoutY="443.0" mnemonicParsing="false" onAction="#createAppointment" prefHeight="27.0" prefWidth="109.0" text="Create" />
-      <Button fx:id="addAppointmentCancelButton" layoutX="629.0" layoutY="443.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
+      <Button fx:id="addAppointmentCancelButton" layoutX="629.0" layoutY="443.0" mnemonicParsing="false" onAction="#loadMainWindowAppointmentAddNew" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
       <Text fx:id="newAppointmentLocationText" layoutX="42.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" />
       <Text fx:id="newAppointmentTypeText" layoutX="43.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
       <Text fx:id="newAppointmentCustomerText" layoutX="393.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />

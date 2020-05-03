@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Appointment {
+    private SimpleStringProperty appointmentId;
     private SimpleStringProperty appointmentTitle;
     private SimpleStringProperty appointmentDescription;
     private SimpleStringProperty appointmentLocation;
@@ -19,8 +20,9 @@ public class Appointment {
 
     private static ObservableList<Appointment> appointmentList = FXCollections.observableArrayList();
 
-    public Appointment(String appTitle, String appDescription, String appLocation, String appContact,
+    public Appointment(String appId, String appTitle, String appDescription, String appLocation, String appContact,
                     String appType, String appUrl, String appStart, String appEnd, String customerId, String customerName) {
+        this.appointmentId = new SimpleStringProperty(appId);
         this.appointmentTitle = new SimpleStringProperty(appTitle);
         this.appointmentDescription = new SimpleStringProperty(appDescription);
         this.appointmentLocation = new SimpleStringProperty(appLocation);
@@ -36,7 +38,12 @@ public class Appointment {
     public static ObservableList<Appointment> getAppointmentList() {
         return appointmentList;
     }
-
+    public String getAppointmentId() {
+        return appointmentId.get();
+    }
+    public void setAppointmentId(String appId) {
+        appointmentId.set(appId);
+    }
     public String getAppointmentTitle() {
         return appointmentTitle.get();
     }
