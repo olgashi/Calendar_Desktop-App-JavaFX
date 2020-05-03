@@ -74,13 +74,13 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private Button addAppointmentCreateButton;
     private Customer selectedCustomer;
-    private String selectedCustomerId;
-    private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription;
+    private int selectedCustomerId, userId;
+    private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription, contact, url;;
 //            TODO add check for conflicting appointment
 //            TODO add end time
 //            TODO add "information" to alertmessage.display
 //    TODO user should not be able to add appointments outside business hours and on the weekends
-//    TODO user
+//    TODO add length of the appointment
 
     private boolean validateTime(){
         String tHours;
@@ -94,7 +94,6 @@ public class AppointmentAddNewController implements Initializable {
             e.printStackTrace();
             return false;
         }
-
 
         if ((tHours.length() < 3 && tMinutes.length() < 3) && (Pattern.matches(regexDigits, tHours) && Pattern.matches(regexDigits,tMinutes))) return true;
         else return false;
@@ -135,13 +134,9 @@ public class AppointmentAddNewController implements Initializable {
     }
 
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
-        LocalDateTime fullAppointmentDateTime;
+        LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = appointmentCustomerTable.getSelectionModel().getSelectedItem();
-//        LocalDate date = newAppointmentDatePicker.getValue();
-//        LocalDateTime myDateObj = LocalDateTime.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-//        String dt = date.toString() + aTimeHours + ':' + aTimeMinutes;
-//        String formattedDate = dt.format(formatter);
+
         if (!validateEmptyInputsAddNewAppointment()) {
             AlertMessage.display("All fields are required. Please make try again.", "warning");
             return;
@@ -154,22 +149,28 @@ public class AppointmentAddNewController implements Initializable {
             AlertMessage.display("Please select a customer for this appointment.", "warning");
             return;
         } else {
-
-                    fullAppointmentDateTime = LocalDateTime.of(
+            fullAppointmentStartDateTime = LocalDateTime.of(
                     newAppointmentDatePicker.getValue().getYear(),
                     newAppointmentDatePicker.getValue().getMonthValue(),
                     newAppointmentDatePicker.getValue().getDayOfMonth(),
                     Integer.parseInt(newAppointmentTimeHoursTextField.getText()),
                     Integer.parseInt(newAppointmentTimeMinutesTextField.getText()));
 
-//            LocalDateTime endAppt = apptDateTime.plusMinutes(Long.parseLong(duration.getValue()));
-//            AlertMessage.display(formattedDate, "warning");
-
             // create appointment
-//             String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription;
-//            selectedCustomerId = selectedCustomer.getCustomerId();
-//            dbQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, type, start) values()");
-        System.out.println(fullAppointmentDateTime);
+            selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
+//            TODO change these values to actual values
+            userId = 1;
+            fullAppointmentEndDateTime = fullAppointmentStartDateTime;
+            contact = "test";
+            url = "test";
+            dbQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, contact, " +
+                    "type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) values(" +
+                    "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + newAppointmentTitleTextField.getText() + "'" + ", " +
+                    "'" + newAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + newAppointmentLocationTextField.getText() + "'" + ", " +
+                    "'" + "test" + "'" + ", "+ "'" + newAppointmentTypeTextField.getText() + "'" + ", " +
+                    "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
+                    ", " + "'" + LocalDateTime.now() + "'"+ ", 'admin', " + "'" + LocalDateTime.now() + "'" + ", 'admin')");
+            if (dbQuery.queryNumRowsAffected() > 0) System.out.println("appointment created successfully " + dbQuery.getInsertedRowId());
 
         }
     }
