@@ -15,7 +15,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -69,19 +73,34 @@ public class AppointmentAddNewController implements Initializable {
     private Button addAppointmentCancelButton;
     @FXML
     private Button addAppointmentCreateButton;
-
+    private Customer selectedCustomer;
+    private String selectedCustomerId;
+    private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription;
+//            TODO add check for conflicting appointment
+//            TODO add end time
+//            TODO add "information" to alertmessage.display
+//    TODO user should not be able to add appointments outside business hours and on the weekends
+//    TODO user
 
     private boolean validateTime(){
+        String tHours;
+        String tMinutes;
         String regexDigits = "[0-9]+";
-        String tHours = newAppointmentTimeHoursTextField.getText();
-        String tMinutes = newAppointmentTimeMinutesTextField.getText();
+        try {
+            tHours = newAppointmentTimeHoursTextField.getText();
+            tMinutes = newAppointmentTimeMinutesTextField.getText();
+        } catch (NumberFormatException e) {
+            AlertMessage.display("Please enter numbers only in hour and minute fields.", "warning");
+            e.printStackTrace();
+            return false;
+        }
 
-        if ((tHours.length() < 3 && tMinutes.length() < 3) && (tHours.matches(regexDigits) && tMinutes.matches(regexDigits))) return true;
+
+        if ((tHours.length() < 3 && tMinutes.length() < 3) && (Pattern.matches(regexDigits, tHours) && Pattern.matches(regexDigits,tMinutes))) return true;
         else return false;
     }
 
     public boolean validateEmptyInputsAddNewAppointment() {
-        String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription;
         try {
             aTitle = newAppointmentTitleTextField.getText();
             aDate = newAppointmentDateText.getText();
@@ -116,12 +135,42 @@ public class AppointmentAddNewController implements Initializable {
     }
 
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
-
-        Customer selectedCustomer = appointmentCustomerTable.getSelectionModel().getSelectedItem();
-        if (!validateEmptyInputsAddNewAppointment() || !validateTime() || selectedCustomer == null) {
-            AlertMessage.display("Inputs are invalid. Please check and try again.", "warning");
+        LocalDateTime fullAppointmentDateTime;
+        selectedCustomer = appointmentCustomerTable.getSelectionModel().getSelectedItem();
+//        LocalDate date = newAppointmentDatePicker.getValue();
+//        LocalDateTime myDateObj = LocalDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+//        String dt = date.toString() + aTimeHours + ':' + aTimeMinutes;
+//        String formattedDate = dt.format(formatter);
+        if (!validateEmptyInputsAddNewAppointment()) {
+            AlertMessage.display("All fields are required. Please make try again.", "warning");
+            return;
+        }
+        if (!validateTime()) {
+            AlertMessage.display("Time has to be numbers only. Please make try again.", "warning");
+            return;
+        }
+        if (selectedCustomer == null) {
+            AlertMessage.display("Please select a customer for this appointment.", "warning");
+            return;
         } else {
+
+                    fullAppointmentDateTime = LocalDateTime.of(
+                    newAppointmentDatePicker.getValue().getYear(),
+                    newAppointmentDatePicker.getValue().getMonthValue(),
+                    newAppointmentDatePicker.getValue().getDayOfMonth(),
+                    Integer.parseInt(newAppointmentTimeHoursTextField.getText()),
+                    Integer.parseInt(newAppointmentTimeMinutesTextField.getText()));
+
+//            LocalDateTime endAppt = apptDateTime.plusMinutes(Long.parseLong(duration.getValue()));
+//            AlertMessage.display(formattedDate, "warning");
+
             // create appointment
+//             String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription;
+//            selectedCustomerId = selectedCustomer.getCustomerId();
+//            dbQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, type, start) values()");
+        System.out.println(fullAppointmentDateTime);
+
         }
     }
 
