@@ -2,7 +2,11 @@ package view_controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -53,6 +57,7 @@ public class AppointmentMainWindowController implements Initializable {
     private Button returnToMainWindowButton;
 // TODO:This method is also in CustomerMainWindow Controller, extract?,
 //  look if can grab info from event and load an appropriate file based on that (also look at openAddAppointmentWindow())
+//    TODO doublecheck all access modifiers and make sure they all make sense
     @FXML
     public void loadMainWindow(ActionEvent event) throws IOException {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
@@ -79,8 +84,6 @@ public class AppointmentMainWindowController implements Initializable {
         dbQuery.createQuery("SELECT appointmentId, title, description, location, contact, type, url, start, end, " +
                 "customerName, customer.customerId FROM appointment, customer where appointment.customerId = customer.customerId");
         ResultSet rs = dbQuery.getQueryResultSet();
-
-//TODO refactor this
         try {
             while (dbQuery.getQueryResultSet().next()) {
                 Appointment.getAppointmentList().add(new Appointment(rs.getString("appointmentId"),
@@ -96,6 +99,34 @@ public class AppointmentMainWindowController implements Initializable {
     private void loadMainWindow() throws IOException {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("AppointmentMainWindowController.fxml"));
+    }
+
+    public void openModifyAppointmentWindow(ActionEvent event) throws IOException {
+        //TODO refactor this if possible to still use NewWindow.display
+
+        String customerName = null;
+        Appointment appointment = null;
+        try {
+            appointment = appointmentTable.getSelectionModel().getSelectedItem();
+            customerName = appointment.getAppointmentCustomerName();
+        } catch (NullPointerException e) {
+            e.getSuppressed();
+        }
+        if (appointment!= null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("AppointmentModify.fxml"));
+                Parent mainViewParent = loader.load();
+                Scene modifyAppointmentView = new Scene(mainViewParent);
+                AppointmentModifyController controller = loader.getController();
+                controller.initModifyAppointmentData(appointment, customerName);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(modifyAppointmentView);
+                window.show();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        } else AlertMessage.display("Please select appointment in a table and then click 'Modify Appointment'.", "warning");
     }
 
     @Override

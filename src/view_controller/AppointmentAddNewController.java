@@ -15,10 +15,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 import static javafx.collections.FXCollections.observableArrayList;
-
 
 public class AppointmentAddNewController implements Initializable {
     @FXML
@@ -38,37 +36,37 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private Text newAppointmentDescriptionText;
     @FXML
-    private DatePicker newAppointmentDatePicker;
+    private DatePicker addNewAppointmentDatePicker;
     @FXML
-    private RadioButton newAppointmentTimeAM;
+    private RadioButton addNewAppointmentTimeAM;
     @FXML
-    private RadioButton newAppointmentTimePM;
+    private RadioButton addNewAppointmentTimePM;
     @FXML
-    private ToggleGroup newAppointmentAmPMtoggleGroup;
+    private ToggleGroup addNewAppointmentAmPMtoggleGroup;
     @FXML
-    private TextField newAppointmentTimeHoursTextField;
+    private TextField addNewAppointmentTimeHoursTextField;
     @FXML
-    private TextField newAppointmentTimeMinutesTextField;
+    private TextField addNewAppointmentTimeMinutesTextField;
     @FXML
-    private TextField newAppointmentTypeTextField;
+    private TextField addNewAppointmentTypeTextField;
     @FXML
-    private TextField newAppointmentDescriptionTextField;
+    private TextField addNewAppointmentDescriptionTextField;
     @FXML
-    private TextField newAppointmentTitleTextField;
+    private TextField addNewAppointmentTitleTextField;
     @FXML
-    private TextField newAppointmentLocationTextField;
+    private TextField addNewAppointmentLocationTextField;
     @FXML
-    private TableView<Customer> appointmentCustomerTable;
+    private TableView<Customer> addNewAppointmentCustomerTable;
     @FXML
-    private TableColumn<Customer,String> appointmentCustomerNameColumn;
+    private TableColumn<Customer,String> addNewAppointmentCustomerNameColumn;
     @FXML
-    private TableColumn<Customer,String> appointmentCustomerLocationColumn;
+    private TableColumn<Customer,String> addNewAppointmentCustomerLocationColumn;
     @FXML
-    private TableColumn<Customer,String> appointmentCustomerPhoneNumberColumn;
+    private TableColumn<Customer,String> addNewAppointmentCustomerPhoneNumberColumn;
     @FXML
-    private Button addAppointmentCancelButton;
+    private Button addNewAppointmentCancelButton;
     @FXML
-    private Button addAppointmentCreateButton;
+    private Button addNewAppointmentCreateButton;
     private Customer selectedCustomer;
     private int selectedCustomerId, userId;
     private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription, contact, url;;
@@ -77,24 +75,6 @@ public class AppointmentAddNewController implements Initializable {
 //            TODO add "information" to alertmessage.display
 //    TODO user should not be able to add appointments outside business hours and on the weekends
 //    TODO add length of the appointment
-
-// TODO extract this method to a class?
-//    private boolean validateTime(TextField ... timeArgs){
-////        break this in two separate methods
-//        String regexDigits = "[0-9]+";
-//
-//        for (TextField tme: timeArgs) {
-//            if (!Pattern.matches(regexDigits, tme.getText()) || tme.getText().isEmpty()) return false;
-//        }
-//
-//        for (TextField tme: timeArgs) {
-//            if ((tme.getText().length() < 3 || tme.getText().isEmpty())) return false;
-//        }
-//
-//
-//        return true;
-//
-//    }
 
     private void loadCustomerTableData (){
         Customer.clearCustomerList();
@@ -114,22 +94,22 @@ public class AppointmentAddNewController implements Initializable {
 
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
-        selectedCustomer = appointmentCustomerTable.getSelectionModel().getSelectedItem();
+        selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
 
-        if (!InputValidation.checkForEmptyInputs(newAppointmentTimeHoursTextField, newAppointmentTimeMinutesTextField, newAppointmentTypeTextField,
-       newAppointmentDescriptionTextField, newAppointmentTitleTextField, newAppointmentLocationTextField)) {
+        if (!InputValidation.checkForEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField, addNewAppointmentTypeTextField,
+                addNewAppointmentDescriptionTextField, addNewAppointmentTitleTextField, addNewAppointmentLocationTextField)) {
             AlertMessage.display("All fields are required. Please make try again.", "warning");
             return;
         }
-        if (newAppointmentDatePicker.getValue() == null) {
+        if (addNewAppointmentDatePicker.getValue() == null) {
             AlertMessage.display("Date cannot be empty", "warning");
             return;
         }
-        if (!InputValidation.timeInputNumbersOnly(newAppointmentTimeHoursTextField, newAppointmentTimeMinutesTextField)) {
+        if (!InputValidation.timeInputNumbersOnly(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField)) {
             AlertMessage.display("Time has to be numbers only. Please correct and try again.", "warning");
             return;
         }
-        if (!InputValidation.timeInputProperLength(newAppointmentTimeHoursTextField, newAppointmentTimeMinutesTextField)) {
+        if (!InputValidation.timeInputProperLength(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField)) {
             AlertMessage.display("Time has to be numbers only, not longer than 2 digits. Please correct and try again.", "warning");
             return;
         }
@@ -138,11 +118,11 @@ public class AppointmentAddNewController implements Initializable {
             return;
         } else {
             fullAppointmentStartDateTime = LocalDateTime.of(
-                    newAppointmentDatePicker.getValue().getYear(),
-                    newAppointmentDatePicker.getValue().getMonthValue(),
-                    newAppointmentDatePicker.getValue().getDayOfMonth(),
-                    Integer.parseInt(newAppointmentTimeHoursTextField.getText()),
-                    Integer.parseInt(newAppointmentTimeMinutesTextField.getText()));
+                    addNewAppointmentDatePicker.getValue().getYear(),
+                    addNewAppointmentDatePicker.getValue().getMonthValue(),
+                    addNewAppointmentDatePicker.getValue().getDayOfMonth(),
+                    Integer.parseInt(addNewAppointmentTimeHoursTextField.getText()),
+                    Integer.parseInt(addNewAppointmentTimeMinutesTextField.getText()));
 
             // create appointment
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
@@ -153,9 +133,9 @@ public class AppointmentAddNewController implements Initializable {
             url = "test";
             dbQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, contact, " +
                     "type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) values(" +
-                    "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + newAppointmentTitleTextField.getText() + "'" + ", " +
-                    "'" + newAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + newAppointmentLocationTextField.getText() + "'" + ", " +
-                    "'" + "test" + "'" + ", "+ "'" + newAppointmentTypeTextField.getText() + "'" + ", " +
+                    "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + addNewAppointmentTitleTextField.getText() + "'" + ", " +
+                    "'" + addNewAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + addNewAppointmentLocationTextField.getText() + "'" + ", " +
+                    "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeTextField.getText() + "'" + ", " +
                     "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
                     ", " + "'" + LocalDateTime.now() + "'"+ ", 'admin', " + "'" + LocalDateTime.now() + "'" + ", 'admin')");
             if (dbQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
@@ -172,16 +152,17 @@ public class AppointmentAddNewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        newAppointmentAmPMtoggleGroup = new ToggleGroup();
-        this.newAppointmentTimeAM.setToggleGroup(newAppointmentAmPMtoggleGroup);
-        this.newAppointmentTimePM.setToggleGroup(newAppointmentAmPMtoggleGroup);
-        newAppointmentTimeAM.setSelected(true);
+        addNewAppointmentAmPMtoggleGroup = new ToggleGroup();
+        this.addNewAppointmentTimeAM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
+        this.addNewAppointmentTimePM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
+        addNewAppointmentTimeAM.setSelected(true);
 
         loadCustomerTableData();
-        appointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
-        appointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
-        appointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));
-        appointmentCustomerTable.setItems(Customer.getCustomerList());
+        Customer.getCustomerList();
+        addNewAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
+        addNewAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
+        addNewAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));
+        addNewAppointmentCustomerTable.setItems(Customer.getCustomerList());
     }
 }
 // TODO include info popups on hover for input fields

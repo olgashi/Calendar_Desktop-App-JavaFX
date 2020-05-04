@@ -12,19 +12,19 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="940.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.AppointmentAddNewController">
    <children>
-      <DatePicker fx:id="newAppointmentDatePicker" layoutX="135.0" layoutY="146.0" prefHeight="27.0" prefWidth="120.0" />
+      <DatePicker fx:id="addNewAppointmentDatePicker" layoutX="135.0" layoutY="146.0" prefHeight="27.0" prefWidth="120.0" />
       <Text fx:id="appointmentAddNewMainWindowLabel" layoutX="311.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Appointment" textAlignment="CENTER" wrappingWidth="318.24072265625">
          <font>
             <Font size="24.0" />
          </font>
       </Text>
-      <TextField fx:id="newAppointmentTitleTextField" layoutX="134.0" layoutY="90.0" prefHeight="27.0" prefWidth="191.0" />
-      <TextField fx:id="newAppointmentDescriptionTextField" layoutX="136.0" layoutY="358.0" prefHeight="76.0" prefWidth="191.0" />
-      <TableView fx:id="appointmentCustomerTable" layoutX="468.0" layoutY="90.0" prefHeight="240.0" prefWidth="446.0">
+      <TextField fx:id="addNewAppointmentTitleTextField" layoutX="134.0" layoutY="90.0" prefHeight="27.0" prefWidth="191.0" />
+      <TextField fx:id="addNewAppointmentDescriptionTextField" layoutX="136.0" layoutY="358.0" prefHeight="76.0" prefWidth="191.0" />
+      <TableView fx:id="addNewAppointmentCustomerTable" layoutX="468.0" layoutY="90.0" prefHeight="240.0" prefWidth="446.0">
          <columns>
-            <TableColumn fx:id="appointmentCustomerNameColumn" prefWidth="130.0" text="Customer Name" />
-            <TableColumn fx:id="appointmentCustomerLocationColumn" prefWidth="156.0" text="Customer Location" />
-            <TableColumn fx:id="appointmentCustomerPhoneNumberColumn" prefWidth="159.0" text="Customer Phone" />
+            <TableColumn fx:id="addNewAppointmentCustomerNameColumn" prefWidth="130.0" text="Customer Name" />
+            <TableColumn fx:id="addNewAppointmentCustomerLocationColumn" prefWidth="156.0" text="Customer Location" />
+            <TableColumn fx:id="addNewAppointmentCustomerPhoneNumberColumn" prefWidth="159.0" text="Customer Phone" />
          </columns>
       </TableView>
       <Text fx:id="newAppointmentTitleText" layoutX="44.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title">
@@ -38,18 +38,18 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button fx:id="addAppointmentCreateButton" layoutX="797.0" layoutY="443.0" mnemonicParsing="false" onAction="#createAppointment" prefHeight="27.0" prefWidth="109.0" text="Create" />
-      <Button fx:id="addAppointmentCancelButton" layoutX="629.0" layoutY="443.0" mnemonicParsing="false" onAction="#loadMainWindowAppointmentAddNew" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
+      <Button fx:id="addNewAppointmentCreateButton" layoutX="797.0" layoutY="443.0" mnemonicParsing="false" onAction="#createAppointment" prefHeight="27.0" prefWidth="109.0" text="Create" />
+      <Button fx:id="addNewAppointmentCancelButton" layoutX="629.0" layoutY="443.0" mnemonicParsing="false" onAction="#loadMainWindowAppointmentAddNew" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
       <Text fx:id="newAppointmentLocationText" layoutX="42.0" layoutY="262.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" />
       <Text fx:id="newAppointmentTypeText" layoutX="43.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
       <Text fx:id="newAppointmentCustomerText" layoutX="393.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
       <Text fx:id="newAppointmentTimeText" layoutX="41.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" wrappingWidth="39.1767578125" />
-      <TextField fx:id="newAppointmentTimeHoursTextField" layoutX="135.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
-      <TextField fx:id="newAppointmentTypeTextField" layoutX="136.0" layoutY="303.0" prefHeight="27.0" prefWidth="191.0" />
-      <TextField fx:id="newAppointmentLocationTextField" layoutX="135.0" layoutY="244.0" prefHeight="27.0" prefWidth="191.0" />
-      <TextField fx:id="newAppointmentTimeMinutesTextField" layoutX="188.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
+      <TextField fx:id="addNewAppointmentTimeHoursTextField" layoutX="135.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
+      <TextField fx:id="addNewAppointmentTypeTextField" layoutX="136.0" layoutY="303.0" prefHeight="27.0" prefWidth="191.0" />
+      <TextField fx:id="addNewAppointmentLocationTextField" layoutX="135.0" layoutY="244.0" prefHeight="27.0" prefWidth="191.0" />
+      <TextField fx:id="addNewAppointmentTimeMinutesTextField" layoutX="188.0" layoutY="197.0" prefHeight="27.0" prefWidth="44.0" />
       <Text layoutX="181.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":" />
-      <RadioButton fx:id="newAppointmentTimeAM" layoutX="240.0" layoutY="201.0" mnemonicParsing="false" text="AM" />
-      <RadioButton fx:id="newAppointmentTimePM" layoutX="289.0" layoutY="201.0" mnemonicParsing="false" text="PM" />
+      <RadioButton fx:id="addNewAppointmentTimeAM" layoutX="240.0" layoutY="201.0" mnemonicParsing="false" text="AM" />
+      <RadioButton fx:id="addNewAppointmentTimePM" layoutX="289.0" layoutY="201.0" mnemonicParsing="false" text="PM" />
    </children>
 </AnchorPane>
