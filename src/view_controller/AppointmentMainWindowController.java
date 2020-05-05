@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
 import utilities.AlertMessage;
+import utilities.HelperQuery;
 import utilities.NewWindow;
 import utilities.dbQuery;
 import java.io.IOException;
@@ -81,19 +82,20 @@ public class AppointmentMainWindowController implements Initializable {
 
     public void loadAppointmentTableData() {
         Appointment.clearAppointmentList();
-        dbQuery.createQuery("SELECT appointmentId, title, description, location, contact, type, url, start, end, " +
-                "customerName, customer.customerId FROM appointment, customer where appointment.customerId = customer.customerId");
-        ResultSet rs = dbQuery.getQueryResultSet();
-        try {
-            while (dbQuery.getQueryResultSet().next()) {
-                Appointment.getAppointmentList().add(new Appointment(rs.getString("appointmentId"),
-                        rs.getString("title"), rs.getString("description"), rs.getString("location"),
-                        rs.getString("contact"), rs.getString("type"), rs.getString("url"), rs.getString("start"),
-                        rs.getString("end"), rs.getString("customerId"), rs.getString("customerName")));
-            }
-        }  catch(SQLException e){
-            e.printStackTrace();
-        }
+        HelperQuery.getAppointmentData();
+//        dbQuery.createQuery("SELECT appointmentId, title, description, location, contact, type, url, start, end, " +
+//                "customerName, customer.customerId FROM appointment, customer where appointment.customerId = customer.customerId");
+//        ResultSet rs = dbQuery.getQueryResultSet();
+//        try {
+//            while (dbQuery.getQueryResultSet().next()) {
+//                Appointment.getAppointmentList().add(new Appointment(rs.getString("appointmentId"),
+//                        rs.getString("title"), rs.getString("description"), rs.getString("location"),
+//                        rs.getString("contact"), rs.getString("type"), rs.getString("url"), rs.getString("start"),
+//                        rs.getString("end"), rs.getString("customerId"), rs.getString("customerName")));
+//            }
+//        }  catch(SQLException e){
+//            e.printStackTrace();
+//        }
     }
     @FXML
     private void loadMainWindow() throws IOException {

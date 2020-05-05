@@ -140,7 +140,8 @@ public class AppointmentModifyController implements Initializable {
         this.modifyAppointmentTimePM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         modifyAppointmentTimeAM.setSelected(true);
 
-        loadCustomerTableData();
+//        loadCustomerTableData();
+
         Customer.getCustomerList();
         modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
         modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));

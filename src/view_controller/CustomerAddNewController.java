@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import utilities.InputValidation;
 import utilities.NewWindow;
 import utilities.dbQuery;
 import utilities.AlertMessage;
@@ -30,7 +31,8 @@ public class CustomerAddNewController implements Initializable {
     int cityCreatedSuccess, addressCreatedSuccess, countryId, cityId, addressId;
 
     public void createCustomer(ActionEvent event) throws SQLException, IOException {
-        if (!validateEmptyInputsAddNewCustomer()) {
+        if (!InputValidation.checkForEmptyInputs(newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
+                newCustomerZipTextField, newCustomerCountryTextField, newCustomerNumberTextField)){
             AlertMessage.display("All Fields are required.", "warning");
         } else {
             // check if customer already exists TODO:partial match for address line?
@@ -93,23 +95,6 @@ public class CustomerAddNewController implements Initializable {
             }
         }
         return;
-    }
-
-    public boolean validateEmptyInputsAddNewCustomer() {
-        String cName,cAddress, cCity, cZip, cCountry, cNumber;
-        try {
-            cName = newCustomerNameTextField.getText();
-            cAddress = newCustomerAddressTextField.getText();
-            cCity = newCustomerCityTextField.getText();
-            cZip = newCustomerZipTextField.getText();
-            cCountry = newCustomerCountryTextField.getText();
-            cNumber = newCustomerNumberTextField.getText();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return false;
-        }
-        if (cName.isEmpty() || cAddress.isEmpty() || cCity.isEmpty() || cZip.isEmpty() || cCountry.isEmpty() || cNumber.isEmpty()) return false;
-        else return true;
     }
 
     public void loadMainWindowCustomerAddNew(ActionEvent event) throws IOException {

@@ -15,7 +15,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
+import model.Schedule;
 import utilities.AlertMessage;
+import utilities.HelperQuery;
 import utilities.NewWindow;
 import utilities.dbQuery;
 
@@ -56,18 +58,19 @@ public class CustomersMainWindowController implements Initializable {
     @FXML
     private void loadCustomerTableData (){
         Customer.clearCustomerList();
-        dbQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
-                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
-        ResultSet rs = dbQuery.getQueryResultSet();
-        try {
-            while(dbQuery.getQueryResultSet().next()) {
-                Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
-                        rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
-                        rs.getString("country"), rs.getString("phone")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        HelperQuery.getCustomerData();
+//        dbQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
+//                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
+//        ResultSet rs = dbQuery.getQueryResultSet();
+//        try {
+//            while(dbQuery.getQueryResultSet().next()) {
+//                Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
+//                        rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
+//                        rs.getString("country"), rs.getString("phone")));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
     @FXML
     private void loadMainWindow() throws IOException {
@@ -104,8 +107,10 @@ public class CustomersMainWindowController implements Initializable {
             Customer customer = customerTable.getSelectionModel().getSelectedItem();
             if (customer != null) {
                 if (AlertMessage.display("Are you sure you want to delete customer " + customer.getCustomerName(), "confirmation")){
-                    dbQuery.createQuery("DELETE FROM customer WHERE customerName = " + "'" + customer.getCustomerName()  + "'");
+                    dbQuery.createQuery("DELETE FROM appointment WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
+                    dbQuery.createQuery("DELETE FROM customer WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
                     loadCustomerTableData();
+                    Schedule.deleteCustomer(customer);
                 }
             }
             else AlertMessage.display("Please select customer you want to delete", "warning");
