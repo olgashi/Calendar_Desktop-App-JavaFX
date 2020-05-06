@@ -80,4 +80,12 @@ public class Customer {
     public static void clearCustomerList(){
         customerList.clear();
     }
+
+    public static void addToCustomerList(Customer customer){
+        customerList.add(customer);
+    }
+
+    public static void getFromCustomerList(Customer customer){
+        customerList.add(customer);
+    }
 }

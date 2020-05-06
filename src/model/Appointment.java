@@ -34,7 +34,7 @@ public class Appointment {
         this.appointmentCustomerId = new SimpleStringProperty(customerId);
         this.appointmentCustomerName = new SimpleStringProperty(customerName);
     }
-
+    //TODO move to schedule class
     public static ObservableList<Appointment> getAppointmentList() {
         return appointmentList;
     }
@@ -122,7 +122,7 @@ public class Appointment {
     public void setAppointmentCustomerId(String appCustId) {
         appointmentCustomerId.set(appCustId);
     }
-
+//TODO move to schedule class
     public static void clearAppointmentList(){
         appointmentList.clear();
     }
