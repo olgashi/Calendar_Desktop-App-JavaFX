@@ -12,7 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Customer;
+import model.Schedule;
 import utilities.DBConnection;
+import utilities.HelperQuery;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -54,6 +58,8 @@ public class LoginWindowController implements Initializable {
     }
 // TODO: again, this method is in many other places, extract/refactor to use just one for all the cases
     public void changeSceneMainWindowView(ActionEvent event) throws IOException {
+        HelperQuery.getCustomerData();
+        HelperQuery.getAppointmentData();
         Parent mainWindowViewParent = FXMLLoader.load(getClass().getResource("MainWindow.fxml"));
         Scene addPartViewScene = new Scene(mainWindowViewParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

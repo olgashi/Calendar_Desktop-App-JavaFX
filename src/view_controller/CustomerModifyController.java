@@ -8,11 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
+import model.Schedule;
 import utilities.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 //TODO check everywhere if any if can be substituted with one liners or ternary
 // TODO update all NOW() to proper datetime (format) method
@@ -50,7 +50,7 @@ public class CustomerModifyController implements Initializable {
     private Button modifyCustomerUpdateButton;
     Customer selectedCustomer;
 // TODO check Java style guide and make sure everything is formatted accordingly
-    public void updateCustomer() throws SQLException {
+    public void updateCustomer(ActionEvent event) throws SQLException, IOException {
         int countryId = -1;
         int cityId = -1;
         int addressId = -1;
@@ -78,68 +78,66 @@ public class CustomerModifyController implements Initializable {
 
             if (!existingCustomerCountry.equals(updatedCustomerCountry)) {
                 // query database to determine if updated country exists
-                dbQuery.createQuery("SELECT country, countryId from country WHERE country = " + "'" + updatedCustomerCountry + "'");
-                if (dbQuery.getQueryResultSet().next()) countryId = Integer.parseInt(dbQuery.getQueryResultSet().getString("countryId"));
+                DBQuery.createQuery("SELECT country, countryId from country WHERE country = " + "'" + updatedCustomerCountry + "'");
+                if (DBQuery.getQueryResultSet().next()) countryId = Integer.parseInt(DBQuery.getQueryResultSet().getString("countryId"));
                 else {
 //create a new country and get id
-                    dbQuery.createQuery("INSERT INTO country SET country = " + "'" + updatedCustomerCountry + "'"
+                    DBQuery.createQuery("INSERT INTO country SET country = " + "'" + updatedCustomerCountry + "'"
                             + ", createDate = NOW(), createdBy = 'admin', lastUpdate = NOW(), lastUpdateBy = 'admin'");
-                    if (dbQuery.queryNumRowsAffected() > 0) countryId = dbQuery.getInsertedRowId();
+                    if (DBQuery.queryNumRowsAffected() > 0) countryId = DBQuery.getInsertedRowId();
                 }
             } else { //if field wasnt updated go get country id
-                dbQuery.createQuery("SELECT country, countryId from country WHERE country = " + "'" + existingCustomerCountry + "'");
-                if (dbQuery.getQueryResultSet().next()) countryId = Integer.parseInt(dbQuery.getQueryResultSet().getString("countryId"));
+                DBQuery.createQuery("SELECT country, countryId from country WHERE country = " + "'" + existingCustomerCountry + "'");
+                if (DBQuery.getQueryResultSet().next()) countryId = Integer.parseInt(DBQuery.getQueryResultSet().getString("countryId"));
             }
 
             // city
             if (!existingCustomerCity.equals(updatedCustomerCity)) {
-                dbQuery.createQuery("SELECT city, cityId from city WHERE city = " + "'" + updatedCustomerCity + "'");
-                if (dbQuery.getQueryResultSet().next()) cityId = Integer.parseInt(dbQuery.getQueryResultSet().getString("cityId"));
+                DBQuery.createQuery("SELECT city, cityId from city WHERE city = " + "'" + updatedCustomerCity + "'");
+                if (DBQuery.getQueryResultSet().next()) cityId = Integer.parseInt(DBQuery.getQueryResultSet().getString("cityId"));
                 else {
-                    dbQuery.createQuery("INSERT INTO city SET city = " + "'" + updatedCustomerCity + "'" +", countryId = " + "'" + countryId + "'"
+                    DBQuery.createQuery("INSERT INTO city SET city = " + "'" + updatedCustomerCity + "'" +", countryId = " + "'" + countryId + "'"
                             + ", createDate = NOW(), createdBy = 'admin', lastUpdate = NOW(), lastUpdateBy = 'admin'");
-                    if (dbQuery.queryNumRowsAffected() > 0) cityId = dbQuery.getInsertedRowId();
+                    if (DBQuery.queryNumRowsAffected() > 0) cityId = DBQuery.getInsertedRowId();
                 }
             } else {
 //                get id for existingcustomercity
-                dbQuery.createQuery("SELECT city, cityId from city WHERE city = " + "'" + existingCustomerCity + "'" + "AND countryId = " + "'" + countryId+ "'");
-                if (dbQuery.getQueryResultSet().next()) cityId = Integer.parseInt(dbQuery.getQueryResultSet().getString("cityId"));
+                DBQuery.createQuery("SELECT city, cityId from city WHERE city = " + "'" + existingCustomerCity + "'" + "AND countryId = " + "'" + countryId+ "'");
+                if (DBQuery.getQueryResultSet().next()) cityId = Integer.parseInt(DBQuery.getQueryResultSet().getString("cityId"));
                 else {
-                    dbQuery.createQuery("INSERT INTO city SET city = " + "'" + existingCustomerCity + "'" +", countryId = " + "'" + countryId + "'"
+                    DBQuery.createQuery("INSERT INTO city SET city = " + "'" + existingCustomerCity + "'" +", countryId = " + "'" + countryId + "'"
                             + ", createDate = NOW(), createdBy = 'admin', lastUpdate = NOW(), lastUpdateBy = 'admin'");
-                    if (dbQuery.queryNumRowsAffected() > 0) cityId = dbQuery.getInsertedRowId();
+                    if (DBQuery.queryNumRowsAffected() > 0) cityId = DBQuery.getInsertedRowId();
                 }
             }
 
-            if (!(existingCustomerZip.equals(updatedCustomerZip) &&
-                    existingCustomerAddress.equals(updatedCustomerAddress) &&
-                    existingCustomerPhone.equals(updatedCustomerPhone) &&
-                    existingCustomerCity.equals(updatedCustomerCity) &&
+            if (!(existingCustomerZip.equals(updatedCustomerZip) && existingCustomerAddress.equals(updatedCustomerAddress) &&
+                    existingCustomerPhone.equals(updatedCustomerPhone) && existingCustomerCity.equals(updatedCustomerCity) &&
                     existingCustomerCountry.equals(updatedCustomerCountry))) {
                 // insert new address
-                dbQuery.createQuery("INSERT INTO address SET address = " + "'" + updatedCustomerAddress +"'" +
+                DBQuery.createQuery("INSERT INTO address SET address = " + "'" + updatedCustomerAddress +"'" +
                         ", address2 = '', cityId = " + "'" + cityId + "'" + ", postalCode = " + "'" + updatedCustomerZip + "'" +
                         ", phone = " + "'" + updatedCustomerPhone + "'" + ", createDate = NOW(), createdBy = 'admin', lastUpdateBy='admin'");
-                if (dbQuery.queryNumRowsAffected() > 0) addressId = dbQuery.getInsertedRowId();
+                if (DBQuery.queryNumRowsAffected() > 0) addressId = DBQuery.getInsertedRowId();
 
             } else {
-                dbQuery.createQuery("SELECT addressId from customer WHERE customerId = " + "'" + existingCustomerId + "'");
-                if (dbQuery.getQueryResultSet().next()) addressId = Integer.parseInt(dbQuery.getQueryResultSet().getString("addressId"));
+                DBQuery.createQuery("SELECT addressId from customer WHERE customerId = " + "'" + existingCustomerId + "'");
+                if (DBQuery.getQueryResultSet().next()) addressId = Integer.parseInt(DBQuery.getQueryResultSet().getString("addressId"));
 //                get id for existing address
             }
-
-
-                dbQuery.createQuery("UPDATE customer SET customerName = " + "'" + updatedCustomerName + "'" + ", addressId = " + "'" + addressId + "'" +
+                DBQuery.createQuery("UPDATE customer SET customerName = " + "'" + updatedCustomerName + "'" + ", addressId = " + "'" + addressId + "'" +
                         " WHERE customerId = " + "'" + existingCustomerId + "'");
 
-
-//                    System.out.println(addressId);
-
-
-            // address
-
-//        System.out.println(countryId);
+            String customerId = String.valueOf(existingCustomerId);
+            Customer customerToUpdate = Schedule.lookupCustomerById(customerId);
+            customerToUpdate.setCustomerName(updatedCustomerName);
+            customerToUpdate.setCustomerAddress(updatedCustomerAddress);
+            customerToUpdate.setCustomerCity(updatedCustomerCity);
+            customerToUpdate.setCustomerZipCode(updatedCustomerZip);
+            customerToUpdate.setCustomerCountry(updatedCustomerCountry);
+            customerToUpdate.setCustomerPhoneNumber(updatedCustomerPhone);
         }
+        loadMainWindow(event);
     }
 
 

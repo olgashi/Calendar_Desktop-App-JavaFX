@@ -7,9 +7,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Customer;
+import model.Schedule;
 import utilities.InputValidation;
 import utilities.NewWindow;
-import utilities.dbQuery;
+import utilities.DBQuery;
 import utilities.AlertMessage;
 // TODO: research about import statements whats more efficient, and about *
 // TODO: add concurrent execution to optimize
@@ -36,63 +38,65 @@ public class CustomerAddNewController implements Initializable {
             AlertMessage.display("All Fields are required.", "warning");
         } else {
             // check if customer already exists TODO:partial match for address line?
-            dbQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country" +
+            DBQuery.createQuery("SELECT customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country" +
                     " WHERE customerName = " + "'" + newCustomerNameTextField.getText() + "'" + " AND address = " + "'" + newCustomerAddressTextField.getText() + "'" +
                     " AND city = " + "'" + newCustomerCityTextField.getText() + "'" + " AND postalCode = " + "'" + newCustomerZipTextField.getText() + "'" + " AND country = " +
                     "'" + newCustomerCountryTextField.getText() + "'" + " AND phone = " + "'" + newCustomerNumberTextField.getText() + "'");
             // if customer exists, display a warning to the user
-            if (dbQuery.getQueryResultSet().next()) {
+            if (DBQuery.getQueryResultSet().next()) {
                 AlertMessage.display("Customer already exists.", "warning");
             } else { //If customer doesn't exist, proceed with creating a new customer, first check if country exists
-                dbQuery.createQuery("SELECT country, countryId FROM country WHERE country.country= " + "'" + newCustomerCountryTextField.getText() + "'");
+                DBQuery.createQuery("SELECT country, countryId FROM country WHERE country.country= " + "'" + newCustomerCountryTextField.getText() + "'");
                 // if country that user specified doesn't exists, create a new country
-                if (!dbQuery.getQueryResultSet().next()) {
+                if (!DBQuery.getQueryResultSet().next()) {
 //                        TODO: research statement vs prepared statement
-                    dbQuery.createQuery("INSERT INTO country (country, createDate, createdBy, lastUpdateBy) values (" + "'" + newCustomerCountryTextField.getText() + "'" + " , NOW(), 'admin', 'admin')");
-                    if (dbQuery.queryNumRowsAffected() > 0){ // if country was created successfully
+                    DBQuery.createQuery("INSERT INTO country (country, createDate, createdBy, lastUpdateBy) values (" + "'" + newCustomerCountryTextField.getText() + "'" + " , NOW(), 'admin', 'admin')");
+                    if (DBQuery.queryNumRowsAffected() > 0){ // if country was created successfully
                             // get id for that country
-                        countryId = dbQuery.getInsertedRowId();
+                        countryId = DBQuery.getInsertedRowId();
                         System.out.println("Country created, id " + countryId);
                     } else AlertMessage.display("There was an error when creating country " + newCustomerCountryTextField.getText(), "warning");
                    // if country exists get country id
-                } else countryId = Integer.parseInt(dbQuery.getQueryResultSet().getString("countryId"));
+                } else countryId = Integer.parseInt(DBQuery.getQueryResultSet().getString("countryId"));
                 System.out.println("Country exists, id " + countryId);
                 // check if city exists
-                dbQuery.createQuery("SELECT city, cityId FROM city WHERE city.city= " + "'" + newCustomerCityTextField.getText() + "'");
-                if (!dbQuery.getQueryResultSet().next()) {// City doesn't exist, create a new city
+                DBQuery.createQuery("SELECT city, cityId FROM city WHERE city.city= " + "'" + newCustomerCityTextField.getText() + "'");
+                if (!DBQuery.getQueryResultSet().next()) {// City doesn't exist, create a new city
                     System.out.println("City doesn't exist");
-                    dbQuery.createQuery("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) values (" +
+                    DBQuery.createQuery("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) values (" +
                                 "'" + newCustomerCityTextField.getText() + "'" +","+ "'" + countryId  + "'" + ", NOW(), 'admin', NOW(), 'admin')");
-                    if (dbQuery.queryNumRowsAffected() > 0){ // get id for that city
+                    if (DBQuery.queryNumRowsAffected() > 0){ // get id for that city
                         System.out.println("City created, rows affected " + cityCreatedSuccess );
-                        cityId = dbQuery.getInsertedRowId();
+                        cityId = DBQuery.getInsertedRowId();
                     } else AlertMessage.display("There was an error when creating city " + newCustomerCityTextField.getText(), "warning");
-                } else cityId = Integer.parseInt(dbQuery.getQueryResultSet().getString("cityId"));
+                } else cityId = Integer.parseInt(DBQuery.getQueryResultSet().getString("cityId"));
                 // check if address with given street address (address.address), postalCode, cityId, phone exists
-                dbQuery.createQuery("SELECT address, addressId, postalCode, phone FROM address WHERE address = " + "'" + newCustomerAddressTextField.getText() + "'" + " AND" +
+                DBQuery.createQuery("SELECT address, addressId, postalCode, phone FROM address WHERE address = " + "'" + newCustomerAddressTextField.getText() + "'" + " AND" +
                         " postalCode = " + "'" + newCustomerZipTextField.getText() + "'" + " AND"+ " phone = " + "'" + newCustomerNumberTextField.getText() + "'");
-                if (!dbQuery.getQueryResultSet().next()) {
+                if (!DBQuery.getQueryResultSet().next()) {
                     // if address doesn't exist, create customer with address
 //                    TODO update 'test' value for address2
-                    dbQuery.createQuery("INSERT INTO address (cityId, address, address2, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy)" +
+                    DBQuery.createQuery("INSERT INTO address (cityId, address, address2, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy)" +
                                 " VALUES (" + "'" + cityId + "'" + ", " + "'" + newCustomerAddressTextField.getText() + "'" + ", 'test', " + "'" + newCustomerZipTextField.getText() + "'" +
                                 ", " + "'" + newCustomerNumberTextField.getText() + "'" + ", NOW(), 'admin', NOW(), 'admin')");
                     System.out.println("Address was created: " + addressCreatedSuccess);
-                    if (dbQuery.queryNumRowsAffected() > 0) {
-                        addressId = dbQuery.getInsertedRowId();
+                    if (DBQuery.queryNumRowsAffected() > 0) {
+                        addressId = DBQuery.getInsertedRowId();
                     } else AlertMessage.display("There was an error when creating address ", "warning");
                 } else {
-                    addressId = Integer.parseInt(dbQuery.getQueryResultSet().getString("addressId"));
+                    addressId = Integer.parseInt(DBQuery.getQueryResultSet().getString("addressId"));
                 }
-            dbQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
+            DBQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
                 " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), 'admin', NOW(), 'admin')");
-            if (dbQuery.queryNumRowsAffected() <= 0) {
+            if (DBQuery.queryNumRowsAffected() <= 0) {
                 AlertMessage.display("There was an error when creating customer. Please try again.", "warning");
             } else {
                 AlertMessage.display("Customer was created successfully!", "warning");
                 loadMainWindowCustomerAddNew(event);
             }
             }
+            Schedule.addCustomer(new Customer(Schedule.setCustomerId(), newCustomerNameTextField.getText(), newCustomerAddressTextField.getText(), newCustomerCityTextField.getText(),
+                    newCustomerZipTextField.getText(), newCustomerCountryTextField.getText(), newCustomerNumberTextField.getText()));
         }
         return;
     }

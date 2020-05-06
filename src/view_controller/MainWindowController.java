@@ -6,6 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Schedule;
+import utilities.HelperQuery;
 import utilities.NewWindow;
 import java.io.IOException;
 import java.net.URL;

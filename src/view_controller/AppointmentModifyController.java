@@ -10,12 +10,9 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
 import utilities.NewWindow;
-import utilities.dbQuery;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AppointmentModifyController implements Initializable {
@@ -84,7 +81,6 @@ public class AppointmentModifyController implements Initializable {
 
     public void initModifyAppointmentData(Appointment appointment, String customerName) {
         String appointmentStartDateTime = appointment.getAppointmentStart();
-//        LocalDateTime formattedAppointmentStartDate = LocalDateTime.parse(appointmentStartDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"));
 //        TODO refactor
         String dateTimeArr[] = appointmentStartDateTime.split(" ");
         String appointmentStartDate = dateTimeArr[0];
@@ -106,26 +102,11 @@ public class AppointmentModifyController implements Initializable {
         // preprocess time to fill in time and date
         modifyAppointmentLocationTextField.setText(selectedAppointment.getAppointmentLocation());
         modifyAppointmentTypeTextField.setText(selectedAppointment.getAppointmentType());
-        modifyAppointmentDescriptionTextField.setText(selectedAppointment.getAppointmentType());
+        modifyAppointmentDescriptionTextField.setText(selectedAppointment.getAppointmentDescription());
         modifyAppointmentCurrentCustomerTextField.setText(customerName);
         modifyAppointmentCurrentCustomerTextField.setDisable(true);
     }
-//    TODO might wanna thing about extracting loadCustomerTableData (it is also in add appointment)
-    private void loadCustomerTableData (){
-        Customer.clearCustomerList();
-        dbQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM customer, address, city, country " +
-                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
-        ResultSet rs = dbQuery.getQueryResultSet();
-        try {
-            while(dbQuery.getQueryResultSet().next()) {
-                Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
-                        rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
-                        rs.getString("country"), rs.getString("phone")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
     @FXML
     private void loadMainWindowAppointmentModify(ActionEvent event) throws IOException {
         NewWindow.display((Stage) appointmentModifyMainWindowLabel.getScene().getWindow(),
@@ -140,9 +121,6 @@ public class AppointmentModifyController implements Initializable {
         this.modifyAppointmentTimePM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         modifyAppointmentTimeAM.setSelected(true);
 
-//        loadCustomerTableData();
-
-        Customer.getCustomerList();
         modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
         modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
         modifyAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));

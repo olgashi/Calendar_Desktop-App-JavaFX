@@ -14,15 +14,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
-import model.Customer;
+import model.Schedule;
 import utilities.AlertMessage;
 import utilities.HelperQuery;
 import utilities.NewWindow;
-import utilities.dbQuery;
+import utilities.DBQuery;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AppointmentMainWindowController implements Initializable {
@@ -73,30 +71,19 @@ public class AppointmentMainWindowController implements Initializable {
         Appointment appointment = appointmentTable.getSelectionModel().getSelectedItem();
         if (appointment != null) {
             if (AlertMessage.display("Are you sure you want to delete appointment with " + appointment.getAppointmentCustomerName(), "confirmation")){
-                dbQuery.createQuery("DELETE FROM appointment WHERE appointmentId = " + "'" + appointment.getAppointmentId()  + "'");
-                loadAppointmentTableData();
+                DBQuery.createQuery("DELETE FROM appointment WHERE appointmentId = " + "'" + appointment.getAppointmentId()  + "'");
+                Schedule.deleteAppointment(appointment);
+//                HelperQuery.getAppointmentData();
+//                loadAppointmentTableData();
             }
         }
         else AlertMessage.display("Please select appointment you want to delete", "warning");
     }
 
-    public void loadAppointmentTableData() {
-        Appointment.clearAppointmentList();
-        HelperQuery.getAppointmentData();
-//        dbQuery.createQuery("SELECT appointmentId, title, description, location, contact, type, url, start, end, " +
-//                "customerName, customer.customerId FROM appointment, customer where appointment.customerId = customer.customerId");
-//        ResultSet rs = dbQuery.getQueryResultSet();
-//        try {
-//            while (dbQuery.getQueryResultSet().next()) {
-//                Appointment.getAppointmentList().add(new Appointment(rs.getString("appointmentId"),
-//                        rs.getString("title"), rs.getString("description"), rs.getString("location"),
-//                        rs.getString("contact"), rs.getString("type"), rs.getString("url"), rs.getString("start"),
-//                        rs.getString("end"), rs.getString("customerId"), rs.getString("customerName")));
-//            }
-//        }  catch(SQLException e){
-//            e.printStackTrace();
-//        }
-    }
+//    public void loadAppointmentTableData() {
+////        Appointment.clearAppointmentList();
+////        HelperQuery.getAppointmentData();
+//    }
     @FXML
     private void loadMainWindow() throws IOException {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
@@ -105,7 +92,6 @@ public class AppointmentMainWindowController implements Initializable {
 
     public void openModifyAppointmentWindow(ActionEvent event) throws IOException {
         //TODO refactor this if possible to still use NewWindow.display
-
         String customerName = null;
         Appointment appointment = null;
         try {
@@ -133,7 +119,7 @@ public class AppointmentMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadAppointmentTableData();
+//        loadAppointmentTableData();
 
         appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
         appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));

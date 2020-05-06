@@ -11,7 +11,6 @@ import model.Customer;
 import utilities.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
@@ -76,22 +75,6 @@ public class AppointmentAddNewController implements Initializable {
 //    TODO user should not be able to add appointments outside business hours and on the weekends
 //    TODO add length of the appointment
 
-//    private void loadCustomerTableData (){
-//        Customer.clearCustomerList();
-//        dbQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM customer, address, city, country " +
-//                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
-//        ResultSet rs = dbQuery.getQueryResultSet();
-//        try {
-//            while(dbQuery.getQueryResultSet().next()) {
-//                Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
-//                        rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
-//                        rs.getString("country"), rs.getString("phone")));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
@@ -131,14 +114,14 @@ public class AppointmentAddNewController implements Initializable {
             fullAppointmentEndDateTime = fullAppointmentStartDateTime;
             contact = "test";
             url = "test";
-            dbQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, contact, " +
+            DBQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, contact, " +
                     "type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) values(" +
                     "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + addNewAppointmentTitleTextField.getText() + "'" + ", " +
                     "'" + addNewAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + addNewAppointmentLocationTextField.getText() + "'" + ", " +
                     "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeTextField.getText() + "'" + ", " +
                     "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
                     ", " + "'" + LocalDateTime.now() + "'"+ ", 'admin', " + "'" + LocalDateTime.now() + "'" + ", 'admin')");
-            if (dbQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
+            if (DBQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
             else AlertMessage.display("There was a problem creating an appointment", "warning");
         }
     }
@@ -157,7 +140,7 @@ public class AppointmentAddNewController implements Initializable {
         this.addNewAppointmentTimePM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
         addNewAppointmentTimeAM.setSelected(true);
 
-//        loadCustomerTableData();
+////        loadCustomerTableData();
         Customer.getCustomerList();
         addNewAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
         addNewAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));

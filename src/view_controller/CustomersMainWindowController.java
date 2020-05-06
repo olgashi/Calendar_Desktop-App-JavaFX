@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,12 +18,10 @@ import model.Schedule;
 import utilities.AlertMessage;
 import utilities.HelperQuery;
 import utilities.NewWindow;
-import utilities.dbQuery;
+import utilities.DBQuery;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class CustomersMainWindowController implements Initializable {
@@ -55,23 +52,6 @@ public class CustomersMainWindowController implements Initializable {
     @FXML
     private Button returnToMainWindowButton;
 
-    @FXML
-    private void loadCustomerTableData (){
-        Customer.clearCustomerList();
-        HelperQuery.getCustomerData();
-//        dbQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
-//                "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
-//        ResultSet rs = dbQuery.getQueryResultSet();
-//        try {
-//            while(dbQuery.getQueryResultSet().next()) {
-//                Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
-//                        rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
-//                        rs.getString("country"), rs.getString("phone")));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-    }
     @FXML
     private void loadMainWindow() throws IOException {
         NewWindow.display((Stage) customerMainWindowLabel.getScene().getWindow(),
@@ -107,10 +87,10 @@ public class CustomersMainWindowController implements Initializable {
             Customer customer = customerTable.getSelectionModel().getSelectedItem();
             if (customer != null) {
                 if (AlertMessage.display("Are you sure you want to delete customer " + customer.getCustomerName(), "confirmation")){
-                    dbQuery.createQuery("DELETE FROM appointment WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
-                    dbQuery.createQuery("DELETE FROM customer WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
-                    loadCustomerTableData();
+                    DBQuery.createQuery("DELETE FROM appointment WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
+                    DBQuery.createQuery("DELETE FROM customer WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
                     Schedule.deleteCustomer(customer);
+                    customerTable.setItems(Customer.getCustomerList());
                 }
             }
             else AlertMessage.display("Please select customer you want to delete", "warning");
@@ -118,7 +98,6 @@ public class CustomersMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadCustomerTableData();
         // populate customer table
         customerId.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerId"));
         customerName.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerName"));
