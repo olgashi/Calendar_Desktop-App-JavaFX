@@ -36,7 +36,7 @@ public class CustomerAddNewController implements Initializable {
 
 
     public void createCustomer(ActionEvent event) throws SQLException, IOException {
-        if (!InputValidation.checkForEmptyInputs(newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
+        if (!InputValidation.checkForAllEmptyInputs(newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
                 newCustomerZipTextField, newCustomerCountryTextField, newCustomerNumberTextField)){
             AlertMessage.display("All Fields are required.", "warning");
         } else {

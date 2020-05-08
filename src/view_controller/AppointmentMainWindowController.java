@@ -102,7 +102,7 @@ public class AppointmentMainWindowController implements Initializable {
                 Parent mainViewParent = loader.load();
                 Scene modifyAppointmentView = new Scene(mainViewParent);
                 AppointmentModifyController controller = loader.getController();
-                controller.initModifyAppointmentData(appointment, customerName);
+                controller.initModifyAppointmentData(appointment);
                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 window.setScene(modifyAppointmentView);
                 window.show();

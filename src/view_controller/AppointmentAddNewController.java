@@ -81,9 +81,9 @@ public class AppointmentAddNewController implements Initializable {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
 
-        if (!InputValidation.checkForEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField, addNewAppointmentTypeTextField,
+        if (!InputValidation.checkForAllEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField, addNewAppointmentTypeTextField,
                 addNewAppointmentDescriptionTextField, addNewAppointmentTitleTextField, addNewAppointmentLocationTextField)) {
-            AlertMessage.display("All fields are required. Please make try again.", "warning");
+            AlertMessage.display("All fields are required. Please make changes and try again.", "warning");
             return;
         }
         if (addNewAppointmentDatePicker.getValue() == null) {

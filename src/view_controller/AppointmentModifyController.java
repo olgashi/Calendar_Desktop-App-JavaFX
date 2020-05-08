@@ -9,13 +9,25 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
+import model.User;
 import utilities.AlertMessage;
+import utilities.DBQuery;
 import utilities.InputValidation;
 import utilities.NewWindow;
 
+import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AppointmentModifyController implements Initializable {
@@ -105,25 +117,53 @@ public class AppointmentModifyController implements Initializable {
     private Appointment selectedAppointment;
     private Customer selectedCustomer;
     private int selectedCustomerId, userId;
+//    TODO these variables are a mess, rename/refactor
+    private String updatedCustomerId, updatedTitle, updatedHours, updatedMinutes, updatedAppointmentYear,
+        updatedAppointmentDay, updatedLocation, updatedType, updatedDescription;
+    private Month updatedAppointmentMonth;
+    private String existingAppointmentMonth;
+    private String existingAppointmentYear, existingAppointmentDay, existingAppointmentHours,
+            existingAppointmentMinutes, existingAppointmentStartDate, existingAppointmentStartTime;
+    String loggedInUserName = User.getUserName();
 
     public void initModifyAppointmentData(Appointment appointment) {
         String appointmentStartDateTime = appointment.getAppointmentStart();
+
 //        TODO refactor
         String dateTimeArr[] = appointmentStartDateTime.split(" ");
-        String appointmentStartDate = dateTimeArr[0];
-        String appointmentStartTime = dateTimeArr[1];
-        String yearDayMonthArr[] = appointmentStartDate.split("-");
-        String year = yearDayMonthArr[0];
-        String day = yearDayMonthArr[2];
-        String hourMinArr[] = appointmentStartTime.split(":");
-        String month = yearDayMonthArr[1];
-        String hour = hourMinArr[0];
-        String minute = hourMinArr[1];
+        existingAppointmentStartDate = dateTimeArr[0];
+
+        existingAppointmentStartTime = dateTimeArr[1];
+
+//        String yearDayMonthArr[] = existingAppointmentStartDate.split("-");
+//        existingAppointmentYear = yearDayMonthArr[0];
+//        existingAppointmentDay = yearDayMonthArr[2];
+//        System.out.println("Month: " + yearDayMonthArr[1]);
+//
+//        Date tempDate = new LocalDate(yearDayMonthArr[1]);
+//        System.out.println(new SimpleDateFormat("MMMM").format(tempDate));
+
+        String hourMinArr[] = existingAppointmentStartTime.split(":");
+//----------
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+        LocalDate localDate = LocalDate.parse( existingAppointmentStartDate , formatter);
+        existingAppointmentMonth = localDate.getMonth().getDisplayName( TextStyle.FULL , Locale.US );
+//        System.out.println("MONTH: " + monthName);
+//----------
+
+
+
+
+
+        existingAppointmentHours = hourMinArr[0];
+        existingAppointmentMinutes = hourMinArr[1];
 
         selectedAppointment = appointment;
         existingAppointmentTitleValue.setText(selectedAppointment.getAppointmentTitle());
-        existingAppointmentDateValue.setText(appointmentStartDate);
-        existingAppointmentTimeValue.setText(appointmentStartTime);
+        existingAppointmentDateValue.setText(existingAppointmentStartDate);
+        existingAppointmentTimeValue.setText(existingAppointmentStartTime);
         existingAppointmentLocationValue.setText(selectedAppointment.getAppointmentLocation());
         existingAppointmentTypeValue.setText(selectedAppointment.getAppointmentType());
         existingAppointmentDescriptionValue.setText(selectedAppointment.getAppointmentDescription());
@@ -132,14 +172,15 @@ public class AppointmentModifyController implements Initializable {
 
     public void updateAppointment(ActionEvent event) throws SQLException, IOException {
         Customer selectedAppointmentCustomer = modifyAppointmentCustomerTable.getSelectionModel().getSelectedItem();
+        LocalDateTime fullAppointmentStartDateTime;
+        LocalDateTime fullAppointmentEndDateTime;
 
         if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField, modifyAppointmentTypeTextField,
                 modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
-                modifyAppointmentTimeMinutesTextField) && (selectedAppointmentCustomer == null)) {
+                modifyAppointmentTimeMinutesTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
             return;
         }
-
         if (!modifyAppointmentTimeHoursTextField.getText().isEmpty()) {
             if (!InputValidation.timeInputNumbersOnly(modifyAppointmentTimeHoursTextField)) {
                 AlertMessage.display("Hours field has to be numbers only. Please correct and try again.", "warning");
@@ -162,9 +203,29 @@ public class AppointmentModifyController implements Initializable {
                 }
             }
         }
-        AlertMessage.display("fields look good", "warning");
 
+        updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
+        updatedLocation = modifyAppointmentLocationTextField.getText().isEmpty() ? selectedAppointment.getAppointmentLocation() : modifyAppointmentLocationTextField.getText();
+        updatedType = modifyAppointmentTypeTextField.getText().isEmpty() ? selectedAppointment.getAppointmentType() : modifyAppointmentLocationTextField.getText();
+        updatedDescription = modifyAppointmentDescriptionTextField.getText().isEmpty() ? selectedAppointment.getAppointmentDescription() : modifyAppointmentDescriptionTextField.getText();
+        updatedCustomerId = selectedAppointmentCustomer == null ? selectedAppointment.getAppointmentCustomerId() : selectedAppointmentCustomer.getCustomerId();
+        updatedHours = modifyAppointmentTimeHoursTextField.getText().isEmpty() ? existingAppointmentHours : modifyAppointmentTimeHoursTextField.getText();
+        updatedMinutes = modifyAppointmentTimeMinutesTextField.getText().isEmpty() ? existingAppointmentMinutes : modifyAppointmentTimeMinutesTextField.getText();
+        updatedAppointmentYear = modifyAppointmentNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyAppointmentNewDate.getValue().getYear());
+        updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth) : modifyAppointmentNewDate.getValue().getMonth();
+        updatedAppointmentDay = modifyAppointmentNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyAppointmentNewDate.getValue().getDayOfMonth());
 
+        fullAppointmentStartDateTime = LocalDateTime.of(
+                Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth, Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
+        System.out.println("Date" + fullAppointmentStartDateTime);
+        fullAppointmentEndDateTime = fullAppointmentStartDateTime;
+
+// TODO figure out fields that are not in the view, like url, contact
+//        AlertMessage.display("fields look good", "warning");
+        DBQuery.createQuery("UPDATE appointment SET customerId = " + "'" + updatedCustomerId + "'" + ", title = " + "'" + updatedTitle + "'" + ", description = " + "'" + updatedDescription + "'" +
+                ", location = " + "'" + updatedLocation + "'" + ", start = " + "'" + fullAppointmentStartDateTime + "'" + ", end = " + "'" + fullAppointmentEndDateTime + "'" +
+                ", createDate = " + "'" + LocalDateTime.now() + "'" +  ", createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = " + "'" + LocalDateTime.now() + "'"+ ", lastUpdateBy = "+ "'" + loggedInUserName + "'" +
+                " WHERE appointmentId = " + "'" + selectedAppointment.getAppointmentId() + "'");
     }
 
     @FXML
