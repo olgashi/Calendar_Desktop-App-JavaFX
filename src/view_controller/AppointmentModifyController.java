@@ -9,10 +9,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
+import utilities.AlertMessage;
+import utilities.InputValidation;
 import utilities.NewWindow;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AppointmentModifyController implements Initializable {
@@ -25,10 +28,7 @@ public class AppointmentModifyController implements Initializable {
     private Text modifyAppointmentDateText;
     @FXML
     private Text modifyAppointmentTimeText;
-    @FXML
-    private Text modifyAppointmentCurrentCustomerText;
-    @FXML
-    private Text modifyAppointmentNewCustomerText;
+
     @FXML
     private Text modifyAppointmentLocationText;
     @FXML
@@ -37,10 +37,39 @@ public class AppointmentModifyController implements Initializable {
     private Text modifyAppointmentDescriptionText;
     @FXML
     private Text modifyAppointmentDatePickerCurrentDateText;
+
+
     @FXML
-    private Text modifyAppointmentDatePickerNewDateText;
+    private Text existingAppointmentTitleText;
     @FXML
-    private TextField modifyAppointmentCurrentDate;
+    private Text existingAppointmentDateText;
+    @FXML
+    private Text existingAppointmentTimeText;
+    @FXML
+    private Text existingAppointmentLocationText;
+    @FXML
+    private Text existingAppointmentTypeText;
+    @FXML
+    private Text existingAppointmentDescriptionText;
+    @FXML
+    private Text existingAppointmentCustomerText;
+
+    @FXML
+    private Text existingAppointmentTitleValue;
+    @FXML
+    private Text existingAppointmentDateValue;
+    @FXML
+    private Text existingAppointmentTimeValue;
+    @FXML
+    private Text existingAppointmentLocationValue;
+    @FXML
+    private Text existingAppointmentTypeValue;
+    @FXML
+    private Text existingAppointmentDescriptionValue;
+    @FXML
+    private Text existingAppointmentCustomerValue;
+
+
     @FXML
     private DatePicker modifyAppointmentNewDate;
     @FXML
@@ -62,8 +91,6 @@ public class AppointmentModifyController implements Initializable {
     @FXML
     private TextField modifyAppointmentLocationTextField;
     @FXML
-    private TextField modifyAppointmentCurrentCustomerTextField;
-    @FXML
     private TableView<Customer> modifyAppointmentCustomerTable;
     @FXML
     private TableColumn<Customer,String> modifyAppointmentCustomerNameColumn;
@@ -79,7 +106,7 @@ public class AppointmentModifyController implements Initializable {
     private Customer selectedCustomer;
     private int selectedCustomerId, userId;
 
-    public void initModifyAppointmentData(Appointment appointment, String customerName) {
+    public void initModifyAppointmentData(Appointment appointment) {
         String appointmentStartDateTime = appointment.getAppointmentStart();
 //        TODO refactor
         String dateTimeArr[] = appointmentStartDateTime.split(" ");
@@ -94,17 +121,50 @@ public class AppointmentModifyController implements Initializable {
         String minute = hourMinArr[1];
 
         selectedAppointment = appointment;
-        modifyAppointmentTitleTextField.setText(selectedAppointment.getAppointmentTitle());
-        modifyAppointmentCurrentDate.setText(month  + "/" + day + "/" + year);
-        modifyAppointmentCurrentDate.setDisable(true);
-        modifyAppointmentTimeHoursTextField.setText(hour);
-        modifyAppointmentTimeMinutesTextField.setText(minute);
-        // preprocess time to fill in time and date
-        modifyAppointmentLocationTextField.setText(selectedAppointment.getAppointmentLocation());
-        modifyAppointmentTypeTextField.setText(selectedAppointment.getAppointmentType());
-        modifyAppointmentDescriptionTextField.setText(selectedAppointment.getAppointmentDescription());
-        modifyAppointmentCurrentCustomerTextField.setText(customerName);
-        modifyAppointmentCurrentCustomerTextField.setDisable(true);
+        existingAppointmentTitleValue.setText(selectedAppointment.getAppointmentTitle());
+        existingAppointmentDateValue.setText(appointmentStartDate);
+        existingAppointmentTimeValue.setText(appointmentStartTime);
+        existingAppointmentLocationValue.setText(selectedAppointment.getAppointmentLocation());
+        existingAppointmentTypeValue.setText(selectedAppointment.getAppointmentType());
+        existingAppointmentDescriptionValue.setText(selectedAppointment.getAppointmentDescription());
+        existingAppointmentCustomerValue.setText(selectedAppointment.getAppointmentCustomerName() + ", " + selectedAppointment.getAppointmentLocation());
+    }
+
+    public void updateAppointment(ActionEvent event) throws SQLException, IOException {
+        Customer selectedAppointmentCustomer = modifyAppointmentCustomerTable.getSelectionModel().getSelectedItem();
+
+        if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField, modifyAppointmentTypeTextField,
+                modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
+                modifyAppointmentTimeMinutesTextField) && (selectedAppointmentCustomer == null)) {
+            AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
+            return;
+        }
+
+        if (!modifyAppointmentTimeHoursTextField.getText().isEmpty()) {
+            if (!InputValidation.timeInputNumbersOnly(modifyAppointmentTimeHoursTextField)) {
+                AlertMessage.display("Hours field has to be numbers only. Please correct and try again.", "warning");
+                return;
+            } else {
+                if (!InputValidation.timeInputProperLength(modifyAppointmentTimeHoursTextField)) {
+                    AlertMessage.display("Hours value should be not longer than 2 digits. Please correct and try again.", "warning");
+                    return;
+                }
+            }
+        }
+        if (!modifyAppointmentTimeMinutesTextField.getText().isEmpty()) {
+            if (!InputValidation.timeInputNumbersOnly(modifyAppointmentTimeMinutesTextField)) {
+                AlertMessage.display("Minutes field has to be numbers only. Please correct and try again.", "warning");
+                return;
+            } else {
+                if (!InputValidation.timeInputProperLength(modifyAppointmentTimeMinutesTextField)) {
+                    AlertMessage.display("Minutes value should be not longer than 2 digits. Please correct and try again.", "warning");
+                    return;
+                }
+            }
+        }
+        AlertMessage.display("fields look good", "warning");
+
+
     }
 
     @FXML
