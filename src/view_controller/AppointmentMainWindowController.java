@@ -21,6 +21,7 @@ import utilities.NewWindow;
 import utilities.DBQuery;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AppointmentMainWindowController implements Initializable {
@@ -67,23 +68,17 @@ public class AppointmentMainWindowController implements Initializable {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("AppointmentAddNew.fxml"));
     }
-    public void deleteAppointment() {
+    public void deleteAppointment() throws SQLException {
         Appointment appointment = appointmentTable.getSelectionModel().getSelectedItem();
         if (appointment != null) {
             if (AlertMessage.display("Are you sure you want to delete appointment with " + appointment.getAppointmentCustomerName(), "confirmation")){
                 DBQuery.createQuery("DELETE FROM appointment WHERE appointmentId = " + "'" + appointment.getAppointmentId()  + "'");
                 Schedule.deleteAppointment(appointment);
-//                HelperQuery.getAppointmentData();
-//                loadAppointmentTableData();
             }
         }
         else AlertMessage.display("Please select appointment you want to delete", "warning");
     }
 
-//    public void loadAppointmentTableData() {
-////        Appointment.clearAppointmentList();
-////        HelperQuery.getAppointmentData();
-//    }
     @FXML
     private void loadMainWindow() throws IOException {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
@@ -119,8 +114,6 @@ public class AppointmentMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        loadAppointmentTableData();
-
         appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
         appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));

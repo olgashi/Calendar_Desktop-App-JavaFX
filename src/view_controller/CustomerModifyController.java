@@ -9,6 +9,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
 import model.Schedule;
+import model.User;
 import utilities.*;
 import java.io.IOException;
 import java.net.URL;
@@ -68,6 +69,7 @@ public class CustomerModifyController implements Initializable {
         String existingCustomerZip = selectedCustomer.getCustomerZipCode();
         String existingCustomerPhone = selectedCustomer.getCustomerPhoneNumber();
         int existingCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
+        String loggedInUserName = User.getUserName();
         // check if all values in input fields remained unchanged
         if (existingCustomerName.equals(updatedCustomerName) && existingCustomerAddress.equals(updatedCustomerAddress) &&
                 existingCustomerCity.equals(updatedCustomerCity) && existingCustomerZip.equals(updatedCustomerZip) &&
@@ -83,7 +85,7 @@ public class CustomerModifyController implements Initializable {
                 else {
 //create a new country and get id
                     DBQuery.createQuery("INSERT INTO country SET country = " + "'" + updatedCustomerCountry + "'"
-                            + ", createDate = NOW(), createdBy = 'admin', lastUpdate = NOW(), lastUpdateBy = 'admin'");
+                            + ", createDate = NOW(), createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = NOW(), lastUpdateBy = " + "'" + loggedInUserName + "'");
                     if (DBQuery.queryNumRowsAffected() > 0) countryId = DBQuery.getInsertedRowId();
                 }
             } else { //if field wasnt updated go get country id
@@ -97,7 +99,7 @@ public class CustomerModifyController implements Initializable {
                 if (DBQuery.getQueryResultSet().next()) cityId = Integer.parseInt(DBQuery.getQueryResultSet().getString("cityId"));
                 else {
                     DBQuery.createQuery("INSERT INTO city SET city = " + "'" + updatedCustomerCity + "'" +", countryId = " + "'" + countryId + "'"
-                            + ", createDate = NOW(), createdBy = 'admin', lastUpdate = NOW(), lastUpdateBy = 'admin'");
+                            + ", createDate = NOW(), createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = NOW(), lastUpdateBy = " + "'" + loggedInUserName + "'");
                     if (DBQuery.queryNumRowsAffected() > 0) cityId = DBQuery.getInsertedRowId();
                 }
             } else {
@@ -106,7 +108,7 @@ public class CustomerModifyController implements Initializable {
                 if (DBQuery.getQueryResultSet().next()) cityId = Integer.parseInt(DBQuery.getQueryResultSet().getString("cityId"));
                 else {
                     DBQuery.createQuery("INSERT INTO city SET city = " + "'" + existingCustomerCity + "'" +", countryId = " + "'" + countryId + "'"
-                            + ", createDate = NOW(), createdBy = 'admin', lastUpdate = NOW(), lastUpdateBy = 'admin'");
+                            + ", createDate = NOW(), createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = NOW(), lastUpdateBy = " + "'" + loggedInUserName + "'");
                     if (DBQuery.queryNumRowsAffected() > 0) cityId = DBQuery.getInsertedRowId();
                 }
             }
@@ -117,7 +119,8 @@ public class CustomerModifyController implements Initializable {
                 // insert new address
                 DBQuery.createQuery("INSERT INTO address SET address = " + "'" + updatedCustomerAddress +"'" +
                         ", address2 = '', cityId = " + "'" + cityId + "'" + ", postalCode = " + "'" + updatedCustomerZip + "'" +
-                        ", phone = " + "'" + updatedCustomerPhone + "'" + ", createDate = NOW(), createdBy = 'admin', lastUpdateBy='admin'");
+                        ", phone = " + "'" + updatedCustomerPhone + "'" + ", createDate = NOW(), createdBy = " +"'"+ loggedInUserName +
+                        "'" +", lastUpdateBy = " + "'" + loggedInUserName + "'");
                 if (DBQuery.queryNumRowsAffected() > 0) addressId = DBQuery.getInsertedRowId();
 
             } else {
@@ -137,6 +140,7 @@ public class CustomerModifyController implements Initializable {
             customerToUpdate.setCustomerCountry(updatedCustomerCountry);
             customerToUpdate.setCustomerPhoneNumber(updatedCustomerPhone);
         }
+        System.out.println("Customer modify woindow, loggedin user " + loggedInUserName);
         loadMainWindow(event);
     }
 

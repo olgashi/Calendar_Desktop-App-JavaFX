@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.User;
 import utilities.DBQuery;
 import utilities.HelperQuery;
 import utilities.NewWindow;
@@ -30,8 +31,10 @@ public class LoginWindowController implements Initializable {
     @FXML
     private Pane loginWindowPane;
 
+    public static User loggedInUser;
+
     public boolean determineIfUserExists(String userN, String pass) throws SQLException, IOException {
-        DBQuery.createQuery("SELECT user.userId FROM user WHERE userName = " + "'" + userN + "'" + " AND password = " + "'" + pass + "'");
+        DBQuery.createQuery("SELECT userId, userName FROM user WHERE userName = " + "'" + userN + "'" + " AND password = " + "'" + pass + "'");
         if (DBQuery.getQueryResultSet().next()) return true;
         else return false;
     }
@@ -49,6 +52,9 @@ public class LoginWindowController implements Initializable {
             if (determineIfUserExists(usernameTextField.getText(), passwordTextField.getText())) {
                 System.out.println("user found");
                 loginInvalidWarningText.setText("");
+                loggedInUser = new User(DBQuery.getQueryResultSet().getString("userName"), DBQuery.getQueryResultSet().getString("userId"));
+//                System.out.println("user name " + User.getUserName());
+//                System.out.println("user id " + loggedInUser.getUserId());
                 changeSceneMainWindowView(event);
             } else {
                 System.out.println("user not found");

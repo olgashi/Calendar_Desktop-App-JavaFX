@@ -9,6 +9,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
 import model.Schedule;
+import model.User;
 import utilities.InputValidation;
 import utilities.NewWindow;
 import utilities.DBQuery;
@@ -31,6 +32,8 @@ public class CustomerAddNewController implements Initializable {
     @FXML
     private Button addCustomerCancelButton, addCustomerCreateButton;
     int cityCreatedSuccess, addressCreatedSuccess, countryId, cityId, addressId;
+    String loggedInUserName = User.getUserName();
+
 
     public void createCustomer(ActionEvent event) throws SQLException, IOException {
         if (!InputValidation.checkForEmptyInputs(newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
@@ -50,7 +53,8 @@ public class CustomerAddNewController implements Initializable {
                 // if country that user specified doesn't exists, create a new country
                 if (!DBQuery.getQueryResultSet().next()) {
 //                        TODO: research statement vs prepared statement
-                    DBQuery.createQuery("INSERT INTO country (country, createDate, createdBy, lastUpdateBy) values (" + "'" + newCustomerCountryTextField.getText() + "'" + " , NOW(), 'admin', 'admin')");
+                    DBQuery.createQuery("INSERT INTO country (country, createDate, createdBy, lastUpdateBy) values (" + "'" + newCustomerCountryTextField.getText() + "'" + " , NOW()," +
+                            "'" + loggedInUserName + "'" + ", " + "'" + loggedInUserName + "'" + ")");
                     if (DBQuery.queryNumRowsAffected() > 0){ // if country was created successfully
                             // get id for that country
                         countryId = DBQuery.getInsertedRowId();
@@ -64,7 +68,8 @@ public class CustomerAddNewController implements Initializable {
                 if (!DBQuery.getQueryResultSet().next()) {// City doesn't exist, create a new city
                     System.out.println("City doesn't exist");
                     DBQuery.createQuery("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) values (" +
-                                "'" + newCustomerCityTextField.getText() + "'" +","+ "'" + countryId  + "'" + ", NOW(), 'admin', NOW(), 'admin')");
+                                "'" + newCustomerCityTextField.getText() + "'" +","+ "'" + countryId  + "'" + ", NOW(), " +
+                            "'" + loggedInUserName + "'" + ", NOW(), " + "'" + loggedInUserName + "'" + ")");
                     if (DBQuery.queryNumRowsAffected() > 0){ // get id for that city
                         System.out.println("City created, rows affected " + cityCreatedSuccess );
                         cityId = DBQuery.getInsertedRowId();
@@ -78,7 +83,7 @@ public class CustomerAddNewController implements Initializable {
 //                    TODO update 'test' value for address2
                     DBQuery.createQuery("INSERT INTO address (cityId, address, address2, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy)" +
                                 " VALUES (" + "'" + cityId + "'" + ", " + "'" + newCustomerAddressTextField.getText() + "'" + ", 'test', " + "'" + newCustomerZipTextField.getText() + "'" +
-                                ", " + "'" + newCustomerNumberTextField.getText() + "'" + ", NOW(), 'admin', NOW(), 'admin')");
+                                ", " + "'" + newCustomerNumberTextField.getText() + "'" + ", NOW(), " +"'" + loggedInUserName + "'" +", NOW(), " + "'" + loggedInUserName + "'" + ")");
                     System.out.println("Address was created: " + addressCreatedSuccess);
                     if (DBQuery.queryNumRowsAffected() > 0) {
                         addressId = DBQuery.getInsertedRowId();
@@ -87,11 +92,13 @@ public class CustomerAddNewController implements Initializable {
                     addressId = Integer.parseInt(DBQuery.getQueryResultSet().getString("addressId"));
                 }
             DBQuery.createQuery("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, LastUpdateBy)" +
-                " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), 'admin', NOW(), 'admin')");
+                " VALUES (" + "'" + newCustomerNameTextField.getText() + "'" + ", " + "'" + addressId +"'" +", " + "1" + ", NOW(), " + "'" + loggedInUserName + "'"
+                    + ", NOW(), " +"'" + loggedInUserName + "'" + ")");
             if (DBQuery.queryNumRowsAffected() <= 0) {
                 AlertMessage.display("There was an error when creating customer. Please try again.", "warning");
             } else {
                 AlertMessage.display("Customer was created successfully!", "warning");
+                System.out.println("Customer created by user: " + User.getUserName());
                 loadMainWindowCustomerAddNew(event);
             }
             }

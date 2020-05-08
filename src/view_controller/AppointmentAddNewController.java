@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Customer;
+import model.User;
 import utilities.*;
 import java.io.IOException;
 import java.net.URL;
@@ -68,7 +69,8 @@ public class AppointmentAddNewController implements Initializable {
     private Button addNewAppointmentCreateButton;
     private Customer selectedCustomer;
     private int selectedCustomerId, userId;
-    private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription, contact, url;;
+    private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription, contact, url;
+    String loggedInUserName = User.getUserName();
 //            TODO add check for conflicting appointment
 //            TODO add end time
 //            TODO add "information" to alertmessage.display
@@ -120,7 +122,7 @@ public class AppointmentAddNewController implements Initializable {
                     "'" + addNewAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + addNewAppointmentLocationTextField.getText() + "'" + ", " +
                     "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeTextField.getText() + "'" + ", " +
                     "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
-                    ", " + "'" + LocalDateTime.now() + "'"+ ", 'admin', " + "'" + LocalDateTime.now() + "'" + ", 'admin')");
+                    ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " + "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
             if (DBQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
             else AlertMessage.display("There was a problem creating an appointment", "warning");
         }
@@ -140,8 +142,7 @@ public class AppointmentAddNewController implements Initializable {
         this.addNewAppointmentTimePM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
         addNewAppointmentTimeAM.setSelected(true);
 
-////        loadCustomerTableData();
-        Customer.getCustomerList();
+//        Customer.getCustomerList();
         addNewAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
         addNewAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
         addNewAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));

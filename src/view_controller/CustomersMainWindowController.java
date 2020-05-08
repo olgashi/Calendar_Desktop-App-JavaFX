@@ -22,6 +22,7 @@ import utilities.DBQuery;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class CustomersMainWindowController implements Initializable {
@@ -83,7 +84,7 @@ public class CustomersMainWindowController implements Initializable {
         } else AlertMessage.display("Please select customer in a table and then click 'Modify Customer'.", "warning");
     }
 
-    public void deleteCustomer() {
+    public void deleteCustomer() throws SQLException {
             Customer customer = customerTable.getSelectionModel().getSelectedItem();
             if (customer != null) {
                 if (AlertMessage.display("Are you sure you want to delete customer " + customer.getCustomerName(), "confirmation")){
@@ -98,7 +99,6 @@ public class CustomersMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // populate customer table
         customerId.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerId"));
         customerName.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerName"));
         customerAddress.setCellValueFactory(new PropertyValueFactory<Customer, String>("customerAddress"));
