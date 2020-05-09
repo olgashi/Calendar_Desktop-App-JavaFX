@@ -11,10 +11,12 @@ import javafx.stage.Stage;
 import model.User;
 import utilities.DBQuery;
 import utilities.HelperQuery;
+import utilities.LoginLanguage;
 import utilities.NewWindow;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LoginWindowController implements Initializable {
@@ -29,11 +31,18 @@ public class LoginWindowController implements Initializable {
     @FXML
     private Text loginInvalidWarningText;
     @FXML
+    private Text loginWindowLabelText;
+    @FXML
+    private Text loginUsernameText;
+    @FXML
+    private Text loginPasswordText;
+    @FXML
     private Pane loginWindowPane;
 
     public static User loggedInUser;
+    Locale currentLocale;
 
-    public boolean determineIfUserExists(String userN, String pass) throws SQLException, IOException {
+    public boolean determineIfUserExists(String userN, String pass) throws SQLException {
         DBQuery.createQuery("SELECT userId, userName FROM user WHERE userName = " + "'" + userN + "'" + " AND password = " + "'" + pass + "'");
         if (DBQuery.getQueryResultSet().next()) return true;
         else return false;
@@ -43,28 +52,27 @@ public class LoginWindowController implements Initializable {
         public void changeSceneMainWindowView(ActionEvent event) throws SQLException, IOException {
         HelperQuery.getCustomerData();
         HelperQuery.getAppointmentData();
-        NewWindow.display((Stage) loginWindowPane.getScene().getWindow(),
-                getClass().getResource("MainWindow.fxml"));
+        NewWindow.display((Stage) loginWindowPane.getScene().getWindow(), getClass().getResource("MainWindow.fxml"));
     }
 
     public void loginButtonClickEvent(ActionEvent event) throws IOException, SQLException {
         if (!usernameTextField.getText().isEmpty() && !passwordTextField.getText().isEmpty()) {
             if (determineIfUserExists(usernameTextField.getText(), passwordTextField.getText())) {
                 System.out.println("user found");
-                loginInvalidWarningText.setText("");
                 loggedInUser = new User(DBQuery.getQueryResultSet().getString("userName"), DBQuery.getQueryResultSet().getString("userId"));
-//                System.out.println("user name " + User.getUserName());
-//                System.out.println("user id " + loggedInUser.getUserId());
                 changeSceneMainWindowView(event);
             } else {
                 System.out.println("user not found");
-                loginInvalidWarningText.setText("Username and Password combination is invalid.");
+                LoginLanguage.userNamePassInvalidComboMessage(currentLocale.getCountry(), loginInvalidWarningText);
             }
-        } else loginInvalidWarningText.setText("Username and Password cannot be empty.");
+        } else LoginLanguage.userNamePassEmptyMessage(currentLocale.getCountry(), loginInvalidWarningText);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        loginInvalidWarningText.setText("");
+        currentLocale = Locale.getDefault();
+        System.out.println("current locale: " + currentLocale.getCountry());
+        LoginLanguage.setLoginWindowLabels(currentLocale.getCountry(), loginUsernameText, loginPasswordText, loginWindowLabelText, loginButton );
     }
 }
