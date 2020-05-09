@@ -102,8 +102,10 @@ public class CustomerAddNewController implements Initializable {
                 loadMainWindowCustomerAddNew(event);
             }
             }
-            Schedule.addCustomer(new Customer(Schedule.setCustomerId(), newCustomerNameTextField.getText(), newCustomerAddressTextField.getText(), newCustomerCityTextField.getText(),
-                    newCustomerZipTextField.getText(), newCustomerCountryTextField.getText(), newCustomerNumberTextField.getText()));
+            if (DBQuery.queryNumRowsAffected() > 0) {
+                Schedule.addCustomer(new Customer(Schedule.setCustomerId(), newCustomerNameTextField.getText(), newCustomerAddressTextField.getText(), newCustomerCityTextField.getText(),
+                        newCustomerZipTextField.getText(), newCustomerCountryTextField.getText(), newCustomerNumberTextField.getText()));
+            }
         }
         return;
     }
