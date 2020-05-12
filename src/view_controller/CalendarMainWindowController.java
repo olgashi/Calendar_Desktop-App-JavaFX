@@ -90,10 +90,7 @@ public class CalendarMainWindowController implements Initializable {
 
 
         } else {
-//            byMonthGridPane.
-            Node gridLines = byMonthGridPane.getChildren().get(0);
-            byMonthGridPane.getChildren().clear();
-            byMonthGridPane.getChildren().add(0, gridLines);
+            resetGridLines(byMonthGridPane);
             Month thisMonth = Month.valueOf(currentTimeFrame.getText());
             Month nextMonth = thisMonth.plus(1);
             currentTimeFrame.setText(nextMonth.toString());
@@ -126,9 +123,7 @@ public class CalendarMainWindowController implements Initializable {
 
 
         } else {
-            Node gridLines = byMonthGridPane.getChildren().get(0);
-            byMonthGridPane.getChildren().clear();
-            byMonthGridPane.getChildren().add(0, gridLines);
+            resetGridLines(byMonthGridPane);
             Month thisMonth = Month.valueOf(currentTimeFrame.getText());
             Month previousMonth = thisMonth.minus(1);
             currentTimeFrame.setText(previousMonth.toString());
@@ -143,6 +138,12 @@ public class CalendarMainWindowController implements Initializable {
         }
         return;
 
+    }
+
+    public void resetGridLines(GridPane grid){
+        Node gridLines = grid.getChildren().get(0);
+        byMonthGridPane.getChildren().clear();
+        byMonthGridPane.getChildren().add(0, gridLines);
     }
 
     public void populateCalendar(ActionEvent event) {
