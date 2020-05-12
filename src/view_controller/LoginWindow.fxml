@@ -11,5 +11,8 @@
       <TextField fx:id="passwordTextField" layoutX="217.0" layoutY="161.0" text="pass123" />
       <Button fx:id="loginButton" layoutX="325.0" layoutY="212.0" mnemonicParsing="false" onAction="#loginButtonClickEvent" text="Log In" />
       <Text fx:id="loginInvalidWarningText" layoutX="217.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="loginUsernameText" layoutX="66.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="username" textAlignment="RIGHT" wrappingWidth="139.0" />
+      <Text fx:id="loginPasswordText" layoutX="66.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="password" textAlignment="RIGHT" wrappingWidth="138.99999260902405" />
+      <Text fx:id="loginWindowLabelText" layoutX="13.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="574.2060546875" />
    </children>
 </Pane>

@@ -122,8 +122,5 @@ public class Appointment {
     public void setAppointmentCustomerId(String appCustId) {
         appointmentCustomerId.set(appCustId);
     }
-//TODO move to schedule class
-    public static void clearAppointmentList(){
-        appointmentList.clear();
-    }
+
 }

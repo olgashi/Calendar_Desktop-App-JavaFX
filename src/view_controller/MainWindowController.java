@@ -21,6 +21,8 @@ public class MainWindowController implements Initializable {
     @FXML
     private Button appointmentsMainWindowViewButton;
     @FXML
+    private Button calendarMainWindowViewButton;
+    @FXML
     private Button reportsMainWindowViewButton;
 
     @FXML
@@ -34,6 +36,19 @@ public class MainWindowController implements Initializable {
         NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
                 getClass().getResource("AppointmentsMainWindow.fxml"));
     }
+
+    @FXML
+    private void loadCalendarWindow(ActionEvent event) throws IOException {
+        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
+                getClass().getResource("CalendarMainWindow.fxml"));
+    }
+//uncomment when reports view and functionality are created
+//    @FXML
+//    private void loadReportsWindow(ActionEvent event) throws IOException {
+//        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
+//                getClass().getResource("ReportsMainWindow.fxml"));
+//    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

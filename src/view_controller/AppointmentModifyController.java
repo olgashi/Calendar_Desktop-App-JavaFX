@@ -9,16 +9,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
+import model.Schedule;
 import model.User;
-import utilities.AlertMessage;
-import utilities.DBQuery;
-import utilities.InputValidation;
-import utilities.NewWindow;
+import utilities.*;
 
 import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -40,7 +39,6 @@ public class AppointmentModifyController implements Initializable {
     private Text modifyAppointmentDateText;
     @FXML
     private Text modifyAppointmentTimeText;
-
     @FXML
     private Text modifyAppointmentLocationText;
     @FXML
@@ -128,16 +126,17 @@ public class AppointmentModifyController implements Initializable {
 
     public void initModifyAppointmentData(Appointment appointment) {
         String appointmentStartDateTime = appointment.getAppointmentStart();
+        System.out.println("appointment start date " + appointmentStartDateTime);
 
 //        TODO refactor
-        String dateTimeArr[] = appointmentStartDateTime.split(" ");
-        existingAppointmentStartDate = dateTimeArr[0];
+        String dateTimeArr[] = appointmentStartDateTime.split(" |T");
 
+        existingAppointmentStartDate = dateTimeArr[0];
         existingAppointmentStartTime = dateTimeArr[1];
 
-//        String yearDayMonthArr[] = existingAppointmentStartDate.split("-");
-//        existingAppointmentYear = yearDayMonthArr[0];
-//        existingAppointmentDay = yearDayMonthArr[2];
+        String yearDayMonthArr[] = existingAppointmentStartDate.split("-");
+        existingAppointmentYear = yearDayMonthArr[0];
+        existingAppointmentDay = yearDayMonthArr[2];
 //        System.out.println("Month: " + yearDayMonthArr[1]);
 //
 //        Date tempDate = new LocalDate(yearDayMonthArr[1]);
@@ -148,14 +147,17 @@ public class AppointmentModifyController implements Initializable {
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+        System.out.println("existing appointment start date " + existingAppointmentStartDate);
         LocalDate localDate = LocalDate.parse( existingAppointmentStartDate , formatter);
-        existingAppointmentMonth = localDate.getMonth().getDisplayName( TextStyle.FULL , Locale.US );
-//        System.out.println("MONTH: " + monthName);
+//        existingAppointmentMonth = localDate.getMonth().getDisplayName( TextStyle.FULL , Locale.US );
+//        existingAppointmentMonth = localDate.getMonthValue().toString();
+        String temp[] = existingAppointmentStartDate.split("-");
+        int mnth = Integer.parseInt(temp[1]);
+
+        existingAppointmentMonth = new DateFormatSymbols().getMonths()[mnth-1];
+        System.out.println("MONTH: " + mnth);
+
 //----------
-
-
-
-
 
         existingAppointmentHours = hourMinArr[0];
         existingAppointmentMinutes = hourMinArr[1];
@@ -189,9 +191,13 @@ public class AppointmentModifyController implements Initializable {
                 if (!InputValidation.timeInputProperLength(modifyAppointmentTimeHoursTextField)) {
                     AlertMessage.display("Hours value should be not longer than 2 digits. Please correct and try again.", "warning");
                     return;
+                } else {
+                    existingAppointmentHours = modifyAppointmentTimeHoursTextField.getText();
+
                 }
             }
         }
+
         if (!modifyAppointmentTimeMinutesTextField.getText().isEmpty()) {
             if (!InputValidation.timeInputNumbersOnly(modifyAppointmentTimeMinutesTextField)) {
                 AlertMessage.display("Minutes field has to be numbers only. Please correct and try again.", "warning");
@@ -200,9 +206,12 @@ public class AppointmentModifyController implements Initializable {
                 if (!InputValidation.timeInputProperLength(modifyAppointmentTimeMinutesTextField)) {
                     AlertMessage.display("Minutes value should be not longer than 2 digits. Please correct and try again.", "warning");
                     return;
+                } else {
+                    existingAppointmentMinutes = modifyAppointmentTimeMinutesTextField.getText();
                 }
             }
         }
+
 
         updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
         updatedLocation = modifyAppointmentLocationTextField.getText().isEmpty() ? selectedAppointment.getAppointmentLocation() : modifyAppointmentLocationTextField.getText();
@@ -212,20 +221,48 @@ public class AppointmentModifyController implements Initializable {
         updatedHours = modifyAppointmentTimeHoursTextField.getText().isEmpty() ? existingAppointmentHours : modifyAppointmentTimeHoursTextField.getText();
         updatedMinutes = modifyAppointmentTimeMinutesTextField.getText().isEmpty() ? existingAppointmentMinutes : modifyAppointmentTimeMinutesTextField.getText();
         updatedAppointmentYear = modifyAppointmentNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyAppointmentNewDate.getValue().getYear());
-        updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth) : modifyAppointmentNewDate.getValue().getMonth();
+        System.out.println("1------------");
+        System.out.println(existingAppointmentMonth);
+//        System.out.println(modifyAppointmentNewDate.getValue().getMonth());
+        System.out.println("1------------");
+
+        updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyAppointmentNewDate.getValue().getMonth();
         updatedAppointmentDay = modifyAppointmentNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyAppointmentNewDate.getValue().getDayOfMonth());
+        System.out.println("2------------");
+        System.out.println(updatedAppointmentYear);
+        System.out.println(updatedAppointmentMonth);
+        System.out.println(updatedAppointmentDay);
+        System.out.println(updatedHours);
+        System.out.println(updatedMinutes);
+        System.out.println("2------------");
+
 
         fullAppointmentStartDateTime = LocalDateTime.of(
                 Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth, Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
         System.out.println("Date" + fullAppointmentStartDateTime);
         fullAppointmentEndDateTime = fullAppointmentStartDateTime;
+        LocalDateTime createDate = LocalDateTime.now();
+        LocalDateTime lastUpdate = LocalDateTime.now();
 
 // TODO figure out fields that are not in the view, like url, contact
 //        AlertMessage.display("fields look good", "warning");
         DBQuery.createQuery("UPDATE appointment SET customerId = " + "'" + updatedCustomerId + "'" + ", title = " + "'" + updatedTitle + "'" + ", description = " + "'" + updatedDescription + "'" +
                 ", location = " + "'" + updatedLocation + "'" + ", start = " + "'" + fullAppointmentStartDateTime + "'" + ", end = " + "'" + fullAppointmentEndDateTime + "'" +
-                ", createDate = " + "'" + LocalDateTime.now() + "'" +  ", createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = " + "'" + LocalDateTime.now() + "'"+ ", lastUpdateBy = "+ "'" + loggedInUserName + "'" +
+                ", createDate = " + "'" + createDate + "'" +  ", createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = " + "'" + lastUpdate + "'"+ ", lastUpdateBy = "+ "'" + loggedInUserName + "'" +
                 " WHERE appointmentId = " + "'" + selectedAppointment.getAppointmentId() + "'");
+        if (DBQuery.queryNumRowsAffected() > 0) {
+            String appointmentId = String.valueOf(selectedAppointment.getAppointmentId());
+            Appointment appointmentToUpdate = selectedAppointment;
+            appointmentToUpdate.setAppointmentCustomerId(updatedCustomerId);
+            appointmentToUpdate.setAppointmentTitle(updatedTitle);
+            appointmentToUpdate.setAppointmentDescription(updatedDescription);
+            appointmentToUpdate.setAppointmentLocation(updatedLocation);
+            appointmentToUpdate.setAppointmentStart(fullAppointmentStartDateTime.toString());
+            appointmentToUpdate.setAppointmentEnd(fullAppointmentEndDateTime.toString());
+        } else {
+            AlertMessage.display("There was an error when updating customer. Please try again.", "warning");
+        }
+        loadMainWindowAppointmentModify(event);
     }
 
     @FXML

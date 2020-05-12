@@ -3,6 +3,10 @@ package model;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
+import java.text.DateFormatSymbols;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,5 +126,38 @@ public class Schedule {
     public static String setAppointmentId() {
         String id = String.valueOf(lookupAppointmentWithHighestID() + 1);
         return id;
+    }
+// TODO combine to methods into one, combine just by timeframe
+
+    public static ObservableList<Appointment> combineAppointmentsByMonth(Month month){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+        FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
+        appointments.setPredicate(appt -> {
+            String temp[] = appt.getAppointmentStart().split(" ");
+            LocalDate localDate = LocalDate.parse(temp[0] , formatter);
+            Month apptMonth = localDate.getMonth();
+            if (apptMonth.equals(month)) {
+                return true;
+            } else return false;
+        });
+        if (appointments.size() > 0) return appointments;
+        else return null;
+    }
+
+    public static ObservableList<Appointment> combineAppointmentsByWeek(Month month, int weekStartDay, int weekEndDay){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+        FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
+        appointments.setPredicate(appt -> {
+            String temp[] = appt.getAppointmentStart().split(" ");
+            LocalDate localDate = LocalDate.parse(temp[0] , formatter);
+            int apptDay = localDate.getDayOfMonth();
+            Month apptMonth = localDate.getMonth();
+            if (apptMonth.equals(month) && apptDay >= weekStartDay && apptDay <= weekEndDay) {
+                return true;
+            } else return false;
+        });
+        if (appointments.size() > 0) return appointments;
+        else return null;
+
     }
 }

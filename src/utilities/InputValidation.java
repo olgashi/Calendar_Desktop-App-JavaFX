@@ -4,12 +4,19 @@ import javafx.scene.control.TextField;
 import java.util.regex.Pattern;
 
 public class InputValidation {
-    public static boolean checkForEmptyInputs(TextField... inputs) {
+    public static boolean checkForAllEmptyInputs(TextField... inputs) {
         for (TextField inputField: inputs){
             if (inputField.getText().isEmpty()) return false;
         }
         return true;
     }
+    public static boolean checkForAnyEmptyInputs(TextField... inputs) {
+        for (TextField inputField: inputs){
+            if (!inputField.getText().isEmpty()) return true;
+        }
+        return false;
+    }
+
 
     public static boolean timeInputProperLength(TextField ... timeArgs){
         for (TextField tme: timeArgs) {

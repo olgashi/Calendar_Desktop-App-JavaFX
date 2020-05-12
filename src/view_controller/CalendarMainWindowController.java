@@ -1,5 +1,6 @@
 package view_controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,15 +11,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Appointment;
+import model.Schedule;
 import utilities.NewWindow;
-
 import java.io.IOException;
 import java.net.URL;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.YearMonth;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class CalendarMainWindowController implements Initializable {
@@ -57,7 +57,9 @@ public class CalendarMainWindowController implements Initializable {
     @FXML
     private Label saturdayLabel;
     @FXML
-    private Text currentTimeFrame;
+    private Text currentMonthLabel;
+    @FXML
+    private Text currentWeekLabel;
     LocalDate currentDate = LocalDate.now();
     String thisYear = String.valueOf(currentDate.getYear());
     Month thisMonth = currentDate.getMonth();
@@ -73,49 +75,28 @@ public class CalendarMainWindowController implements Initializable {
         byWeekTimeFrame = true;
         byMonthPane.setVisible(false);
         byWeekPane.setVisible(true);
-        currentTimeFrame.setText(thisMonth + " " + thisDay + ", " + thisYear);
+        currentMonthLabel.setText(String.valueOf(thisMonth));
+        int daysSinceSunday = currentDate.getDayOfWeek().getValue();
+        int weekStartDay = currentDate.getDayOfMonth() - daysSinceSunday;
+        int weekEndDay = weekStartDay + 7;
+        currentWeekLabel.setText(thisMonth + " " + weekStartDay + " - " + thisMonth + " " + weekEndDay + ", " + thisYear);
     }
     public void showCalendarByMonth(ActionEvent event) {
         byWeekTimeFrame = false;
         byWeekPane.setVisible(false);
         byMonthPane.setVisible(true);
-        currentTimeFrame.setText(String.valueOf(thisMonth));
-
+        currentMonthLabel.setText(String.valueOf(thisMonth));
+        currentWeekLabel.setText("");
     }
 
     public void nextTimeframe(ActionEvent event) {
-        int row = 0;
-        int col = 0;
         if (byWeekTimeFrame){
-
-
+            System.out.println(Schedule.combineAppointmentsByWeek(Month.valueOf(currentMonthLabel.getText()),19, 27));
         } else {
             resetGridLines(byMonthGridPane);
-            Month thisMonth = Month.valueOf(currentTimeFrame.getText());
-            Month nextMonth = thisMonth.plus(1);
-            currentTimeFrame.setText(nextMonth.toString());
-            LocalDate dte = LocalDate.of(currentDate.getYear(), nextMonth, 1);
-            int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
-            int totalDaysInMonth = dte.lengthOfMonth();
-            System.out.println("Total: " + totalDaysInMonth);
-            col = firstDayOfTheMonth;
-            for (int i = 1; i <= totalDaysInMonth; i++){
-                if (col == 7) {
-                    row += 1;
-                    col = 0;
-                }
-
-                Text test = new Text();
-                test.setText(i + "of " + dte.getMonth());
-                byMonthGridPane.setConstraints(test, col, row);
-
-                col += 1;
-
-                byMonthGridPane.getChildren().addAll(test);
-            }
+           populateCalendar(currentMonthLabel);
         }
         return;
-
     }
 
     public void previousTimeframe(ActionEvent event) {
@@ -124,9 +105,9 @@ public class CalendarMainWindowController implements Initializable {
 
         } else {
             resetGridLines(byMonthGridPane);
-            Month thisMonth = Month.valueOf(currentTimeFrame.getText());
+            Month thisMonth = Month.valueOf(currentMonthLabel.getText());
             Month previousMonth = thisMonth.minus(1);
-            currentTimeFrame.setText(previousMonth.toString());
+            currentMonthLabel.setText(previousMonth.toString());
             LocalDate dte = LocalDate.of(currentDate.getYear(), previousMonth, 1);
             int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
             System.out.println(firstDayOfTheMonth);
@@ -134,7 +115,6 @@ public class CalendarMainWindowController implements Initializable {
             test.setText("first day of the month");
             byMonthGridPane.setConstraints(test, firstDayOfTheMonth, 3);
             byMonthGridPane.getChildren().addAll(test);
-
         }
         return;
 
@@ -146,32 +126,56 @@ public class CalendarMainWindowController implements Initializable {
         byMonthGridPane.getChildren().add(0, gridLines);
     }
 
-    public void populateCalendar(ActionEvent event) {
-        // determine what day of the week first day of the month falls on
-        // populate first day of the month and then days before and days after
-        // create a hashMap? where key is a date and value is indexes for row and col in the grid
-        // combine appointments depending on the time frame:
-        // if it is by week group all appointments for that week
-        // if that is by month group all appointments for that month
-        // sort appointments by day in that bucket
-        // loop through the appointments in that bucket and compare day value to the grid
+    public void populateCalendar(Text currentTimeFrameLabel) {
         if (byWeekTimeFrame){
 
-
         } else {
+            resetGridLines(byMonthGridPane);
+            int row = 0;
+            int col;
+            Month thisMonth = Month.valueOf(currentTimeFrameLabel.getText());
+            Month nextMonth = thisMonth.plus(1);
+            currentTimeFrameLabel.setText(nextMonth.toString());
+            LocalDate dte = LocalDate.of(currentDate.getYear(), nextMonth, 1);
+            int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
+            int totalDaysInMonth = dte.lengthOfMonth();
+            ObservableList<Appointment> appointmentsForGivenMonth = Schedule.combineAppointmentsByMonth(nextMonth);
+//            System.out.println("Appointments: " + appointmentsForGivenMonth);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+//TODO optimize this code, make it faster
+            col = firstDayOfTheMonth;
+            if (appointmentsForGivenMonth != null) {
+                for (int i = 1; i <= totalDaysInMonth; i++){
+                    if (col == 7) {
+                        row += 1;
+                        col = 0;
+                    }
+                    for (int j = 0; j < appointmentsForGivenMonth.size(); j++) {
+                        String temp[] = appointmentsForGivenMonth.get(j).getAppointmentStart().split(" ");
+                        LocalDate localDate = LocalDate.parse(temp[0], formatter);
+                        int apptDay = localDate.getDayOfMonth();
+                        if (apptDay == i) {
+                            Text test = new Text();
+                            test.setText("Appointment with: " + appointmentsForGivenMonth.get(j).getAppointmentCustomerName());
+                            GridPane.setConstraints(test, col, row);
+                            byMonthGridPane.getChildren().addAll(test);
+                        }
+                    }
+                    col += 1;
+                }
+            }
 
         }
     }
-
 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         byWeekPane.setVisible(false);
         byMonthPane.setVisible(true);
-//        currentTimeFrame.setText(thisMonth + " " + thisDay + ", " + thisYear);
         byWeekTimeFrame = false;
-        currentTimeFrame.setText(thisMonth.toString());
-
+        currentMonthLabel.setText(thisMonth.minus(1).toString());
+        currentWeekLabel.setText("");
+        populateCalendar(currentMonthLabel);
     }
 }

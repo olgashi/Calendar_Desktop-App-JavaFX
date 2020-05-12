@@ -5,13 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class dbQuery {
+public class DBQuery {
     private static Statement selectStmt, duiStmt;
     private static ResultSet result;
     private static int numRowsAffected;
     private static Connection conn = DBConnection.getConnection();
 
-    public static void createQuery(String q) {
+    public static void createQuery(String q) throws SQLException {
         try {
                 selectStmt = conn.createStatement();
                 duiStmt = conn.createStatement();
@@ -26,6 +26,7 @@ public class dbQuery {
         catch(SQLException ex) {
             ex.printStackTrace();
         }
+//        DBConnection.closeConnection();
     }
 
     public static ResultSet getQueryResultSet() {
@@ -47,3 +48,4 @@ public class dbQuery {
         }
     }
 }
+//TODO when should i close the connection

@@ -13,7 +13,7 @@ public class LoginLanguage {
                 userPasswordLabel.setText("Mot de passe");
                 loginButton.setText("S'identifier");
                 break;
-            case "EN":
+            case "US":
                 mainLabel.setText("Please provide username and password to log in.");
                 userNameLabel.setText("Username");
                 userPasswordLabel.setText("Password");
@@ -34,7 +34,7 @@ public class LoginLanguage {
             case "FR":
                 errorMessageText.setText("La combinaison nom d'utilisateur / mot de passe n'est pas valide.");
                 break;
-            case "EN":
+            case "US":
                 errorMessageText.setText("Username and Password combination is invalid.");
                 break;
             default:    //set default to spanish
@@ -47,7 +47,7 @@ public class LoginLanguage {
             case "FR":
                 errorMessageText.setText("Le nom d'utilisateur et le mot de passe ne peuvent pas être vides.");
                 break;
-            case "EN":
+            case "US":
                 errorMessageText.setText("Username and Password cannot be empty.");
                 break;
             default:    //set default to spanish

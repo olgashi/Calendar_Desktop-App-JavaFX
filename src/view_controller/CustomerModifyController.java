@@ -128,19 +128,22 @@ public class CustomerModifyController implements Initializable {
                 if (DBQuery.getQueryResultSet().next()) addressId = Integer.parseInt(DBQuery.getQueryResultSet().getString("addressId"));
 //                get id for existing address
             }
-                DBQuery.createQuery("UPDATE customer SET customerName = " + "'" + updatedCustomerName + "'" + ", addressId = " + "'" + addressId + "'" +
+            DBQuery.createQuery("UPDATE customer SET customerName = " + "'" + updatedCustomerName + "'" + ", addressId = " + "'" + addressId + "'" +
                         " WHERE customerId = " + "'" + existingCustomerId + "'");
-
-            String customerId = String.valueOf(existingCustomerId);
-            Customer customerToUpdate = Schedule.lookupCustomerById(customerId);
-            customerToUpdate.setCustomerName(updatedCustomerName);
-            customerToUpdate.setCustomerAddress(updatedCustomerAddress);
-            customerToUpdate.setCustomerCity(updatedCustomerCity);
-            customerToUpdate.setCustomerZipCode(updatedCustomerZip);
-            customerToUpdate.setCustomerCountry(updatedCustomerCountry);
-            customerToUpdate.setCustomerPhoneNumber(updatedCustomerPhone);
+            if (DBQuery.queryNumRowsAffected() > 0) {
+                String customerId = String.valueOf(existingCustomerId);
+                Customer customerToUpdate = Schedule.lookupCustomerById(customerId);
+                customerToUpdate.setCustomerName(updatedCustomerName);
+                customerToUpdate.setCustomerAddress(updatedCustomerAddress);
+                customerToUpdate.setCustomerCity(updatedCustomerCity);
+                customerToUpdate.setCustomerZipCode(updatedCustomerZip);
+                customerToUpdate.setCustomerCountry(updatedCustomerCountry);
+                customerToUpdate.setCustomerPhoneNumber(updatedCustomerPhone);
+            } else {
+                AlertMessage.display("There was an error when updating customer. Please try again.", "warning");
+            }
         }
-        System.out.println("Customer modify woindow, loggedin user " + loggedInUserName);
+        System.out.println("Customer modify window, logged in user " + loggedInUserName);
         loadMainWindow(event);
     }
 

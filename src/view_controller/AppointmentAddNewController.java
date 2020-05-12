@@ -7,7 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Customer;
+import model.Schedule;
 import model.User;
 import utilities.*;
 import java.io.IOException;
@@ -123,7 +125,16 @@ public class AppointmentAddNewController implements Initializable {
                     "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeTextField.getText() + "'" + ", " +
                     "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
                     ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " + "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
-            if (DBQuery.queryNumRowsAffected() > 0) loadMainWindowAppointmentAddNew(event);
+            Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
+                    addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.toString(),
+                    fullAppointmentEndDateTime.toString(), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
+
+            if (DBQuery.queryNumRowsAffected() > 0) {
+                Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
+                        addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.toString(),
+                        fullAppointmentEndDateTime.toString(), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
+                loadMainWindowAppointmentAddNew(event);
+            }
             else AlertMessage.display("There was a problem creating an appointment", "warning");
         }
     }

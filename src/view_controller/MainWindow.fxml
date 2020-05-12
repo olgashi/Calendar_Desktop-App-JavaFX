@@ -7,6 +7,7 @@
    <children>
       <Button fx:id="customersMainWindowViewButton" layoutX="75.0" layoutY="62.0" mnemonicParsing="false" onAction="#loadCustomersWindow" prefHeight="27.0" prefWidth="137.0" text="Customers" />
       <Button fx:id="appointmentsMainWindowViewButton" layoutX="75.0" layoutY="108.0" mnemonicParsing="false" onAction="#loadAppointmentsWindow" prefHeight="27.0" prefWidth="137.0" text="Appointments" />
-      <Button fx:id="reportsMainWindowViewButton" layoutX="75.0" layoutY="150.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="137.0" text="Reports" />
+      <Button fx:id="reportsMainWindowViewButton" layoutX="75.0" layoutY="190.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="137.0" text="Reports" />
+      <Button fx:id="calendarMainWindowViewButton" layoutX="75.0" layoutY="149.0" mnemonicParsing="false" onAction="#loadCalendarWindow" prefHeight="27.0" prefWidth="137.0" text="Calendar" />
    </children>
 </AnchorPane>
