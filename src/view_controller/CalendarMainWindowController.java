@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
@@ -60,7 +61,9 @@ public class CalendarMainWindowController implements Initializable {
     private Text currentMonthLabel;
     @FXML
     private Text currentWeekLabel;
+
     LocalDate currentDate = LocalDate.now();
+    int thisYearInt = currentDate.getYear();
     String thisYear = String.valueOf(currentDate.getYear());
     Month thisMonth = currentDate.getMonth();
     String thisDay = String.valueOf(currentDate.getDayOfMonth());
@@ -91,7 +94,7 @@ public class CalendarMainWindowController implements Initializable {
 
     public void nextTimeframe(ActionEvent event) {
         if (byWeekTimeFrame){
-            System.out.println(Schedule.combineAppointmentsByWeek(Month.valueOf(currentMonthLabel.getText()),19, 27));
+
         } else {
             resetGridLines(byMonthGridPane);
            populateCalendar(currentMonthLabel, "incr");
@@ -124,13 +127,17 @@ public class CalendarMainWindowController implements Initializable {
             resetGridLines(byMonthGridPane);
             int row = 0;
             int col;
+
             Month thisMonth = Month.valueOf(currentTimeFrameLabel.getText());
             Month nextMonth = direction.equals("incr") ? thisMonth.plus(1) : thisMonth.minus(1);
+            if (thisMonth.equals(Month.DECEMBER) && nextMonth.equals(Month.JANUARY)) thisYearInt += 1;
+            if (nextMonth.equals(Month.DECEMBER) && thisMonth.equals(Month.JANUARY)) thisYearInt -= 1;
+
             currentTimeFrameLabel.setText(nextMonth.toString());
             LocalDate dte = LocalDate.of(currentDate.getYear(), nextMonth, 1);
             int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
             int totalDaysInMonth = dte.lengthOfMonth();
-            ObservableList<Appointment> appointmentsForGivenMonth = Schedule.combineAppointmentsByMonth(nextMonth);
+            ObservableList<Appointment> appointmentsForGivenMonth = Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt);
 //            System.out.println("Appointments: " + appointmentsForGivenMonth);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
 //TODO optimize this code, make it faster

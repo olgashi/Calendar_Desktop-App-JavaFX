@@ -6,6 +6,7 @@ import javafx.collections.transformation.FilteredList;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -129,14 +130,15 @@ public class Schedule {
     }
 // TODO combine to methods into one, combine just by timeframe
 
-    public static ObservableList<Appointment> combineAppointmentsByMonth(Month month){
+    public static ObservableList<Appointment> combineAppointmentsByMonth(Month month, int year){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
         FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
         appointments.setPredicate(appt -> {
             String temp[] = appt.getAppointmentStart().split(" ");
             LocalDate localDate = LocalDate.parse(temp[0] , formatter);
             Month apptMonth = localDate.getMonth();
-            if (apptMonth.equals(month)) {
+            int apptYear = localDate.getYear();
+            if (apptMonth.equals(month) && apptYear == year) {
                 return true;
             } else return false;
         });
@@ -144,15 +146,16 @@ public class Schedule {
         else return null;
     }
 
-    public static ObservableList<Appointment> combineAppointmentsByWeek(Month month, int weekStartDay, int weekEndDay){
+    public static ObservableList<Appointment> combineAppointmentsByWeek(Month month, int year, int weekStartDay, int weekEndDay){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
         FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
         appointments.setPredicate(appt -> {
             String temp[] = appt.getAppointmentStart().split(" ");
             LocalDate localDate = LocalDate.parse(temp[0] , formatter);
             int apptDay = localDate.getDayOfMonth();
+            int apptYear = localDate.getYear();
             Month apptMonth = localDate.getMonth();
-            if (apptMonth.equals(month) && apptDay >= weekStartDay && apptDay <= weekEndDay) {
+            if (apptMonth.equals(month) && apptYear == year && apptDay >= weekStartDay && apptDay <= weekEndDay) {
                 return true;
             } else return false;
         });
