@@ -94,7 +94,7 @@ public class CalendarMainWindowController implements Initializable {
             System.out.println(Schedule.combineAppointmentsByWeek(Month.valueOf(currentMonthLabel.getText()),19, 27));
         } else {
             resetGridLines(byMonthGridPane);
-           populateCalendar(currentMonthLabel);
+           populateCalendar(currentMonthLabel, "incr");
         }
         return;
     }
@@ -105,16 +105,7 @@ public class CalendarMainWindowController implements Initializable {
 
         } else {
             resetGridLines(byMonthGridPane);
-            Month thisMonth = Month.valueOf(currentMonthLabel.getText());
-            Month previousMonth = thisMonth.minus(1);
-            currentMonthLabel.setText(previousMonth.toString());
-            LocalDate dte = LocalDate.of(currentDate.getYear(), previousMonth, 1);
-            int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
-            System.out.println(firstDayOfTheMonth);
-            Text test = new Text();
-            test.setText("first day of the month");
-            byMonthGridPane.setConstraints(test, firstDayOfTheMonth, 3);
-            byMonthGridPane.getChildren().addAll(test);
+            populateCalendar(currentMonthLabel, "decr");
         }
         return;
 
@@ -126,7 +117,7 @@ public class CalendarMainWindowController implements Initializable {
         byMonthGridPane.getChildren().add(0, gridLines);
     }
 
-    public void populateCalendar(Text currentTimeFrameLabel) {
+    public void populateCalendar(Text currentTimeFrameLabel, String direction) {
         if (byWeekTimeFrame){
 
         } else {
@@ -134,7 +125,7 @@ public class CalendarMainWindowController implements Initializable {
             int row = 0;
             int col;
             Month thisMonth = Month.valueOf(currentTimeFrameLabel.getText());
-            Month nextMonth = thisMonth.plus(1);
+            Month nextMonth = direction.equals("incr") ? thisMonth.plus(1) : thisMonth.minus(1);
             currentTimeFrameLabel.setText(nextMonth.toString());
             LocalDate dte = LocalDate.of(currentDate.getYear(), nextMonth, 1);
             int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
@@ -176,6 +167,6 @@ public class CalendarMainWindowController implements Initializable {
         byWeekTimeFrame = false;
         currentMonthLabel.setText(thisMonth.minus(1).toString());
         currentWeekLabel.setText("");
-        populateCalendar(currentMonthLabel);
+        populateCalendar(currentMonthLabel, "incr");
     }
 }
