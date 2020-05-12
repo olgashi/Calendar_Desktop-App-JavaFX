@@ -17,6 +17,7 @@ import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -83,6 +84,8 @@ public class CalendarMainWindowController implements Initializable {
     }
 
     public void nextTimeframe(ActionEvent event) {
+        int row = 0;
+        int col = 0;
         if (byWeekTimeFrame){
 
 
@@ -96,13 +99,23 @@ public class CalendarMainWindowController implements Initializable {
             currentTimeFrame.setText(nextMonth.toString());
             LocalDate dte = LocalDate.of(currentDate.getYear(), nextMonth, 1);
             int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
-            System.out.println(firstDayOfTheMonth);
-            Text test = new Text();
-            test.setText("first day of the month");
-            byMonthGridPane.setConstraints(test, firstDayOfTheMonth, 3);
-            byMonthGridPane.getChildren().addAll(test);
+            int totalDaysInMonth = dte.lengthOfMonth();
+            System.out.println("Total: " + totalDaysInMonth);
+            col = firstDayOfTheMonth;
+            for (int i = 1; i <= totalDaysInMonth; i++){
+                if (col == 7) {
+                    row += 1;
+                    col = 0;
+                }
 
+                Text test = new Text();
+                test.setText(i + "of " + dte.getMonth());
+                byMonthGridPane.setConstraints(test, col, row);
 
+                col += 1;
+
+                byMonthGridPane.getChildren().addAll(test);
+            }
         }
         return;
 
