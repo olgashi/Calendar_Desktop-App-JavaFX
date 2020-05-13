@@ -18,8 +18,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Period;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAmount;
 import java.util.ResourceBundle;
 
 public class CalendarMainWindowController implements Initializable {
@@ -73,16 +75,23 @@ public class CalendarMainWindowController implements Initializable {
         NewWindow.display((Stage) calendarMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("MainWindow.fxml"));
     }
+    public String calculateWeekRange(LocalDate currentDate){
+        int daysSinceSunday = currentDate.getDayOfWeek().getValue();
+        LocalDate weekStartDay = currentDate.minus(Period.ofDays(daysSinceSunday));
+        LocalDate weekEndDay = weekStartDay.plus(Period.ofDays(6));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM, yyyy");
+        String formattedStringStart = weekStartDay.format(formatter);
+        String formattedStringEnd = weekEndDay.format(formatter);
+        return formattedStringStart + " - " + formattedStringEnd;
+    }
 
     public void showCalendarByWeek(ActionEvent event) {
         byWeekTimeFrame = true;
         byMonthPane.setVisible(false);
         byWeekPane.setVisible(true);
         currentMonthLabel.setText(String.valueOf(thisMonth));
-        int daysSinceSunday = currentDate.getDayOfWeek().getValue();
-        int weekStartDay = currentDate.getDayOfMonth() - daysSinceSunday;
-        int weekEndDay = weekStartDay + 7;
-        currentWeekLabel.setText(thisMonth + " " + weekStartDay + " - " + thisMonth + " " + weekEndDay + ", " + thisYear);
+        String weekRange = calculateWeekRange(currentDate);
+        currentWeekLabel.setText(weekRange);
     }
     public void showCalendarByMonth(ActionEvent event) {
         byWeekTimeFrame = false;
@@ -94,7 +103,9 @@ public class CalendarMainWindowController implements Initializable {
 
     public void nextTimeframe(ActionEvent event) {
         if (byWeekTimeFrame){
-
+            String weekRange = calculateWeekRange(currentDate.plus(Period.ofDays(6)));
+            currentDate = currentDate.plus(Period.ofDays(6));
+            currentWeekLabel.setText(weekRange);
         } else {
             resetGridLines(byMonthGridPane);
            populateCalendar(currentMonthLabel, "incr");
@@ -104,7 +115,9 @@ public class CalendarMainWindowController implements Initializable {
 
     public void previousTimeframe(ActionEvent event) {
         if (byWeekTimeFrame){
-
+            String weekRange = calculateWeekRange(currentDate.minus(Period.ofDays(6)));
+            currentDate = currentDate.minus(Period.ofDays(6));
+            currentWeekLabel.setText(weekRange);
 
         } else {
             resetGridLines(byMonthGridPane);
@@ -124,7 +137,6 @@ public class CalendarMainWindowController implements Initializable {
         if (byWeekTimeFrame){
 
         } else {
-            resetGridLines(byMonthGridPane);
             int row = 0;
             int col;
 

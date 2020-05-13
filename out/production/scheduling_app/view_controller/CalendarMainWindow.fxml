@@ -65,6 +65,6 @@
       <Label fx:id="fridayLabel" layoutX="614.0" layoutY="148.0" text="Friday" />
       <Label fx:id="saturdayLabel" layoutX="725.0" layoutY="148.0" text="Saturday" />
       <Text fx:id="currentMonthLabel" layoutX="328.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="97.9999981932342" />
-      <Text fx:id="currentWeekLabel" layoutX="293.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="163.00000444054604" />
+      <Text fx:id="currentWeekLabel" layoutX="257.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="246.00000444054604" />
    </children>
 </AnchorPane>
