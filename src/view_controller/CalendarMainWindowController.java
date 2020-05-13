@@ -19,9 +19,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAmount;
 import java.util.ResourceBundle;
 
 public class CalendarMainWindowController implements Initializable {
@@ -60,7 +58,7 @@ public class CalendarMainWindowController implements Initializable {
     @FXML
     private Label saturdayLabel;
     @FXML
-    private Text currentMonthLabel;
+    private Text currentTimeFrameLabel;
     @FXML
     private Text currentWeekLabel;
 
@@ -89,39 +87,42 @@ public class CalendarMainWindowController implements Initializable {
         byWeekTimeFrame = true;
         byMonthPane.setVisible(false);
         byWeekPane.setVisible(true);
-        currentMonthLabel.setText(String.valueOf(thisMonth));
+        currentTimeFrameLabel.setText(String.valueOf(thisMonth));
         String weekRange = calculateWeekRange(currentDate);
-        currentWeekLabel.setText(weekRange);
+        currentTimeFrameLabel.setText(weekRange);
     }
     public void showCalendarByMonth(ActionEvent event) {
         byWeekTimeFrame = false;
         byWeekPane.setVisible(false);
         byMonthPane.setVisible(true);
-        currentMonthLabel.setText(String.valueOf(thisMonth));
-        currentWeekLabel.setText("");
+        currentTimeFrameLabel.setText(String.valueOf(thisMonth));
+//        currentWeekLabel.setText("");
     }
 
     public void nextTimeframe(ActionEvent event) {
         if (byWeekTimeFrame){
+            resetGridLines(byWeekGridPane);
             String weekRange = calculateWeekRange(currentDate.plus(Period.ofDays(6)));
             currentDate = currentDate.plus(Period.ofDays(6));
-            currentWeekLabel.setText(weekRange);
+            currentTimeFrameLabel.setText(weekRange);
+            populateCalendar(currentTimeFrameLabel, "incr");
         } else {
             resetGridLines(byMonthGridPane);
-           populateCalendar(currentMonthLabel, "incr");
+           populateCalendar(currentTimeFrameLabel, "incr");
         }
         return;
     }
 
     public void previousTimeframe(ActionEvent event) {
         if (byWeekTimeFrame){
+            resetGridLines(byWeekGridPane);
             String weekRange = calculateWeekRange(currentDate.minus(Period.ofDays(6)));
             currentDate = currentDate.minus(Period.ofDays(6));
-            currentWeekLabel.setText(weekRange);
-
+            currentTimeFrameLabel.setText(weekRange);
+            populateCalendar(currentTimeFrameLabel, "decr");
         } else {
             resetGridLines(byMonthGridPane);
-            populateCalendar(currentMonthLabel, "decr");
+            populateCalendar(currentTimeFrameLabel, "decr");
         }
         return;
 
@@ -129,12 +130,45 @@ public class CalendarMainWindowController implements Initializable {
 
     public void resetGridLines(GridPane grid){
         Node gridLines = grid.getChildren().get(0);
-        byMonthGridPane.getChildren().clear();
-        byMonthGridPane.getChildren().add(0, gridLines);
+        grid.getChildren().clear();
+        grid.getChildren().add(0, gridLines);
     }
-
+//TODO refactor this method, extract code into multiple small methods
     public void populateCalendar(Text currentTimeFrameLabel, String direction) {
         if (byWeekTimeFrame){
+            String timeFrame = currentTimeFrameLabel.getText();
+            String dateSplit[] = timeFrame.split(" - ");
+            String startDate = dateSplit[0];
+            String endDate = dateSplit[1];
+            DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd MMMM, yyyy");
+            LocalDate parsedStartDate = LocalDate.parse(startDate, dTF);
+            LocalDate parsedEndDate = LocalDate.parse(endDate, dTF);
+//            LocalDate dte = LocalDate.of(parsedStartDate.getYear(), parsedStartDate.getMonth(), parsedStartDate.getDayOfMonth());
+            int firstDayOfTheMonth = parsedStartDate.getDayOfMonth();
+
+            ObservableList<Appointment> appointmentsForGivenWeek = Schedule.combineAppointmentsByWeek(thisMonth,
+                    thisYearInt, parsedStartDate.getDayOfMonth(), parsedEndDate.getDayOfMonth());
+            System.out.println("appointments this week: " + appointmentsForGivenWeek);
+//            System.out.println("Appointments: " + appointmentsForGivenMonth);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+//TODO optimize this code, make it faster
+            int col = firstDayOfTheMonth;
+            if (appointmentsForGivenWeek != null) {
+                for (int i = 1; i <= 7; i++){
+                    for (int j = 0; j < appointmentsForGivenWeek.size(); j++) {
+                        String temp[] = appointmentsForGivenWeek.get(j).getAppointmentStart().split(" ");
+                        LocalDate localDate = LocalDate.parse(temp[0], formatter);
+                        int apptDay = localDate.getDayOfMonth();
+                        if (apptDay == parsedStartDate.getDayOfMonth() + i) {
+                            Text test = new Text();
+                            test.setText("Appointment with: " + appointmentsForGivenWeek.get(j).getAppointmentCustomerName());
+                            GridPane.setConstraints(test, i, 0);
+                            byWeekGridPane.getChildren().addAll(test);
+                        }
+                    }
+                    col += 1;
+                }
+            }
 
         } else {
             int row = 0;
@@ -144,7 +178,6 @@ public class CalendarMainWindowController implements Initializable {
             Month nextMonth = direction.equals("incr") ? thisMonth.plus(1) : thisMonth.minus(1);
             if (thisMonth.equals(Month.DECEMBER) && nextMonth.equals(Month.JANUARY)) thisYearInt += 1;
             if (nextMonth.equals(Month.DECEMBER) && thisMonth.equals(Month.JANUARY)) thisYearInt -= 1;
-
             currentTimeFrameLabel.setText(nextMonth.toString());
             LocalDate dte = LocalDate.of(currentDate.getYear(), nextMonth, 1);
             int firstDayOfTheMonth = dte.getDayOfWeek().getValue();
@@ -184,8 +217,8 @@ public class CalendarMainWindowController implements Initializable {
         byWeekPane.setVisible(false);
         byMonthPane.setVisible(true);
         byWeekTimeFrame = false;
-        currentMonthLabel.setText(thisMonth.minus(1).toString());
-        currentWeekLabel.setText("");
-        populateCalendar(currentMonthLabel, "incr");
+        currentTimeFrameLabel.setText(thisMonth.minus(1).toString());
+//        currentWeekLabel.setText("");
+        populateCalendar(currentTimeFrameLabel, "incr");
     }
 }
