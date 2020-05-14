@@ -1,5 +1,6 @@
 package view_controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,10 +16,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Schedule;
-import utilities.AlertMessage;
-import utilities.HelperQuery;
-import utilities.NewWindow;
-import utilities.DBQuery;
+import utilities.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -123,6 +122,18 @@ public class AppointmentMainWindowController implements Initializable {
         appointmentStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
         appointmentCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
-        appointmentTable.setItems(Appointment.getAppointmentList());
+        ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
+
+        //Lambda expression to convert times from the database, stored in UTC time, to Local time
+//        if (allAppointments.size() > 0) {
+//            allAppointments.forEach(appt -> {
+//                appt.setAppointmentStart(String.valueOf(ConvertTime.convertToLocalTime(appt.getAppointmentStart())));
+//                appt.setAppointmentEnd(String.valueOf(ConvertTime.convertToLocalTime(appt.getAppointmentEnd())));
+//            });
+//        }
+
+//        appointmentTable.setItems(allAppointments);
+                appointmentTable.setItems(allAppointments);
+
     }
 }

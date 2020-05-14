@@ -1,5 +1,7 @@
 package view_controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +17,9 @@ import utilities.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -37,6 +41,10 @@ public class AppointmentAddNewController implements Initializable {
     private Text newAppointmentTypeText;
     @FXML
     private Text newAppointmentDescriptionText;
+    @FXML
+    private Text newAppointmentDurationText;
+    @FXML
+    private ComboBox newAppointmentDurationComboBox;
     @FXML
     private DatePicker addNewAppointmentDatePicker;
     @FXML
@@ -73,6 +81,10 @@ public class AppointmentAddNewController implements Initializable {
     private int selectedCustomerId, userId;
     private String aTitle,aDate, aTimeHours, aTimeMinutes, aLocation, aType, aDescription, contact, url;
     String loggedInUserName = User.getUserName();
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+
 //            TODO add check for conflicting appointment
 //            TODO add end time
 //            TODO add "information" to alertmessage.display
@@ -82,6 +94,9 @@ public class AppointmentAddNewController implements Initializable {
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
+        String durationTempStr = newAppointmentDurationComboBox.getValue().toString();
+        String durationTempArr[]= durationTempStr.split(" ");
+        int appointmentDuration = Integer.parseInt(durationTempArr[0]);
 
         if (!InputValidation.checkForAllEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField, addNewAppointmentTypeTextField,
                 addNewAppointmentDescriptionTextField, addNewAppointmentTitleTextField, addNewAppointmentLocationTextField)) {
@@ -110,29 +125,33 @@ public class AppointmentAddNewController implements Initializable {
                     addNewAppointmentDatePicker.getValue().getDayOfMonth(),
                     Integer.parseInt(addNewAppointmentTimeHoursTextField.getText()),
                     Integer.parseInt(addNewAppointmentTimeMinutesTextField.getText()));
-
-            // create appointment
+           LocalDateTime str = LocalDateTime.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(fullAppointmentStartDateTime), dtf);
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
 //            TODO change these values to actual values
             userId = 1;
-            fullAppointmentEndDateTime = fullAppointmentStartDateTime;
+            fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
             contact = "test";
             url = "test";
+
             DBQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, contact, " +
                     "type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) values(" +
                     "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + addNewAppointmentTitleTextField.getText() + "'" + ", " +
                     "'" + addNewAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + addNewAppointmentLocationTextField.getText() + "'" + ", " +
                     "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeTextField.getText() + "'" + ", " +
-                    "'" + url + "'" + ", " + "'" + fullAppointmentStartDateTime + "'" + ", " + "'" + fullAppointmentEndDateTime + "'" +
-                    ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " + "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
-            Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
-                    addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.toString(),
-                    fullAppointmentEndDateTime.toString(), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
+                    "'" + url + "'" + ", " + "'" + ConvertTime.convertToUTCTime(str) + "'" + ", " + "'" +
+//                    ConvertTime.convertToUTCTime(fullAppointmentEndDateTime) + "'" + ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " +
+                    ConvertTime.convertToUTCTime(str) + "'" + ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " +
+
+                    "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
+
+//            Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
+//                    addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.format(dtf),
+//                    ConvertTime.convertToUTCTime(fullAppointmentEndDateTime).toString(), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
 
             if (DBQuery.queryNumRowsAffected() > 0) {
                 Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
-                        addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.toString(),
-                        fullAppointmentEndDateTime.toString(), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
+                        addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.format(dtf),
+                        fullAppointmentEndDateTime.format(dtf), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
                 loadMainWindowAppointmentAddNew(event);
             }
             else AlertMessage.display("There was a problem creating an appointment", "warning");
@@ -148,6 +167,8 @@ public class AppointmentAddNewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        newAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
+
         addNewAppointmentAmPMtoggleGroup = new ToggleGroup();
         this.addNewAppointmentTimeAM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
         this.addNewAppointmentTimePM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
