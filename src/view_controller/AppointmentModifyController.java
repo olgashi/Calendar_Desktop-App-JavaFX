@@ -133,7 +133,7 @@ public class AppointmentModifyController implements Initializable {
             existingAppointmentMinutes, existingAppointmentStartDate, existingAppointmentStartTime, appointmentStartDateTime;
     String appointmentEndDateTime;
     String loggedInUserName = User.getUserName();
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 
     public void initModifyAppointmentData(Appointment appointment) {
         selectedAppointment = appointment;
@@ -174,17 +174,6 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime end = LocalDateTime.parse(appointmentEndDateTime, dtf);
         Duration existingApptDuration = Duration.between(start, end);
 
-//        System.out.println("dur :" + existingApptDuration);
-//        long existingApptDurationMinutes = existingApptDuration.toMinutes();
-//        Duration appointmentDuration;
-//        if (modifyAppointmentDurationComboBox.getValue() != null) {
-//            String durationTempStr = modifyAppointmentDurationComboBox.getValue().toString();
-//            String durationTempArr[] = durationTempStr.split(" ");
-//            appointmentDuration = Duration.ofMinutes(existingApptDurationMinutes);
-//        } else {
-//            appointmentDuration = Duration.ofMinutes(0);
-//        }
-//        System.out.println(appointmentDuration);
         LocalDateTime existingAppointmentEnd = LocalDateTime.parse(appointmentEndDateTime, dtf);
         if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField, modifyAppointmentTypeTextField,
                 modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
@@ -222,7 +211,6 @@ public class AppointmentModifyController implements Initializable {
             }
         }
 
-
         updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
         updatedLocation = modifyAppointmentLocationTextField.getText().isEmpty() ? selectedAppointment.getAppointmentLocation() : modifyAppointmentLocationTextField.getText();
         updatedType = modifyAppointmentTypeTextField.getText().isEmpty() ? selectedAppointment.getAppointmentType() : modifyAppointmentLocationTextField.getText();
@@ -234,11 +222,9 @@ public class AppointmentModifyController implements Initializable {
         updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyAppointmentNewDate.getValue().getMonth();
         updatedAppointmentDay = modifyAppointmentNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyAppointmentNewDate.getValue().getDayOfMonth());
 
+        fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
+                Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
 
-
-        fullAppointmentStartDateTime = LocalDateTime.of(
-                Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth, Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
-        System.out.println("Date" + fullAppointmentStartDateTime);
 
         if (modifyAppointmentDurationComboBox.getValue() == null) {
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(existingApptDuration);
@@ -253,7 +239,6 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime lastUpdate = LocalDateTime.now();
 
 // TODO figure out fields that are not in the view, like url, contact
-//        AlertMessage.display("fields look good", "warning");
         try {
             DBQuery.createQuery("UPDATE appointment SET customerId = " + "'" + updatedCustomerId + "'" + ", title = " + "'" + updatedTitle + "'" + ", description = " + "'" + updatedDescription + "'" +
                     ", location = " + "'" + updatedLocation + "'" + ", start = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", end = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentEndDateTime) + "'" +
@@ -263,7 +248,6 @@ public class AppointmentModifyController implements Initializable {
             e.printStackTrace();
         }
         if (DBQuery.queryNumRowsAffected() > 0) {
-            String appointmentId = String.valueOf(selectedAppointment.getAppointmentId());
             Appointment appointmentToUpdate = selectedAppointment;
             appointmentToUpdate.setAppointmentCustomerId(updatedCustomerId);
             appointmentToUpdate.setAppointmentTitle(updatedTitle);
@@ -286,13 +270,11 @@ public class AppointmentModifyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         modifyAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
-
 //        TODO extract this to a method?
         modifyAppointmentAmPMtoggleGroup = new ToggleGroup();
         this.modifyAppointmentTimeAM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         this.modifyAppointmentTimePM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         modifyAppointmentTimeAM.setSelected(true);
-
         modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
         modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
         modifyAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));

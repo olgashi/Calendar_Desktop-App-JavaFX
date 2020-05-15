@@ -86,11 +86,9 @@ public class AppointmentMainWindowController implements Initializable {
 
     public void openModifyAppointmentWindow(ActionEvent event) throws IOException {
         //TODO refactor this if possible to still use NewWindow.display
-        String customerName = null;
         Appointment appointment = null;
         try {
             appointment = appointmentTable.getSelectionModel().getSelectedItem();
-            customerName = appointment.getAppointmentCustomerName();
         } catch (NullPointerException e) {
             e.getSuppressed();
         }
@@ -123,17 +121,6 @@ public class AppointmentMainWindowController implements Initializable {
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
         appointmentCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
         ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
-
-        //Lambda expression to convert times from the database, stored in UTC time, to Local time
-//        if (allAppointments.size() > 0) {
-//            allAppointments.forEach(appt -> {
-//                appt.setAppointmentStart(String.valueOf(ConvertTime.convertToLocalTime(appt.getAppointmentStart())));
-//                appt.setAppointmentEnd(String.valueOf(ConvertTime.convertToLocalTime(appt.getAppointmentEnd())));
-//            });
-//        }
-
-//        appointmentTable.setItems(allAppointments);
-                appointmentTable.setItems(allAppointments);
-
+        appointmentTable.setItems(allAppointments);
     }
 }

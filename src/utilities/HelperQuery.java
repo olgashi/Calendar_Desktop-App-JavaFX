@@ -23,16 +23,18 @@ public class HelperQuery {
     }
 
     public static void getAppointmentData() throws SQLException {
-//        Appointment.clearAppointmentList();
         DBQuery.createQuery("SELECT appointmentId, title, description, location, contact, type, url, start, end, " +
                 "customerName, customer.customerId FROM appointment, customer where appointment.customerId = customer.customerId");
         ResultSet rs = DBQuery.getQueryResultSet();
         try {
             while (DBQuery.getQueryResultSet().next()) {
+                String updatedStartTime = ConvertTime.convertToLocalTime(rs.getString("start")).toString();
+                String updatedEndTime = ConvertTime.convertToLocalTime(rs.getString("end")).toString();
+
                 Appointment.getAppointmentList().add(new Appointment(rs.getString("appointmentId"),
                         rs.getString("title"), rs.getString("description"), rs.getString("location"),
-                        rs.getString("contact"), rs.getString("type"), rs.getString("url"), rs.getString("start"),
-                        rs.getString("end"), rs.getString("customerId"), rs.getString("customerName")));
+                        rs.getString("contact"), rs.getString("type"), rs.getString("url"), updatedStartTime,
+                        updatedEndTime, rs.getString("customerId"), rs.getString("customerName")));
             }
         }  catch(SQLException e){
             e.printStackTrace();

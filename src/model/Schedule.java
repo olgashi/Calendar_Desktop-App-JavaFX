@@ -1,13 +1,18 @@
 package model;
 
+import com.sun.tools.javadoc.Start;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.Year;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,7 +106,7 @@ public class Schedule {
             }
             return Integer.parseInt(max.getCustomerId());
         } else {
-            return null;
+            return 0;
         }
     }
     public static Integer lookupAppointmentWithHighestID() {
@@ -115,7 +120,7 @@ public class Schedule {
             }
             return Integer.parseInt(max.getAppointmentId());
         } else {
-            return null;
+            return 0;
         }
     }
 
@@ -146,21 +151,18 @@ public class Schedule {
         else return null;
     }
 
-    public static ObservableList<Appointment> combineAppointmentsByWeek(Month month, int year, int weekStartDay, int weekEndDay){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
+    public static ObservableList<Appointment> combineAppointmentsByWeek(LocalDate start, LocalDate end){
+        DateTimeFormatter existingAppointmentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
         FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
         appointments.setPredicate(appt -> {
-            String temp[] = appt.getAppointmentStart().split(" ");
-            LocalDate localDate = LocalDate.parse(temp[0] , formatter);
-            int apptDay = localDate.getDayOfMonth();
-            int apptYear = localDate.getYear();
-            Month apptMonth = localDate.getMonth();
-            if (apptMonth.equals(month) && apptYear == year && apptDay >= weekStartDay && apptDay <= weekEndDay) {
+            String appointmentStart = appt.getAppointmentStart();
+            LocalDateTime existingApptStartParsed = LocalDateTime.parse(appointmentStart, existingAppointmentFormatter);
+            LocalDate existingApptDate = existingApptStartParsed.toLocalDate();
+            if (existingApptDate.compareTo(start) >= 0 && existingApptDate.compareTo(end) <= 0) {
                 return true;
             } else return false;
         });
         if (appointments.size() > 0) return appointments;
         else return null;
-
     }
 }
