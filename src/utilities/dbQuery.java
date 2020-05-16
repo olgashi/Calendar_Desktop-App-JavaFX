@@ -48,4 +48,3 @@ public class DBQuery {
         }
     }
 }
-//TODO when should i close the connection
