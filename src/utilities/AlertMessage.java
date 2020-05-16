@@ -6,7 +6,13 @@ import java.util.Optional;
 // TODO refactor
 public class AlertMessage {
     public static boolean display(String messageToDisplay, String alertType) {
-        boolean userResponse;
+        Alert.AlertType alertTypeMethodCall = getAlertType(alertType);
+        Alert alertMessage = new Alert(alertTypeMethodCall, messageToDisplay);
+        Optional<ButtonType> result = alertMessage.showAndWait();
+        return !(result.isPresent() && result.get() == ButtonType.CANCEL);
+    }
+
+    private static Alert.AlertType getAlertType(String alertType) {
         alertType = alertType.toLowerCase();
         Alert.AlertType alertTypeMethodCall;
         switch (alertType) {
@@ -16,17 +22,13 @@ public class AlertMessage {
             case "confirmation":
                 alertTypeMethodCall = Alert.AlertType.CONFIRMATION;
                 break;
+            case "information":
+                alertTypeMethodCall = Alert.AlertType.INFORMATION;
+                break;
             default:
-                alertTypeMethodCall = Alert.AlertType.WARNING;
+                alertTypeMethodCall = Alert.AlertType.NONE;
                 break;
         }
-        Alert alertMessage = new Alert(alertTypeMethodCall, messageToDisplay);
-        Optional<ButtonType> result = alertMessage.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.CANCEL) {
-            userResponse = false;
-        } else {
-            userResponse = true;
-        }
-        return userResponse;
+        return alertTypeMethodCall;
     }
 }
