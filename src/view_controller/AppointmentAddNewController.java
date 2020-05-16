@@ -17,6 +17,7 @@ import utilities.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -88,7 +89,7 @@ public class AppointmentAddNewController implements Initializable {
 //            TODO add "information" to alertmessage.display
 //    TODO user should not be able to add appointments outside business hours and on the weekends
 
-    public void createAppointment(ActionEvent event) throws SQLException, IOException {
+    public void createAppointment(ActionEvent event) throws SQLException, IOException, ParseException {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
         String durationTempStr = newAppointmentDurationComboBox.getValue().toString();
@@ -124,15 +125,20 @@ public class AppointmentAddNewController implements Initializable {
                     Integer.parseInt(addNewAppointmentTimeHoursTextField.getText()),
                     Integer.parseInt(addNewAppointmentTimeMinutesTextField.getText()));
             fullAppointmentStartDateTime = LocalDateTime.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s").format(fullAppointmentStartDateTime), dtf);
+            fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
+            selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
 
-            if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime)){
+            if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, selectedCustomerId)){
                 AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
                 return;
             }
-            selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
+            if (!Schedule.outsideOfBusinessHoursCheck(fullAppointmentStartDateTime, fullAppointmentEndDateTime)){
+                AlertMessage.display("Scheduling appointments outside of business hours is not allowed, please select different time and try again", "warning");
+                return;
+            }
+
 //            TODO change these values to actual values
             userId = 1;
-            fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
             contact = "test";
             url = "test";
 

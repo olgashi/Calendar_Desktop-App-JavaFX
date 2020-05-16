@@ -173,8 +173,10 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime start = LocalDateTime.parse(appointmentStartDateTime, dtf);
         LocalDateTime end = LocalDateTime.parse(appointmentEndDateTime, dtf);
         Duration existingApptDuration = Duration.between(start, end);
+        LocalDateTime createDate = LocalDateTime.now();
+        LocalDateTime lastUpdate = LocalDateTime.now();
 
-        LocalDateTime existingAppointmentEnd = LocalDateTime.parse(appointmentEndDateTime, dtf);
+//        LocalDateTime existingAppointmentEnd = LocalDateTime.parse(appointmentEndDateTime, dtf);
         if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField, modifyAppointmentTypeTextField,
                 modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
                 modifyAppointmentTimeMinutesTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
@@ -224,11 +226,10 @@ public class AppointmentModifyController implements Initializable {
 
         fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
                 Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
-        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime)){
+        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, Integer.parseInt(updatedCustomerId))) {
             AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
             return;
         }
-
 
         if (modifyAppointmentDurationComboBox.getValue() == null) {
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(existingApptDuration);
@@ -236,11 +237,12 @@ public class AppointmentModifyController implements Initializable {
             String durationTempStr = modifyAppointmentDurationComboBox.getValue().toString();
             String durationTempArr[]= durationTempStr.split(" ");
             int appointmentDuration = Integer.parseInt(durationTempArr[0]);
-            System.out.println("duration " + appointmentDuration);
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
         }
-        LocalDateTime createDate = LocalDateTime.now();
-        LocalDateTime lastUpdate = LocalDateTime.now();
+        if (!Schedule.outsideOfBusinessHoursCheck(fullAppointmentStartDateTime, fullAppointmentEndDateTime)){
+            AlertMessage.display("Scheduling appointments outside of business hours is not allowed, please select different time and try again", "warning");
+            return;
+        }
 
 // TODO figure out fields that are not in the view, like url, contact
         try {

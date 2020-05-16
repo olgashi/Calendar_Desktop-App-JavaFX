@@ -5,7 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
@@ -196,12 +199,6 @@ public class Schedule {
 
                 LocalTime existingApptStartTime = existingApptStartParsed.toLocalTime();
                 LocalTime existingApptEndTime = existingApptEndParsed.toLocalTime();
-//                System.out.println(newApptStart.toLocalDate());
-//                System.out.println(existingApptDate);
-//                System.out.println(existingApptStartTime);
-//                System.out.println(existingApptEndTime);
-//                System.out.println(newApptStart.toLocalTime());
-
                 if ((customerId == appointmentCustomerId) && existingApptDate.equals(newApptStart.toLocalDate()) &&
                         (((newApptStart.toLocalTime().isAfter(existingApptStartTime) &&
                                 newApptStart.toLocalTime().isBefore(existingApptEndTime))) ||
@@ -213,10 +210,12 @@ public class Schedule {
             return overlappingAppt;
         }
 
-//        public static boolean outsideOfBusinessHoursCheck(LocalDateTime newAppptStart, LocalDateTime newApptEnd){
-//            LocalDateTime businessHoursStart;
-//            LocalDateTime businessHoursEnd;
-//
-//            if (newAppptStart.toLocalTime() )
-//        }
+        public static boolean outsideOfBusinessHoursCheck(LocalDateTime newAppptStart, LocalDateTime newApptEnd) {
+            LocalTime start = newAppptStart.toLocalTime();
+            LocalTime end = newApptEnd.toLocalTime();
+            LocalTime businessHoursStart = LocalTime.parse( "08:59:00" );
+            LocalTime businessHoursEnd = LocalTime.parse( "17:01:00" );
+           return (start.isAfter(businessHoursStart)) && end.isBefore(businessHoursEnd);
+        }
+
 }
