@@ -79,19 +79,10 @@ public class LoginWindowController implements Initializable {
                 window.show();
                 controller.initMainWindowData(upcomingAppointments);
             } else {
-                System.out.println("user not found");
                 LoginLanguage.userNamePassInvalidComboMessage(currentLocale.getCountry(), loginInvalidWarningText);
             }
         } else LoginLanguage.userNamePassEmptyMessage(currentLocale.getCountry(), loginInvalidWarningText);
     }
-
-//    private void checkIfAnyAppointmentsWithinFifteenMins(){
-//        if (Schedule.appointmentsWithinFifteenMins(userLoginTime).size() > 0) {
-//            AlertMessage.display("There is at least one appointment within 15 minutes", "warning");
-//        } else {
-//            return;
-//        }
-//    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
