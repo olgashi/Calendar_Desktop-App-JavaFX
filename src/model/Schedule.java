@@ -182,34 +182,41 @@ public class Schedule {
         return found;
     }
 
-    public static boolean overlappingAppointmentsCheck(LocalDateTime newApptStart){
+    public static boolean overlappingAppointmentsCheck(LocalDateTime newApptStart, int customerId){
         DateTimeFormatter existingAppointmentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
         ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
         boolean overlappingAppt = false;
             for (int i = 0; i< allAppointments.size(); i++) {
                 String appointmentStart = allAppointments.get(i).getAppointmentStart();
                 String appointmentEnd = allAppointments.get(i).getAppointmentEnd();
+                int appointmentCustomerId = Integer.parseInt(allAppointments.get(i).getAppointmentCustomerId());
                 LocalDateTime existingApptStartParsed = LocalDateTime.parse(appointmentStart, existingAppointmentFormatter);
                 LocalDateTime existingApptEndParsed = LocalDateTime.parse(appointmentEnd, existingAppointmentFormatter);
                 LocalDate existingApptDate = existingApptStartParsed.toLocalDate();
 
                 LocalTime existingApptStartTime = existingApptStartParsed.toLocalTime();
                 LocalTime existingApptEndTime = existingApptEndParsed.toLocalTime();
-                System.out.println(newApptStart.toLocalDate());
-                System.out.println(existingApptDate);
-                System.out.println(existingApptStartTime);
-                System.out.println(existingApptEndTime);
-                System.out.println(newApptStart.toLocalTime());
+//                System.out.println(newApptStart.toLocalDate());
+//                System.out.println(existingApptDate);
+//                System.out.println(existingApptStartTime);
+//                System.out.println(existingApptEndTime);
+//                System.out.println(newApptStart.toLocalTime());
 
-                if (existingApptDate.equals(newApptStart.toLocalDate()) &&
+                if ((customerId == appointmentCustomerId) && existingApptDate.equals(newApptStart.toLocalDate()) &&
                         (((newApptStart.toLocalTime().isAfter(existingApptStartTime) &&
                                 newApptStart.toLocalTime().isBefore(existingApptEndTime))) ||
                                 ((newApptStart.toLocalTime().equals(existingApptStartTime) ||
                                         newApptStart.toLocalTime().equals(existingApptEndTime))))) {
-                    System.out.println("Found an overlapping appointment");
                    overlappingAppt = true;
                 }
             }
             return overlappingAppt;
         }
+
+//        public static boolean outsideOfBusinessHoursCheck(LocalDateTime newAppptStart, LocalDateTime newApptEnd){
+//            LocalDateTime businessHoursStart;
+//            LocalDateTime businessHoursEnd;
+//
+//            if (newAppptStart.toLocalTime() )
+//        }
 }
