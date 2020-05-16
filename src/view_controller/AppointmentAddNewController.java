@@ -115,7 +115,8 @@ public class AppointmentAddNewController implements Initializable {
         if (selectedCustomer == null) {
             AlertMessage.display("Please select a customer for this appointment.", "warning");
             return;
-        } else {
+        }
+        else {
             fullAppointmentStartDateTime = LocalDateTime.of(
                     addNewAppointmentDatePicker.getValue().getYear(),
                     addNewAppointmentDatePicker.getValue().getMonthValue(),
@@ -123,6 +124,11 @@ public class AppointmentAddNewController implements Initializable {
                     Integer.parseInt(addNewAppointmentTimeHoursTextField.getText()),
                     Integer.parseInt(addNewAppointmentTimeMinutesTextField.getText()));
             fullAppointmentStartDateTime = LocalDateTime.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s").format(fullAppointmentStartDateTime), dtf);
+
+            if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime)){
+                AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
+                return;
+            }
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
 //            TODO change these values to actual values
             userId = 1;
