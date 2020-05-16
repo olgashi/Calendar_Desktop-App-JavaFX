@@ -7,12 +7,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Schedule;
+import utilities.AlertMessage;
 import utilities.HelperQuery;
 import utilities.NewWindow;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+//TODO populate database with fun/realistic names and places before submission
 
 public class MainWindowController implements Initializable {
     @FXML
@@ -49,6 +53,10 @@ public class MainWindowController implements Initializable {
 //        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
 //                getClass().getResource("ReportsMainWindow.fxml"));
 //    }
+    public void initMainWindowData(Appointment upcomingAppt){
+        if (upcomingAppt != null) AlertMessage.display("There is an upcoming appointment with " +
+                upcomingAppt.getAppointmentCustomerName() + " within 15 minutes", "warning");
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

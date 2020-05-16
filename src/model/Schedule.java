@@ -4,11 +4,9 @@ import com.sun.tools.javadoc.Start;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 
+import java.sql.Time;
 import java.text.DateFormatSymbols;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Year;
+import java.time.*;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -164,5 +162,23 @@ public class Schedule {
         });
         if (appointments.size() > 0) return appointments;
         else return null;
+    }
+
+    public static Appointment appointmentsWithinFifteenMinutes(LocalDateTime loginTime){
+        DateTimeFormatter existingAppointmentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
+        ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
+        Appointment found = null;
+        for (int i = 0; i< allAppointments.size(); i++) {
+            String appointmentStart = allAppointments.get(i).getAppointmentStart();
+            LocalDateTime existingApptStartParsed = LocalDateTime.parse(appointmentStart, existingAppointmentFormatter);
+            LocalDate existingApptDate = existingApptStartParsed.toLocalDate();
+            LocalTime existingApptTime = existingApptStartParsed.toLocalTime();
+            if (existingApptDate.equals(loginTime.toLocalDate()) &&
+                    ((loginTime.toLocalTime().isBefore(existingApptTime) &&
+                            loginTime.toLocalTime().plusMinutes(15).isAfter(existingApptTime)))) {
+                found = allAppointments.get(i);
+            }
+        }
+        return found;
     }
 }

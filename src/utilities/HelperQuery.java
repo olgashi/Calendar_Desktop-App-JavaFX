@@ -2,7 +2,6 @@ package utilities;
 
 import model.Appointment;
 import model.Customer;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

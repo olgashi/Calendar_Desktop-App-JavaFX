@@ -2,20 +2,25 @@ package view_controller;
 //TODO: style with css when finished
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.Appointment;
+import model.Schedule;
 import model.User;
-import utilities.DBQuery;
-import utilities.HelperQuery;
-import utilities.LoginLanguage;
-import utilities.NewWindow;
+import utilities.*;
+
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -49,18 +54,30 @@ public class LoginWindowController implements Initializable {
     }
 
     @FXML
-        public void changeSceneMainWindowView(ActionEvent event) throws SQLException, IOException {
+        public void loadDataFromDB() throws SQLException {
         HelperQuery.getCustomerData();
         HelperQuery.getAppointmentData();
-        NewWindow.display((Stage) loginWindowPane.getScene().getWindow(), getClass().getResource("MainWindow.fxml"));
     }
 
     public void loginButtonClickEvent(ActionEvent event) throws IOException, SQLException {
+        Appointment upcomingAppointments = null;
         if (!usernameTextField.getText().isEmpty() && !passwordTextField.getText().isEmpty()) {
             if (determineIfUserExists(usernameTextField.getText(), passwordTextField.getText())) {
-                System.out.println("user found");
                 loggedInUser = new User(DBQuery.getQueryResultSet().getString("userName"), DBQuery.getQueryResultSet().getString("userId"));
-                changeSceneMainWindowView(event);
+                loadDataFromDB();
+                LocalDateTime userLoginTime = LocalDateTime.now();
+                if (Schedule.appointmentsWithinFifteenMinutes(userLoginTime) != null) {
+                    upcomingAppointments = Schedule.appointmentsWithinFifteenMinutes(userLoginTime);
+                }
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("MainWindow.fxml"));
+                Parent mainViewParent = loader.load();
+                Scene mainWindowView = new Scene(mainViewParent);
+                MainWindowController controller = loader.getController();
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(mainWindowView);
+                window.show();
+                controller.initMainWindowData(upcomingAppointments);
             } else {
                 System.out.println("user not found");
                 LoginLanguage.userNamePassInvalidComboMessage(currentLocale.getCountry(), loginInvalidWarningText);
@@ -68,11 +85,18 @@ public class LoginWindowController implements Initializable {
         } else LoginLanguage.userNamePassEmptyMessage(currentLocale.getCountry(), loginInvalidWarningText);
     }
 
+//    private void checkIfAnyAppointmentsWithinFifteenMins(){
+//        if (Schedule.appointmentsWithinFifteenMins(userLoginTime).size() > 0) {
+//            AlertMessage.display("There is at least one appointment within 15 minutes", "warning");
+//        } else {
+//            return;
+//        }
+//    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loginInvalidWarningText.setText("");
         currentLocale = Locale.getDefault();
-        System.out.println("current locale: " + currentLocale.getCountry());
         LoginLanguage.setLoginWindowLabels(currentLocale.getCountry(), loginUsernameText, loginPasswordText, loginWindowLabelText, loginButton );
     }
 }
