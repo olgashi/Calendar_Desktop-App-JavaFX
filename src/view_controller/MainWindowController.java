@@ -9,7 +9,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Schedule;
+import model.User;
 import utilities.AlertMessage;
+import utilities.AuditLog;
 import utilities.HelperQuery;
 import utilities.NewWindow;
 import java.io.IOException;
@@ -47,13 +49,15 @@ public class MainWindowController implements Initializable {
         NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
                 getClass().getResource("CalendarMainWindow.fxml"));
     }
+
 //uncomment when reports view and functionality are created
 //    @FXML
 //    private void loadReportsWindow(ActionEvent event) throws IOException {
 //        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
 //                getClass().getResource("ReportsMainWindow.fxml"));
 //    }
-    public void initMainWindowData(Appointment upcomingAppt){
+    public void initMainWindowData(Appointment upcomingAppt, User user){
+        AuditLog.addLog(user);
         if (upcomingAppt != null) AlertMessage.display("There is an upcoming appointment with " +
                 upcomingAppt.getAppointmentCustomerName() + " within 15 minutes", "warning");
     }

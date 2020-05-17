@@ -77,7 +77,7 @@ public class LoginWindowController implements Initializable {
                 Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 window.setScene(mainWindowView);
                 window.show();
-                controller.initMainWindowData(upcomingAppointments);
+                controller.initMainWindowData(upcomingAppointments, loggedInUser);
             } else {
                 LoginLanguage.userNamePassInvalidComboMessage(currentLocale.getCountry(), loginInvalidWarningText);
             }
@@ -86,6 +86,7 @@ public class LoginWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        AuditLog.createFile();
         loginInvalidWarningText.setText("");
         currentLocale = Locale.getDefault();
         LoginLanguage.setLoginWindowLabels(currentLocale.getCountry(), loginUsernameText, loginPasswordText, loginWindowLabelText, loginButton );
