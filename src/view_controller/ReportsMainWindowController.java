@@ -37,7 +37,12 @@ public class ReportsMainWindowController implements Initializable {
         NewWindow.display((Stage) reportsWindow.getScene().getWindow(),
                 getClass().getResource("MainWindow.fxml"));
     }
-    //TODO limit number of appointment types to 3-4
+    @FXML
+    private void apptTypesReportOnSelect(){
+        if (reportListComboBox.getValue().equals(apptTypesReport)) yearListComboBox.setVisible(true);
+        else yearListComboBox.setVisible(false);
+    }
+
     @FXML
     private void showReport(){
         reportsPane.getChildren().clear();
@@ -68,7 +73,10 @@ public class ReportsMainWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         reportListComboBox.getItems().addAll(apptTypesReport, "Report 2", "Report 3", "Report 4");
-        yearListComboBox.getItems().addAll("2018", "2019", "2020");
+//        TODO create method that generates a list of years with appointments
+        yearListComboBox.getItems().addAll("2020", "2019");
+        yearListComboBox.setVisible(false);
+
     }
 }
 
