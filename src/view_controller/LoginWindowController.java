@@ -55,8 +55,8 @@ public class LoginWindowController implements Initializable {
 
     @FXML
         public void loadDataFromDB() throws SQLException {
-        HelperQuery.getCustomerData();
-        HelperQuery.getAppointmentData();
+        LoadDataQuery.getCustomerData();
+        LoadDataQuery.getAppointmentData();
     }
 
     public void loginButtonClickEvent(ActionEvent event) throws IOException, SQLException {

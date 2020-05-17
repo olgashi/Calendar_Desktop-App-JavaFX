@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import model.Customer;
 import model.Schedule;
 import utilities.AlertMessage;
-import utilities.HelperQuery;
 import utilities.NewWindow;
 import utilities.DBQuery;
 

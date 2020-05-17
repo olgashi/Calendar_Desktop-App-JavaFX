@@ -12,11 +12,15 @@ import model.Schedule;
 import model.User;
 import utilities.AlertMessage;
 import utilities.AuditLog;
-import utilities.HelperQuery;
 import utilities.NewWindow;
+import utilities.Reports;
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 //TODO populate database with fun/realistic names and places before submission
 
@@ -51,11 +55,11 @@ public class MainWindowController implements Initializable {
     }
 
 //uncomment when reports view and functionality are created
-//    @FXML
-//    private void loadReportsWindow(ActionEvent event) throws IOException {
-//        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
-//                getClass().getResource("ReportsMainWindow.fxml"));
-//    }
+    @FXML
+    private void loadReportsWindow(ActionEvent event) throws IOException {
+        NewWindow.display((Stage) mainWindowView.getScene().getWindow(),
+                getClass().getResource("ReportsMainWindow.fxml"));
+    }
     public void initMainWindowData(Appointment upcomingAppt, User user){
         AuditLog.addLog(user);
         if (upcomingAppt != null) AlertMessage.display("There is an upcoming appointment with " +
@@ -64,6 +68,7 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+//        System.out.println(Reports.typesByMonth(LocalDateTime.parse("2020-05-10 10:00:00.0", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"))));
 
     }
 }

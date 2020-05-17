@@ -18,6 +18,9 @@
       <ComboBox fx:id="reportListComboBox" layoutX="65.0" layoutY="121.0" onAction="#apptTypesReportOnSelect" prefWidth="150.0" />
       <Button fx:id="seeReportButton" layoutX="65.0" layoutY="352.0" mnemonicParsing="false" onAction="#showReport" text="See Report" />
       <ComboBox fx:id="yearListComboBox" layoutX="65.0" layoutY="189.0" prefHeight="27.0" prefWidth="87.0" />
-      <Pane fx:id="reportsPane" layoutX="290.0" layoutY="72.0" prefHeight="302.0" prefWidth="474.0" />
+      <Pane fx:id="reportsPane" layoutX="290.0" layoutY="53.0" prefHeight="334.0" prefWidth="474.0">
+         <children>
+            <Text fx:id="yearText" layoutX="223.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+         </children></Pane>
    </children>
 </AnchorPane>
