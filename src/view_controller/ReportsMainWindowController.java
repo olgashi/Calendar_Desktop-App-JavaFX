@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
+import utilities.AlertMessage;
 import utilities.NewWindow;
 import utilities.Reports;
 import java.io.IOException;
@@ -74,7 +75,16 @@ public class ReportsMainWindowController implements Initializable {
         int year = 0;
         reportsPane.getChildren().clear();
         String reportName = (String) reportListComboBox.getValue();
+        if ((reportName.equals(apptTypesReport) || (reportName.equals(apptTotalReport))) && yearListComboBox.getValue() == null)
+        {
+            AlertMessage.display("Please pick a year", "warning");
+            return;
+        }
         if (yearListComboBox.isVisible()) year = Integer.parseInt((String) yearListComboBox.getValue());
+        pickReportToShow(year, reportName);
+    }
+
+    private void pickReportToShow(int year, String reportName) {
         switch (reportName) {
             case apptTypesReport:
                 showAppointmentTypesByMonth(year);
@@ -84,7 +94,7 @@ public class ReportsMainWindowController implements Initializable {
                 break;
             case apptScheduleByConsultant:
                 showScheduleForConsultant((String) consultantNamesComboBox.getValue());
-            default:    //set default to spanish
+            default:
                 break;
         }
     }
@@ -96,16 +106,12 @@ public class ReportsMainWindowController implements Initializable {
         for (Month month : months) {
         Map<String, Long> reportsForTheMonth = Reports.appointmentTypesByMonth(month, year);
             if (reportsForTheMonth!= null) {
-                Text reportText = new Text();
                 String apptTypeString = "Appointment types: ";
                 for (Map.Entry<String, Long> entry : reportsForTheMonth.entrySet()) {
                    apptTypeString += entry.getKey() + ", count: " + entry.getValue();
                 }
-                reportText.setText(month.toString() + ": " + apptTypeString);
-                reportText.setX(0);
-                reportText.setY(10 + posIncrement);
-               reportsPane.getChildren().addAll(reportText);
-               posIncrement += 23;
+                String textToShow = month.toString() + ": " + apptTypeString;
+                posIncrement = showReportOutput(posIncrement,textToShow);
             }
         }
     }
@@ -116,13 +122,8 @@ public class ReportsMainWindowController implements Initializable {
         List<Appointment> appointmentsForConsultant = allAppointments.get(consultantName);
         appointmentsForConsultant.sort(Comparator.comparing(appt -> appt.getAppointmentStart()));
         for(Appointment appt: appointmentsForConsultant){
-//            System.out.println(appt.getAppointmentStart());
-            Text reportText = new Text();
-            reportText.setText(appt.getAppointmentType() + " with " + appt.getAppointmentCustomerName() + " on " + appt.getAppointmentStart());
-            reportText.setX(0);
-            reportText.setY(10 + posIncrement);
-            reportsPane.getChildren().addAll(reportText);
-            posIncrement += 23;
+            String textToShow = appt.getAppointmentType() + " with " + appt.getAppointmentCustomerName() + " on " + appt.getAppointmentStart();
+            posIncrement = showReportOutput(posIncrement, textToShow);
         }
     }
 
@@ -133,13 +134,19 @@ public class ReportsMainWindowController implements Initializable {
         for (Month month : months) {
             int apptTotal = Reports.appointmentTotalByMonth(month, year);
             //TODO extract to a method?
-            Text reportText = new Text();
-            reportText.setText("Appointment total for the month of " + month.toString() + ": " + apptTotal);
-            reportText.setX(0);
-            reportText.setY(10 + posIncrement);
-            reportsPane.getChildren().addAll(reportText);
-            posIncrement += 23;
+            String textToShow = "Appointment total for the month of " + month.toString() + ": " + apptTotal;
+            posIncrement = showReportOutput(posIncrement, textToShow);
         }
+    }
+
+    private int showReportOutput(int posIncrement, String textToShow) {
+        Text reportText = new Text();
+        reportText.setText(textToShow);
+        reportText.setX(0);
+        reportText.setY(10 + posIncrement);
+        reportsPane.getChildren().addAll(reportText);
+        posIncrement += 23;
+        return posIncrement;
     }
 
     @Override
@@ -150,7 +157,6 @@ public class ReportsMainWindowController implements Initializable {
         yearListComboBox.setVisible(false);
         consultantNamesComboBox.setVisible(false);
         secondComboBoxText.setText("");
-//        yearText.setVisible(false);
     }
 }
 
