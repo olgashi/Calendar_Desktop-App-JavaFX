@@ -185,21 +185,22 @@ public class Schedule {
         return found;
     }
 
-    public static boolean overlappingAppointmentsCheck(LocalDateTime newApptStart, int customerId){
+    public static boolean overlappingAppointmentsCheck(LocalDateTime newApptStart, int customerId, int apptId){
         DateTimeFormatter existingAppointmentFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
         ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
         boolean overlappingAppt = false;
             for (int i = 0; i< allAppointments.size(); i++) {
-                String appointmentStart = allAppointments.get(i).getAppointmentStart();
-                String appointmentEnd = allAppointments.get(i).getAppointmentEnd();
-                int appointmentCustomerId = Integer.parseInt(allAppointments.get(i).getAppointmentCustomerId());
+                Appointment appt =allAppointments.get(i);
+                String appointmentStart = appt.getAppointmentStart();
+                String appointmentEnd = appt.getAppointmentEnd();
+                int appointmentCustomerId = Integer.parseInt(appt.getAppointmentCustomerId());
                 LocalDateTime existingApptStartParsed = LocalDateTime.parse(appointmentStart, existingAppointmentFormatter);
                 LocalDateTime existingApptEndParsed = LocalDateTime.parse(appointmentEnd, existingAppointmentFormatter);
                 LocalDate existingApptDate = existingApptStartParsed.toLocalDate();
 
                 LocalTime existingApptStartTime = existingApptStartParsed.toLocalTime();
                 LocalTime existingApptEndTime = existingApptEndParsed.toLocalTime();
-                if ((customerId == appointmentCustomerId) && existingApptDate.equals(newApptStart.toLocalDate()) &&
+                if (apptId != Integer.parseInt(appt.getAppointmentId()) && customerId == appointmentCustomerId && existingApptDate.equals(newApptStart.toLocalDate()) &&
                         (((newApptStart.toLocalTime().isAfter(existingApptStartTime) &&
                                 newApptStart.toLocalTime().isBefore(existingApptEndTime))) ||
                                 ((newApptStart.toLocalTime().equals(existingApptStartTime) ||

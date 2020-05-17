@@ -59,7 +59,7 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private TextField addNewAppointmentTimeMinutesTextField;
     @FXML
-    private TextField addNewAppointmentTypeTextField;
+    private ComboBox addNewAppointmentTypeComboBox;
     @FXML
     private TextField addNewAppointmentDescriptionTextField;
     @FXML
@@ -96,10 +96,13 @@ public class AppointmentAddNewController implements Initializable {
         String durationTempArr[]= durationTempStr.split(" ");
         int appointmentDuration = Integer.parseInt(durationTempArr[0]);
 
-        if (!InputValidation.checkForAllEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField, addNewAppointmentTypeTextField,
+        if (!InputValidation.checkForAllEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField,
                 addNewAppointmentDescriptionTextField, addNewAppointmentTitleTextField, addNewAppointmentLocationTextField)) {
             AlertMessage.display("All fields are required. Please make changes and try again.", "warning");
             return;
+        }
+        if (addNewAppointmentTypeComboBox.getValue() == null) {
+            AlertMessage.display("Please select appointment type", "warning");
         }
         if (addNewAppointmentDatePicker.getValue() == null) {
             AlertMessage.display("Date cannot be empty", "warning");
@@ -128,7 +131,7 @@ public class AppointmentAddNewController implements Initializable {
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
 
-            if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, selectedCustomerId)){
+            if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, selectedCustomerId, Integer.parseInt(Schedule.setAppointmentId()))){
                 AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
                 return;
             }
@@ -146,14 +149,14 @@ public class AppointmentAddNewController implements Initializable {
                     "type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) values(" +
                     "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + addNewAppointmentTitleTextField.getText() + "'" + ", " +
                     "'" + addNewAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + addNewAppointmentLocationTextField.getText() + "'" + ", " +
-                    "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeTextField.getText() + "'" + ", " + "'" + url + "'" + ", " + "'" +
+                    "'" + "test" + "'" + ", "+ "'" + addNewAppointmentTypeComboBox.getValue().toString() + "'" + ", " + "'" + url + "'" + ", " + "'" +
                     ConvertTime.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", " + "'" + ConvertTime.convertToUTCTime(fullAppointmentEndDateTime) +
                     "'" + ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " +
                     "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
 
             if (DBQuery.queryNumRowsAffected() > 0) {
                 Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
-                        addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeTextField.getText(), url, fullAppointmentStartDateTime.format(dtf),
+                        addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeComboBox.getValue().toString(), url, fullAppointmentStartDateTime.format(dtf),
                         fullAppointmentEndDateTime.format(dtf), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
                 loadMainWindowAppointmentAddNew(event);
             }
@@ -171,6 +174,8 @@ public class AppointmentAddNewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         newAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
+        addNewAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
+
         addNewAppointmentAmPMtoggleGroup = new ToggleGroup();
         this.addNewAppointmentTimeAM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
         this.addNewAppointmentTimePM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);

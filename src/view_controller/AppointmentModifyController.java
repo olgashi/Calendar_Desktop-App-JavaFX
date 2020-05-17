@@ -104,6 +104,8 @@ public class AppointmentModifyController implements Initializable {
     @FXML
     private TextField modifyAppointmentTypeTextField;
     @FXML
+    private ComboBox modifyAppointmentTypeComboBox;
+    @FXML
     private TextField modifyAppointmentDescriptionTextField;
     @FXML
     private TextField modifyAppointmentTitleTextField;
@@ -177,10 +179,10 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime lastUpdate = LocalDateTime.now();
 
 //        LocalDateTime existingAppointmentEnd = LocalDateTime.parse(appointmentEndDateTime, dtf);
-        if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField, modifyAppointmentTypeTextField,
+        if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField,
                 modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
                 modifyAppointmentTimeMinutesTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
-                modifyAppointmentDurationComboBox.getValue() == null) {
+                modifyAppointmentDurationComboBox.getValue() == null && modifyAppointmentTypeComboBox.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
             return;
         }
@@ -215,7 +217,7 @@ public class AppointmentModifyController implements Initializable {
 
         updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
         updatedLocation = modifyAppointmentLocationTextField.getText().isEmpty() ? selectedAppointment.getAppointmentLocation() : modifyAppointmentLocationTextField.getText();
-        updatedType = modifyAppointmentTypeTextField.getText().isEmpty() ? selectedAppointment.getAppointmentType() : modifyAppointmentLocationTextField.getText();
+        updatedType = modifyAppointmentTypeComboBox.getValue() == null ? selectedAppointment.getAppointmentType() : modifyAppointmentLocationTextField.getText();
         updatedDescription = modifyAppointmentDescriptionTextField.getText().isEmpty() ? selectedAppointment.getAppointmentDescription() : modifyAppointmentDescriptionTextField.getText();
         updatedCustomerId = selectedAppointmentCustomer == null ? selectedAppointment.getAppointmentCustomerId() : selectedAppointmentCustomer.getCustomerId();
         updatedHours = modifyAppointmentTimeHoursTextField.getText().isEmpty() ? existingAppointmentHours : modifyAppointmentTimeHoursTextField.getText();
@@ -226,7 +228,7 @@ public class AppointmentModifyController implements Initializable {
 
         fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
                 Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
-        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, Integer.parseInt(updatedCustomerId))) {
+        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, Integer.parseInt(updatedCustomerId), Integer.parseInt(selectedAppointment.getAppointmentId()))) {
             AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
             return;
         }
@@ -276,6 +278,7 @@ public class AppointmentModifyController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         modifyAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
+        modifyAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
 //        TODO extract this to a method?
         modifyAppointmentAmPMtoggleGroup = new ToggleGroup();
         this.modifyAppointmentTimeAM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);

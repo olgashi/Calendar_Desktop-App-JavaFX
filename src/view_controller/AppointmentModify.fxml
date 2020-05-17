@@ -41,7 +41,6 @@
       <Text fx:id="modifyAppointmentTypeText" layoutX="476.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
       <Text fx:id="modifyAppointmentTimeText" layoutX="478.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" wrappingWidth="39.1767578125" />
       <TextField fx:id="modifyAppointmentTimeHoursTextField" layoutX="563.0" layoutY="152.0" prefHeight="27.0" prefWidth="44.0" />
-      <TextField fx:id="modifyAppointmentTypeTextField" layoutX="564.0" layoutY="274.0" prefHeight="27.0" prefWidth="191.0" />
       <TextField fx:id="modifyAppointmentLocationTextField" layoutX="563.0" layoutY="231.0" prefHeight="27.0" prefWidth="191.0" />
       <TextField fx:id="modifyAppointmentTimeMinutesTextField" layoutX="616.0" layoutY="152.0" prefHeight="27.0" prefWidth="44.0" />
       <Text layoutX="609.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":" />
@@ -66,5 +65,6 @@
       <Text fx:id="existingAppointmentCustomerValue" layoutX="212.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       <Text fx:id="modifyAppointmentDurationText" layoutX="478.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration" />
       <ComboBox fx:id="modifyAppointmentDurationComboBox" layoutX="563.0" layoutY="189.0" prefHeight="27.0" prefWidth="95.0" />
+      <ComboBox fx:id="modifyAppointmentTypeComboBox" layoutX="563.0" layoutY="271.0" prefWidth="150.0" />
    </children>
 </AnchorPane>
