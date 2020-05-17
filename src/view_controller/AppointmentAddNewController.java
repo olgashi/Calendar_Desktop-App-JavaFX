@@ -1,7 +1,5 @@
 package view_controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.Appointment;
 import model.Customer;
 import model.Schedule;
@@ -84,9 +83,7 @@ public class AppointmentAddNewController implements Initializable {
     String loggedInUserName = User.getUserName();
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 
-//            TODO add check for conflicting appointment
 //            TODO add end time
-//            TODO add "information" to alertmessage.display
 //    TODO user should not be able to add appointments outside business hours and on the weekends
 
     public void createAppointment(ActionEvent event) throws SQLException, IOException, ParseException {
@@ -173,6 +170,8 @@ public class AppointmentAddNewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Callback<DatePicker, DateCell> dayCellFactory= Calendar.customDayCellFactory();
+        addNewAppointmentDatePicker.setDayCellFactory(dayCellFactory);
         newAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
         addNewAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
 

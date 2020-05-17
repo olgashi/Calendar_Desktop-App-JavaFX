@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.Appointment;
 import model.Customer;
 import model.Schedule;
@@ -277,6 +278,8 @@ public class AppointmentModifyController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Callback<DatePicker, DateCell> dayCellFactory = Calendar.customDayCellFactory();
+        modifyAppointmentNewDate.setDayCellFactory(dayCellFactory);
         modifyAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
         modifyAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
 //        TODO extract this to a method?
@@ -284,9 +287,9 @@ public class AppointmentModifyController implements Initializable {
         this.modifyAppointmentTimeAM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         this.modifyAppointmentTimePM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         modifyAppointmentTimeAM.setSelected(true);
-        modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
-        modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
-        modifyAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));
+        modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
+        modifyAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
         modifyAppointmentCustomerTable.setItems(Customer.getCustomerList());
     }
 }
