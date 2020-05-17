@@ -80,6 +80,10 @@ public class ReportsMainWindowController implements Initializable {
             AlertMessage.display("Please pick a year", "warning");
             return;
         }
+        if (reportName.equals(apptScheduleByConsultant) && consultantNamesComboBox.getValue() == null){
+            AlertMessage.display("Please pick a consultant", "warning");
+            return;
+        }
         if (yearListComboBox.isVisible()) year = Integer.parseInt((String) yearListComboBox.getValue());
         pickReportToShow(year, reportName);
     }
