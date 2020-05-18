@@ -42,6 +42,8 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private Text newAppointmentDurationText;
     @FXML
+    private Text newAppointmentContactText;
+    @FXML
     private ComboBox newAppointmentDurationComboBox;
     @FXML
     private DatePicker addNewAppointmentDatePicker;
@@ -57,6 +59,8 @@ public class AppointmentAddNewController implements Initializable {
     private TextField addNewAppointmentTimeMinutesTextField;
     @FXML
     private ComboBox addNewAppointmentTypeComboBox;
+    @FXML
+    private ComboBox addNewAppointmentContactComboBox;
     @FXML
     private TextField addNewAppointmentDescriptionTextField;
     @FXML
@@ -83,7 +87,7 @@ public class AppointmentAddNewController implements Initializable {
 
 //    TODO user should not be able to add appointments outside business hours and on the weekends
 
-    public void createAppointment(ActionEvent event) throws SQLException, IOException, ParseException {
+    public void createAppointment(ActionEvent event) throws SQLException, IOException {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
         String durationTempStr = newAppointmentDurationComboBox.getValue().toString();
@@ -100,6 +104,10 @@ public class AppointmentAddNewController implements Initializable {
         }
         if (addNewAppointmentDatePicker.getValue() == null) {
             AlertMessage.display("Date cannot be empty", "warning");
+            return;
+        }
+        if (addNewAppointmentContactComboBox.getValue() == null) {
+            AlertMessage.display("Contact cannot be empty", "warning");
             return;
         }
         if (!InputValidation.timeInputNumbersOnly(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField)) {
@@ -137,7 +145,7 @@ public class AppointmentAddNewController implements Initializable {
 
 //            TODO change these values to actual values
             userId = 1;
-            contact = "test";
+            contact = addNewAppointmentContactComboBox.getValue().toString();
             url = "test";
 
             createAppointmentDB(fullAppointmentStartDateTime, fullAppointmentEndDateTime);
@@ -153,7 +161,7 @@ public class AppointmentAddNewController implements Initializable {
 
     public void addAppointmentToSchedule(LocalDateTime fullAppointmentStartDateTime, LocalDateTime fullAppointmentEndDateTime) {
         Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
-                addNewAppointmentLocationTextField.getText(), "test", addNewAppointmentTypeComboBox.getValue().toString(), url, fullAppointmentStartDateTime.format(dtf),
+                addNewAppointmentLocationTextField.getText(), contact, addNewAppointmentTypeComboBox.getValue().toString(), url, fullAppointmentStartDateTime.format(dtf),
                 fullAppointmentEndDateTime.format(dtf), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
     }
 
@@ -182,7 +190,7 @@ public class AppointmentAddNewController implements Initializable {
         addNewAppointmentDatePicker.setDayCellFactory(dayCellFactory);
         newAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
         addNewAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
-
+        addNewAppointmentContactComboBox.getItems().addAll("Heleentje Tacita", "Meintje Hedy", "Dora Lisanne", "Benjamim Angélica", "Klaos Floriana");
         addNewAppointmentAmPMtoggleGroup = new ToggleGroup();
         this.addNewAppointmentTimeAM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);
         this.addNewAppointmentTimePM.setToggleGroup(addNewAppointmentAmPMtoggleGroup);

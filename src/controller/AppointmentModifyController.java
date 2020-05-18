@@ -42,6 +42,10 @@ public class AppointmentModifyController implements Initializable {
     @FXML
     private Text modifyAppointmentDatePickerCurrentDateText;
     @FXML
+    private Text modifyAppointmentContactText;
+    @FXML
+    private ComboBox modifyAppointmentContactComboBox;
+    @FXML
     private Text existingAppointmentTitleText;
     @FXML
     private Text existingAppointmentDateText;
@@ -75,6 +79,10 @@ public class AppointmentModifyController implements Initializable {
     private Text existingAppointmentDurationValue;
     @FXML
     private Text modifyAppointmentDurationText;
+    @FXML
+    private Text existingAppointmentContactText;
+    @FXML
+    private Text existingAppointmentContactValue;
     @FXML
     private ComboBox modifyAppointmentDurationComboBox;
     @FXML
@@ -115,8 +123,17 @@ public class AppointmentModifyController implements Initializable {
     private Customer selectedCustomer;
     private int selectedCustomerId, userId;
 //    TODO these variables are a mess, rename/refactor
-    private String updatedCustomerId, updatedTitle, updatedHours, updatedMinutes, updatedAppointmentYear,
-        updatedAppointmentDay, updatedLocation, updatedType, updatedDescription;
+    private String updatedCustomerId;
+    private String updatedTitle;
+    private String updatedHours;
+    private String updatedMinutes;
+    private String updatedAppointmentYear;
+    private String updatedAppointmentDay;
+    private String updatedLocation;
+    private String updatedType;
+    private String updatedDescription;
+    private String updatedContact;
+    private String updatedDuration;
     private Month updatedAppointmentMonth;
     private String existingAppointmentMonth;
     private String existingAppointmentYear, existingAppointmentDay, existingAppointmentHours,
@@ -149,6 +166,7 @@ public class AppointmentModifyController implements Initializable {
         existingAppointmentTitleValue.setText(selectedAppointment.getAppointmentTitle());
         existingAppointmentDateValue.setText(existingAppointmentStartDate);
         existingAppointmentTimeValue.setText(existingAppointmentStartTime);
+        existingAppointmentContactValue.setText(selectedAppointment.getAppointmentContact());
 //        existingAppointmentDurationValue.setText();
         existingAppointmentLocationValue.setText(selectedAppointment.getAppointmentLocation());
         existingAppointmentTypeValue.setText(selectedAppointment.getAppointmentType());
@@ -170,7 +188,8 @@ public class AppointmentModifyController implements Initializable {
         if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField,
                 modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
                 modifyAppointmentTimeMinutesTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
-                modifyAppointmentDurationComboBox.getValue() == null && modifyAppointmentTypeComboBox.getValue() == null) {
+                modifyAppointmentDurationComboBox.getValue() == null && modifyAppointmentTypeComboBox.getValue() == null &&
+                modifyAppointmentContactComboBox.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
             return;
         }
@@ -202,6 +221,7 @@ public class AppointmentModifyController implements Initializable {
                 }
             }
         }
+        updatedContact = (modifyAppointmentContactComboBox.getValue() == null) ?  selectedAppointment.getAppointmentContact() : modifyAppointmentContactComboBox.getValue().toString();
 
         updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
         updatedLocation = modifyAppointmentLocationTextField.getText().isEmpty() ? selectedAppointment.getAppointmentLocation() : modifyAppointmentLocationTextField.getText();
@@ -213,6 +233,8 @@ public class AppointmentModifyController implements Initializable {
         updatedAppointmentYear = modifyAppointmentNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyAppointmentNewDate.getValue().getYear());
         updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyAppointmentNewDate.getValue().getMonth();
         updatedAppointmentDay = modifyAppointmentNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyAppointmentNewDate.getValue().getDayOfMonth());
+        updatedDuration = modifyAppointmentDurationComboBox.getValue() == null ? String.valueOf(existingApptDuration.toMinutes()) : modifyAppointmentDurationComboBox.getValue().toString().split(" ")[0];
+        updatedType = modifyAppointmentTypeComboBox.getValue() == null ? selectedAppointment.getAppointmentType() : modifyAppointmentTypeComboBox.getValue().toString();
 
         fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
                 Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
@@ -237,7 +259,7 @@ public class AppointmentModifyController implements Initializable {
 // TODO figure out fields that are not in the view, like url, contact
         try {
             DBQuery.createQuery("UPDATE appointment SET customerId = " + "'" + updatedCustomerId + "'" + ", title = " + "'" + updatedTitle + "'" + ", description = " + "'" + updatedDescription + "'" +
-                    ", location = " + "'" + updatedLocation + "'" + ", start = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", end = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentEndDateTime) + "'" +
+                    ", location = " + "'" + updatedLocation + "'" + ", contact = " + "'" + updatedContact + "'" + ", type = " + "'" + updatedType + "'" + ", start = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", end = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentEndDateTime) + "'" +
                     ", createDate = " + "'" + createDate + "'" + ", createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = " + "'" + lastUpdate + "'" + ", lastUpdateBy = " + "'" + loggedInUserName + "'" +
                     " WHERE appointmentId = " + "'" + selectedAppointment.getAppointmentId() + "'");
         } catch (SQLException e) {
@@ -249,8 +271,10 @@ public class AppointmentModifyController implements Initializable {
             appointmentToUpdate.setAppointmentTitle(updatedTitle);
             appointmentToUpdate.setAppointmentDescription(updatedDescription);
             appointmentToUpdate.setAppointmentLocation(updatedLocation);
+            appointmentToUpdate.setAppointmentType(updatedType);
             appointmentToUpdate.setAppointmentStart(fullAppointmentStartDateTime.format(dtf));
             appointmentToUpdate.setAppointmentEnd(fullAppointmentEndDateTime.format(dtf));
+            appointmentToUpdate.setAppointmentContact(updatedContact);
         } else {
             AlertMessage.display("There was an error when updating appointment. Please try again.", "warning");
         }
@@ -269,7 +293,9 @@ public class AppointmentModifyController implements Initializable {
         modifyAppointmentNewDate.setDayCellFactory(dayCellFactory);
         modifyAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
         modifyAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
-//        TODO extract this to a method?
+        modifyAppointmentContactComboBox.getItems().addAll("Heleentje Tacita", "Meintje Hedy", "Dora Lisanne", "Benjamim Angélica", "Klaos Floriana");
+
+        //        TODO extract this to a method?
         modifyAppointmentAmPMtoggleGroup = new ToggleGroup();
         this.modifyAppointmentTimeAM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
         this.modifyAppointmentTimePM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
