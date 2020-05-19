@@ -14,6 +14,7 @@ import utilities.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Month;
 import java.util.ResourceBundle;
 //TODO check everywhere if any if can be substituted with one liners or ternary
 // TODO update all NOW() to proper datetime (format) method
@@ -33,6 +34,30 @@ public class CustomerModifyController implements Initializable {
     private Text modifyCustomerCountryText;
     @FXML
     private Text modifyCustomerPhoneText;
+    @FXML
+    private Text existingCustomerNameText;
+    @FXML
+    private Text existingCustomerNameValue;
+    @FXML
+    private Text existingCustomerAddressText;
+    @FXML
+    private Text existingCustomerAddressValue;
+    @FXML
+    private Text existingCustomerCityText;
+    @FXML
+    private Text existingCustomerCityValue;
+    @FXML
+    private Text existingCustomerZipCodeText;
+    @FXML
+    private Text existingCustomerZipCodeValue;
+    @FXML
+    private Text existingCustomerCountryText;
+    @FXML
+    private Text existingCustomerCountryValue;
+    @FXML
+    private Text existingCustomerPhoneText;
+    @FXML
+    private Text existingCustomerPhoneValue;
     @FXML
     private TextField modifyCustomerNameTextField;
     @FXML
@@ -55,12 +80,6 @@ public class CustomerModifyController implements Initializable {
         int countryId = -1;
         int cityId = -1;
         int addressId = -1;
-        String updatedCustomerName = modifyCustomerNameTextField.getText();
-        String updatedCustomerAddress = modifyCustomerAddressTextField.getText();
-        String updatedCustomerCity = modifyCustomerCityTextField.getText();
-        String updatedCustomerCountry = modifyCustomerCountryTextField.getText();
-        String updatedCustomerPhone = modifyCustomerPhoneTextField.getText();
-        String updatedCustomerZip = modifyCustomerZipCodeTextField.getText();
 
         String existingCustomerName = selectedCustomer.getCustomerName();
         String existingCustomerAddress = selectedCustomer.getCustomerAddress();
@@ -71,11 +90,18 @@ public class CustomerModifyController implements Initializable {
         int existingCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
         String loggedInUserName = User.getUserName();
 
-        if (existingCustomerName.equals(updatedCustomerName) && existingCustomerAddress.equals(updatedCustomerAddress) &&
-                existingCustomerCity.equals(updatedCustomerCity) && existingCustomerZip.equals(updatedCustomerZip) &&
-                existingCustomerCountry.equals(updatedCustomerCountry) && existingCustomerPhone.equals(updatedCustomerPhone)) {
-            AlertMessage.display("Customer data did not change. Update values and try again.", "warning");
+        if (InputValidation.checkForAllEmptyInputs(modifyCustomerNameTextField, modifyCustomerAddressTextField, modifyCustomerCityTextField,
+                modifyCustomerZipCodeTextField, modifyCustomerCountryTextField, modifyCustomerPhoneTextField)) {
+            AlertMessage.display("Please provide new values and try again.", "warning");
+            return;
         } else {
+            String updatedCustomerName = modifyCustomerNameTextField.getText().isEmpty() ? existingCustomerName : modifyCustomerNameTextField.getText();
+            String updatedCustomerAddress = modifyCustomerAddressTextField.getText().isEmpty() ? existingCustomerAddress : modifyCustomerAddressTextField.getText();
+            String updatedCustomerCity = modifyCustomerCityTextField.getText().isEmpty() ? existingCustomerCity : modifyCustomerCityTextField.getText();
+            String updatedCustomerCountry = modifyCustomerCountryTextField.getText().isEmpty() ? existingCustomerCountry : modifyCustomerCountryTextField.getText();
+            String updatedCustomerPhone = modifyCustomerPhoneTextField.getText().isEmpty() ? existingCustomerPhone : modifyCustomerPhoneTextField.getText();
+            String updatedCustomerZip = modifyCustomerZipCodeTextField.getText().isEmpty() ? existingCustomerZip : modifyCustomerZipCodeTextField.getText();
+
             if (!existingCustomerCountry.equals(updatedCustomerCountry)) {
 
                 DBQuery.createQuery("SELECT country, countryId from country WHERE country = " + "'" + updatedCustomerCountry + "'");
@@ -165,12 +191,12 @@ public class CustomerModifyController implements Initializable {
 
     public void initModifyCustomerData(Customer customer) {
         selectedCustomer = customer;
-        modifyCustomerNameTextField.setText(selectedCustomer.getCustomerName());
-        modifyCustomerAddressTextField.setText(selectedCustomer.getCustomerAddress());
-        modifyCustomerCityTextField.setText(selectedCustomer.getCustomerCity());
-        modifyCustomerZipCodeTextField.setText(selectedCustomer.getCustomerZipCode());
-        modifyCustomerCountryTextField.setText(selectedCustomer.getCustomerCountry());
-        modifyCustomerPhoneTextField.setText(selectedCustomer.getCustomerPhoneNumber());
+        existingCustomerNameValue.setText(selectedCustomer.getCustomerName());
+        existingCustomerAddressValue.setText(selectedCustomer.getCustomerAddress());
+        existingCustomerCityValue.setText(selectedCustomer.getCustomerCity());
+        existingCustomerZipCodeValue.setText(selectedCustomer.getCustomerZipCode());
+        existingCustomerCountryValue.setText(selectedCustomer.getCustomerCountry());
+        existingCustomerPhoneValue.setText(selectedCustomer.getCustomerPhoneNumber());
     }
     public void loadMainWindow(ActionEvent event) throws IOException {
         NewWindow.display((Stage) customerModifyMainWindowLabel.getScene().getWindow(),
