@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="reportsWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReportsMainWindowController">
+   <children>
+      <Button fx:id="returnToMainViewButton" layoutX="677.0" layoutY="527.0" mnemonicParsing="false" onAction="#loadMainWindow" prefHeight="27.0" prefWidth="242.0" text="Return To Main View" />
+      <Text layoutX="406.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reports" textAlignment="CENTER" wrappingWidth="137.2060546875">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ComboBox fx:id="reportListComboBox" layoutX="65.0" layoutY="121.0" onAction="#apptTypesReportOnSelect" prefWidth="150.0" />
+      <Button fx:id="seeReportButton" layoutX="79.0" layoutY="527.0" mnemonicParsing="false" onAction="#showReport" text="See Report" />
+      <ComboBox fx:id="yearListComboBox" layoutX="65.0" layoutY="218.0" prefHeight="27.0" prefWidth="150.0" />
+      <ComboBox fx:id="consultantNamesComboBox" layoutX="65.0" layoutY="218.0" prefWidth="150.0" />
+      <Pane fx:id="reportsPane" layoutX="345.0" layoutY="94.0" prefHeight="393.0" prefWidth="552.0">
+         <children>
+            <Text fx:id="yearText" layoutX="223.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+         </children></Pane>
+      <Text fx:id="secondComboBoxText" layoutX="65.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Separator layoutX="282.0" layoutY="85.0" orientation="VERTICAL" prefHeight="422.0" prefWidth="7.0" />
+      <Text fx:id="reportNameHeader" layoutX="443.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="357.0" />
+   </children>
+</AnchorPane>

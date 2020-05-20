@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Appointment;
+import model.Schedule;
 import utilities.AlertMessage;
 import utilities.NewWindow;
 import utilities.Reports;
@@ -39,6 +40,8 @@ public class ReportsMainWindowController implements Initializable {
     @FXML
     private Text secondComboBoxText;
     @FXML
+    private Text reportNameHeader;
+    @FXML
     private Pane reportsPane;
     Month[] months = { Month.DECEMBER, Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL, Month.MAY,
             Month.JUNE, Month.JULY, Month.AUGUST, Month.SEPTEMBER, Month.OCTOBER, Month.NOVEMBER };
@@ -52,6 +55,7 @@ public class ReportsMainWindowController implements Initializable {
     }
     @FXML
     private void apptTypesReportOnSelect(){
+        reportNameHeader.setText("");
         if (reportListComboBox.getValue().equals(apptTypesReport) ||
                 reportListComboBox.getValue().equals(apptTotalReport)) {
             yearListComboBox.setVisible(true);
@@ -89,8 +93,10 @@ public class ReportsMainWindowController implements Initializable {
     }
 
     private void pickReportToShow(int year, String reportName) {
+        reportNameHeader.setText(reportName);
         switch (reportName) {
             case apptTypesReport:
+
                 showAppointmentTypesByMonth(year);
                 break;
             case apptTotalReport:
@@ -157,7 +163,7 @@ public class ReportsMainWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         reportListComboBox.getItems().addAll(apptTypesReport, apptTotalReport, apptScheduleByConsultant);
 //        TODO create method that generates a list of years with appointments
-        yearListComboBox.getItems().addAll("2020", "2019");
+        yearListComboBox.getItems().addAll(Schedule.existingYears());
         yearListComboBox.setVisible(false);
         consultantNamesComboBox.setVisible(false);
         secondComboBoxText.setText("");

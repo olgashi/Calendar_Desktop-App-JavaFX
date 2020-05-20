@@ -13,8 +13,7 @@ import java.time.*;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -88,12 +87,6 @@ public class Schedule {
 
     public static void clearAppointmentList(){
         Appointment.getAppointmentList().clear();
-    }
-    public static ObservableList<Appointment> getAppointmentList() {
-        return allAppointments;
-    }
-    public static ObservableList<Customer> getCustomerList() {
-        return allCustomers;
     }
 
     public static Integer lookupCustomerWithHighestID() {
@@ -219,4 +212,21 @@ public class Schedule {
            return (start.isAfter(businessHoursStart)) && end.isBefore(businessHoursEnd);
         }
 
+        public static List<String> existingYears(){
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
+            ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
+            Set<String> years = new HashSet<>(Arrays.asList(String.valueOf(LocalDateTime.now().getYear())));
+            for (Appointment appt: allAppointments) {
+                LocalDateTime existingApptEndParsed = LocalDateTime.parse(appt.getAppointmentEnd(), dateTimeFormatter);
+                int year = existingApptEndParsed.getYear();
+                if (!years.contains(String.valueOf(year))) {
+                    years.add(String.valueOf(year));
+                }
+            }
+            if (years.size() > 0) {
+                List<String> yearsSorted = new ArrayList<String>(years);
+                Collections.sort(yearsSorted);
+                return yearsSorted;
+            } else return null;
+    }
 }
