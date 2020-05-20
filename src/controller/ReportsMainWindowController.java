@@ -1,10 +1,12 @@
 package controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -43,6 +45,17 @@ public class ReportsMainWindowController implements Initializable {
     private Text reportNameHeader;
     @FXML
     private Pane reportsPane;
+    @FXML
+    private TableView<Appointment> consultantScheduleTable;
+    @FXML
+    private TableColumn<Appointment, String> name;
+    @FXML
+    private TableColumn<Appointment, String> customer;
+    @FXML
+    private TableColumn<Appointment, String> start;
+    @FXML
+    private TableColumn<Appointment, String> end;
+
     Month[] months = { Month.DECEMBER, Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL, Month.MAY,
             Month.JUNE, Month.JULY, Month.AUGUST, Month.SEPTEMBER, Month.OCTOBER, Month.NOVEMBER };
     private final String apptTypesReport = "Types by month";
@@ -55,7 +68,9 @@ public class ReportsMainWindowController implements Initializable {
     }
     @FXML
     private void apptTypesReportOnSelect(){
+        consultantScheduleTable.setVisible(false);
         reportNameHeader.setText("");
+        yearText.setText("");
         if (reportListComboBox.getValue().equals(apptTypesReport) ||
                 reportListComboBox.getValue().equals(apptTotalReport)) {
             yearListComboBox.setVisible(true);
@@ -64,7 +79,6 @@ public class ReportsMainWindowController implements Initializable {
             if (reportsPane.getChildren().size()>0) reportsPane.getChildren().clear();
         }
         else {
-            yearListComboBox.setVisible(false);
             reportsPane.getChildren().clear();
             if (reportListComboBox.getValue().equals(apptScheduleByConsultant)) {
                 consultantNamesComboBox.getItems().setAll(Reports.allAppointmentByConsultant().keySet());
@@ -78,8 +92,12 @@ public class ReportsMainWindowController implements Initializable {
     private void showReport(){
         int year = 0;
         reportsPane.getChildren().clear();
+        if (reportListComboBox.getValue() == null) {
+            AlertMessage.display("Please pick report type", "warning");
+            return;
+        }
         String reportName = (String) reportListComboBox.getValue();
-        if ((reportName.equals(apptTypesReport) || (reportName.equals(apptTotalReport))) && yearListComboBox.getValue() == null)
+        if ((reportName.equals(apptTypesReport) || reportName.equals(apptTotalReport)) && yearListComboBox.getValue() == null)
         {
             AlertMessage.display("Please pick a year", "warning");
             return;
@@ -96,7 +114,6 @@ public class ReportsMainWindowController implements Initializable {
         reportNameHeader.setText(reportName);
         switch (reportName) {
             case apptTypesReport:
-
                 showAppointmentTypesByMonth(year);
                 break;
             case apptTotalReport:
@@ -110,15 +127,17 @@ public class ReportsMainWindowController implements Initializable {
     }
 
     private void showAppointmentTypesByMonth(int year) {
+        consultantScheduleTable.setVisible(false);
+        reportsPane.setVisible(true);
         yearText.setText(String.valueOf(year));
         yearText.setVisible(true);
         int posIncrement = 30;
         for (Month month : months) {
         Map<String, Long> reportsForTheMonth = Reports.appointmentTypesByMonth(month, year);
             if (reportsForTheMonth!= null) {
-                String apptTypeString = "Appointment types: ";
+                String apptTypeString = "";
                 for (Map.Entry<String, Long> entry : reportsForTheMonth.entrySet()) {
-                   apptTypeString += entry.getKey() + ", count: " + entry.getValue();
+                   apptTypeString += entry.getKey() + ": " + entry.getValue() + "  ";
                 }
                 String textToShow = month.toString() + ": " + apptTypeString;
                 posIncrement = showReportOutput(posIncrement,textToShow);
@@ -127,19 +146,31 @@ public class ReportsMainWindowController implements Initializable {
     }
 
     private void showScheduleForConsultant(String consultantName){
+        yearListComboBox.setVisible(false);
         int posIncrement = 30;
         Map<String, List<Appointment>> allAppointments = Reports.allAppointmentByConsultant();
         List<Appointment> appointmentsForConsultant = allAppointments.get(consultantName);
+        ObservableList<Appointment> list = FXCollections.observableArrayList(appointmentsForConsultant);
         appointmentsForConsultant.sort(Comparator.comparing(appt -> appt.getAppointmentStart()));
-        for(Appointment appt: appointmentsForConsultant){
-            String textToShow = appt.getAppointmentType() + " with " + appt.getAppointmentCustomerName() + " on " + appt.getAppointmentStart();
-            posIncrement = showReportOutput(posIncrement, textToShow);
-        }
+//        for(Appointment appt: appointmentsForConsultant){
+//            String textToShow = appt.getAppointmentType() + " with " + appt.getAppointmentCustomerName() + " on " + appt.getAppointmentStart();
+//            posIncrement = showReportOutput(posIncrement, textToShow);
+//        }
+        consultantScheduleTable.setVisible(true);
+        reportsPane.setVisible(false);
+        name.setCellValueFactory(new PropertyValueFactory<>("appointmentContact"));
+        customer.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
+        start.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
+        end.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
+        consultantScheduleTable.setItems(list);
     }
 
+
     private void showAppointmentTotalByMonth(int year) {
+        consultantScheduleTable.setVisible(false);
         yearText.setText(String.valueOf(year));
         yearText.setVisible(true);
+        reportsPane.setVisible(true);
         int posIncrement = 30;
         for (Month month : months) {
             int apptTotal = Reports.appointmentTotalByMonth(month, year);
@@ -161,8 +192,8 @@ public class ReportsMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        consultantScheduleTable.setVisible(false);
         reportListComboBox.getItems().addAll(apptTypesReport, apptTotalReport, apptScheduleByConsultant);
-//        TODO create method that generates a list of years with appointments
         yearListComboBox.getItems().addAll(Schedule.existingYears());
         yearListComboBox.setVisible(false);
         consultantNamesComboBox.setVisible(false);
