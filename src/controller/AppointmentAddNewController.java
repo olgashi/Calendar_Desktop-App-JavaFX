@@ -31,8 +31,6 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private Text newAppointmentTimeText;
     @FXML
-    private Text newAppointmentCustomerText;
-    @FXML
     private Text newAppointmentLocationText;
     @FXML
     private Text newAppointmentTypeText;
@@ -43,21 +41,17 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private Text newAppointmentContactText;
     @FXML
-    private ComboBox newAppointmentDurationComboBox;
+    private ComboBox<String> addNewAppointmentDurationComboBox;
     @FXML
-    private ComboBox newAppointmentHoursComboBox;
+    private ComboBox<String> addNewAppointmentHoursComboBox;
     @FXML
-    private ComboBox newAppointmentMinutesComboBox;
+    private ComboBox<String> addNewAppointmentMinutesComboBox;
     @FXML
     private DatePicker addNewAppointmentDatePicker;
     @FXML
-    private TextField addNewAppointmentTimeHoursTextField;
+    private ComboBox<String> addNewAppointmentTypeComboBox;
     @FXML
-    private TextField addNewAppointmentTimeMinutesTextField;
-    @FXML
-    private ComboBox addNewAppointmentTypeComboBox;
-    @FXML
-    private ComboBox addNewAppointmentContactComboBox;
+    private ComboBox<String> addNewAppointmentContactComboBox;
     @FXML
     private TextField addNewAppointmentDescriptionTextField;
     @FXML
@@ -77,15 +71,17 @@ public class AppointmentAddNewController implements Initializable {
     @FXML
     private Button addNewAppointmentCreateButton;
     private Customer selectedCustomer;
-    private int selectedCustomerId, userId;
-    private String  contact, url;
-    String loggedInUserName = User.getUserName();
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
+    private int selectedCustomerId;
+    private int userId = 1;
+    private String  contact;
+    private String url = "not provided";
+    private String loggedInUserName = User.getUserName();
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
         LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
         selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
-        String durationTempStr = newAppointmentDurationComboBox.getValue().toString();
+        String durationTempStr = addNewAppointmentDurationComboBox.getValue();
         String durationTempArr[]= durationTempStr.split(" ");
         int appointmentDuration = Integer.parseInt(durationTempArr[0]);
 
@@ -104,15 +100,15 @@ public class AppointmentAddNewController implements Initializable {
             AlertMessage.display("Contact cannot be empty", "warning");
             return;
         }
-        if (newAppointmentHoursComboBox.getValue() == null && newAppointmentMinutesComboBox.getValue() == null) {
+        if (addNewAppointmentHoursComboBox.getValue() == null && addNewAppointmentMinutesComboBox.getValue() == null) {
             AlertMessage.display("Please specify time for the appointment", "warning");
             return;
         }
-        if (newAppointmentHoursComboBox.getValue() == null) {
+        if (addNewAppointmentHoursComboBox.getValue() == null) {
             AlertMessage.display("Please select hours for the appointment", "warning");
             return;
         }
-        if (newAppointmentMinutesComboBox.getValue() == null) {
+        if (addNewAppointmentMinutesComboBox.getValue() == null) {
             AlertMessage.display("Please select minutes for the appointment", "warning");
             return;
         }
@@ -126,29 +122,19 @@ public class AppointmentAddNewController implements Initializable {
                     addNewAppointmentDatePicker.getValue().getYear(),
                     addNewAppointmentDatePicker.getValue().getMonthValue(),
                     addNewAppointmentDatePicker.getValue().getDayOfMonth(),
-                    Integer.parseInt(newAppointmentHoursComboBox.getValue().toString()),
-                    Integer.parseInt(newAppointmentMinutesComboBox.getValue().toString()));
+                    Integer.parseInt(addNewAppointmentHoursComboBox.getValue()),
+                    Integer.parseInt(addNewAppointmentMinutesComboBox.getValue()));
 
             fullAppointmentStartDateTime = LocalDateTime.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s").format(fullAppointmentStartDateTime), dtf);
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
+            contact = addNewAppointmentContactComboBox.getValue();
 
             if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, selectedCustomerId, Integer.parseInt(Schedule.setAppointmentId()))){
                 AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
                 return;
             }
-            if (!Schedule.outsideOfBusinessHoursCheck(fullAppointmentStartDateTime, fullAppointmentEndDateTime)){
-                AlertMessage.display("Scheduling appointments outside of business hours is not allowed, please select different time and try again", "warning");
-                return;
-            }
-
-//            TODO change these values to actual values
-            userId = 1;
-            contact = addNewAppointmentContactComboBox.getValue().toString();
-            url = "test";
-
             createAppointmentDB(fullAppointmentStartDateTime, fullAppointmentEndDateTime);
-
             if (DBQuery.queryNumRowsAffected() > 0) {
                 addAppointmentToSchedule(fullAppointmentStartDateTime, fullAppointmentEndDateTime);
                 AlertMessage.display("Appointment was created successfully!", "information");
@@ -175,8 +161,6 @@ public class AppointmentAddNewController implements Initializable {
                 "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
     }
 
-    //TODO am pm is not considered when adding appointment, add
-//    TODO add check that time entered is within business hours and date entered is not on the weekend
     @FXML
     private void loadMainWindowAppointmentAddNew(ActionEvent event) throws IOException {
         NewWindow.display((Stage) appointmentAddNewMainWindowLabel.getScene().getWindow(),
@@ -188,15 +172,15 @@ public class AppointmentAddNewController implements Initializable {
         Callback<DatePicker, DateCell> dayCellFactory= Calendar.customDayCellFactory();
         addNewAppointmentDatePicker.setDayCellFactory(dayCellFactory);
 
-        newAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
+        addNewAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
         addNewAppointmentTypeComboBox.getItems().addAll(Reports.allExistingAppointmentTypes());
         addNewAppointmentContactComboBox.getItems().addAll(Reports.allExistingConsultants());
-        newAppointmentHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16", "17");
-        newAppointmentMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
-        addNewAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerName"));
-        addNewAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerCity"));
-        addNewAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<Customer,String>("customerPhoneNumber"));
+        addNewAppointmentHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16", "17");
+        addNewAppointmentMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
+
+        addNewAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        addNewAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
+        addNewAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
         addNewAppointmentCustomerTable.setItems(Customer.getCustomerList());
     }
 }
-// TODO include info popups on hover for input fields
