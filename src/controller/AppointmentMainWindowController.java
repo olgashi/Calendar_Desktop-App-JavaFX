@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,9 +50,7 @@ public class AppointmentMainWindowController implements Initializable {
     private Button deleteAppointmentButton;
     @FXML
     private Button returnToMainWindowButton;
-// TODO:This method is also in CustomerMainWindow Controller, extract?,
-//  look if can grab info from event and load an appropriate file based on that (also look at openAddAppointmentWindow())
-//    TODO doublecheck all access modifiers and make sure they all make sense
+
     @FXML
     public void loadMainWindow(ActionEvent event) throws IOException {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
@@ -64,6 +61,7 @@ public class AppointmentMainWindowController implements Initializable {
         NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("/view/AppointmentAddNew.fxml"));
     }
+
     public void deleteAppointment() throws SQLException {
         Appointment appointment = appointmentTable.getSelectionModel().getSelectedItem();
         if (appointment != null) {
@@ -82,12 +80,11 @@ public class AppointmentMainWindowController implements Initializable {
     }
 
     public void openModifyAppointmentWindow(ActionEvent event) throws IOException {
-        //TODO refactor this if possible to still use NewWindow.display
         Appointment appointment = null;
         try {
             appointment = appointmentTable.getSelectionModel().getSelectedItem();
         } catch (NullPointerException e) {
-            e.getSuppressed();
+            e.printStackTrace();
         }
         if (appointment!= null) {
             try {
