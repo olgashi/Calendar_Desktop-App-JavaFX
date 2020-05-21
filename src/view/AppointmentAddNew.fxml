@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppointmentAddNewController">
+   <children>
+      <Text fx:id="appointmentAddNewMainWindowLabel" layoutX="311.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Appointment" textAlignment="CENTER" wrappingWidth="318.24072265625">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <TextField fx:id="addNewAppointmentTitleTextField" layoutX="134.0" layoutY="90.0" prefHeight="27.0" prefWidth="191.0" />
+      <DatePicker fx:id="addNewAppointmentDatePicker" layoutX="135.0" layoutY="140.0" prefHeight="27.0" prefWidth="120.0" />
+      <TextField fx:id="addNewAppointmentTimeHoursTextField" layoutX="135.0" layoutY="185.0" prefHeight="27.0" prefWidth="44.0" />
+      <TextField fx:id="addNewAppointmentTimeMinutesTextField" layoutX="188.0" layoutY="185.0" prefHeight="27.0" prefWidth="44.0" />
+      <RadioButton fx:id="addNewAppointmentTimeAM" layoutX="240.0" layoutY="189.0" mnemonicParsing="false" text="AM" />
+      <RadioButton fx:id="addNewAppointmentTimePM" layoutX="289.0" layoutY="189.0" mnemonicParsing="false" text="PM" />
+      <ComboBox fx:id="newAppointmentDurationComboBox" layoutX="136.0" layoutY="232.0" prefWidth="150.0" />
+      <TextField fx:id="addNewAppointmentLocationTextField" layoutX="135.0" layoutY="281.0" prefHeight="27.0" prefWidth="191.0" />
+      <ComboBox fx:id="addNewAppointmentTypeComboBox" layoutX="137.0" layoutY="378.0" prefWidth="150.0" />
+      <TextField fx:id="addNewAppointmentDescriptionTextField" layoutX="136.0" layoutY="429.0" prefHeight="27.0" prefWidth="191.0" />
+      <TableView fx:id="addNewAppointmentCustomerTable" layoutX="468.0" layoutY="84.0" prefHeight="371.0" prefWidth="446.0">
+         <columns>
+            <TableColumn fx:id="addNewAppointmentCustomerNameColumn" prefWidth="130.0" text="Customer Name" />
+            <TableColumn fx:id="addNewAppointmentCustomerLocationColumn" prefWidth="156.0" text="Customer Location" />
+            <TableColumn fx:id="addNewAppointmentCustomerPhoneNumberColumn" prefWidth="159.0" text="Customer Phone" />
+         </columns>
+      </TableView>
+      <Text fx:id="newAppointmentTitleText" layoutX="44.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Text fx:id="newAppointmentDescriptionText" layoutX="41.0" layoutY="442.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" wrappingWidth="75.2158203125" />
+      <Text fx:id="newAppointmentDateText" layoutX="45.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Button fx:id="addNewAppointmentCreateButton" layoutX="805.0" layoutY="531.0" mnemonicParsing="false" onAction="#createAppointment" prefHeight="27.0" prefWidth="109.0" text="Create" />
+      <Button fx:id="addNewAppointmentCancelButton" layoutX="637.0" layoutY="531.0" mnemonicParsing="false" onAction="#loadMainWindowAppointmentAddNew" prefHeight="27.0" prefWidth="109.0" text="Cancel" />
+      <Text fx:id="newAppointmentLocationText" layoutX="42.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" />
+      <Text fx:id="newAppointmentTypeText" layoutX="41.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
+      <Text fx:id="newAppointmentTimeText" layoutX="41.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time" wrappingWidth="39.1767578125" />
+      <Text layoutX="181.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text=":" />
+      <Text fx:id="newAppointmentDurationText" layoutX="45.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Duration" />
+      <ComboBox fx:id="addNewAppointmentContactComboBox" layoutX="136.0" layoutY="330.0" prefWidth="150.0" />
+      <Text fx:id="newAppointmentContactText" layoutX="41.0" layoutY="348.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contact" />
+   </children>
+</AnchorPane>

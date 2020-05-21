@@ -94,7 +94,7 @@ public class AppointmentAddNewController implements Initializable {
         String durationTempArr[]= durationTempStr.split(" ");
         int appointmentDuration = Integer.parseInt(durationTempArr[0]);
 
-        if (!InputValidation.checkForAllEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField,
+        if (InputValidation.checkForAnyEmptyInputs(addNewAppointmentTimeHoursTextField, addNewAppointmentTimeMinutesTextField,
                 addNewAppointmentDescriptionTextField, addNewAppointmentTitleTextField, addNewAppointmentLocationTextField)) {
             AlertMessage.display("All fields are required. Please make changes and try again.", "warning");
             return;

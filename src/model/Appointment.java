@@ -122,5 +122,4 @@ public class Appointment {
     public void setAppointmentCustomerId(String appCustId) {
         appointmentCustomerId.set(appCustId);
     }
-
 }

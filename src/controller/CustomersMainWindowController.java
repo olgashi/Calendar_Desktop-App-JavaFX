@@ -79,13 +79,13 @@ public class CustomersMainWindowController implements Initializable {
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
-        } else AlertMessage.display("Please select customer in a table and then click 'Modify Customer'.", "warning");
+        } else AlertMessage.display("Please select customer to modify.", "warning");
     }
 
     public void deleteCustomer() throws SQLException {
             Customer customer = customerTable.getSelectionModel().getSelectedItem();
             if (customer != null) {
-                if (AlertMessage.display("Are you sure you want to delete customer " + customer.getCustomerName(), "confirmation")){
+                if (AlertMessage.display("Are you sure you want to delete customer" + customer.getCustomerName() +"?", "confirmation")){
                     DBQuery.createQuery("DELETE FROM appointment WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
                     DBQuery.createQuery("DELETE FROM customer WHERE customerId = " + "'" + customer.getCustomerId()  + "'");
                     Schedule.deleteCustomer(customer);

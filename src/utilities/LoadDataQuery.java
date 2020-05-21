@@ -5,7 +5,7 @@ import model.Customer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class HelperQuery {
+public class LoadDataQuery {
     public static void getCustomerData () throws SQLException {
         DBQuery.createQuery("SELECT customerId, customerName, address, city, postalCode, country, phone FROM U071A3.customer, U071A3.address, U071A3.city, U071A3.country " +
                 "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");

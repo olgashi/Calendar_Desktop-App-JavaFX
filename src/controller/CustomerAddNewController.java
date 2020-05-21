@@ -39,7 +39,7 @@ public class CustomerAddNewController implements Initializable {
         address2 = "not provided";
         createDate = lastUpdate = LocalDateTime.now();
 
-        if (!InputValidation.checkForAllEmptyInputs(newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
+        if (InputValidation.checkForAnyEmptyInputs(newCustomerNameTextField, newCustomerAddressTextField, newCustomerCityTextField,
                 newCustomerZipTextField, newCustomerCountryTextField, newCustomerNumberTextField)){
 
             AlertMessage.display("All Fields are required.", "warning");

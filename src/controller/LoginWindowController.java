@@ -1,5 +1,6 @@
 package controller;
 //TODO: style with css when finished
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,13 +30,13 @@ public class LoginWindowController implements Initializable {
     @FXML
     private Button clearLoginButton;
     @FXML
+    private Button exitButton;
+    @FXML
     private TextField usernameTextField;
     @FXML
     private TextField passwordTextField;
     @FXML
     private Text loginInvalidWarningText;
-    @FXML
-    private Text loginWindowLabelText;
     @FXML
     private Text loginUsernameText;
     @FXML
@@ -56,6 +57,12 @@ public class LoginWindowController implements Initializable {
         public void loadDataFromDB() throws SQLException {
         LoadDataQuery.getCustomerData();
         LoadDataQuery.getAppointmentData();
+    }
+
+    @FXML
+    public void exitButtonClickEvent(){
+        Platform.exit();
+        System.exit(0);
     }
 
     public void loginButtonClickEvent(ActionEvent event) throws IOException, SQLException {
@@ -88,6 +95,6 @@ public class LoginWindowController implements Initializable {
         AuditLog.createFile();
         loginInvalidWarningText.setText("");
         currentLocale = Locale.getDefault();
-        LoginLanguage.setLoginWindowLabels(currentLocale.getCountry(), loginUsernameText, loginPasswordText, loginWindowLabelText, loginButton );
+        LoginLanguage.setLoginWindowLabels(currentLocale.getCountry(), loginUsernameText, loginPasswordText, loginButton, exitButton);
     }
 }

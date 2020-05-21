@@ -3,6 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -20,12 +22,17 @@
       <Button fx:id="seeReportButton" layoutX="79.0" layoutY="527.0" mnemonicParsing="false" onAction="#showReport" text="See Report" />
       <ComboBox fx:id="yearListComboBox" layoutX="65.0" layoutY="218.0" prefHeight="27.0" prefWidth="150.0" />
       <ComboBox fx:id="consultantNamesComboBox" layoutX="65.0" layoutY="218.0" prefWidth="150.0" />
-      <Pane fx:id="reportsPane" layoutX="345.0" layoutY="94.0" prefHeight="393.0" prefWidth="552.0">
-         <children>
-            <Text fx:id="yearText" layoutX="223.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-         </children></Pane>
       <Text fx:id="secondComboBoxText" layoutX="65.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       <Separator layoutX="282.0" layoutY="85.0" orientation="VERTICAL" prefHeight="422.0" prefWidth="7.0" />
       <Text fx:id="reportNameHeader" layoutX="443.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="357.0" />
+      <TableView fx:id="consultantScheduleTable" layoutX="350.0" layoutY="120.0" prefHeight="332.0" prefWidth="569.0">
+        <columns>
+          <TableColumn fx:id="name" prefWidth="140.0" text="name" />
+          <TableColumn fx:id="customer" minWidth="0.0" prefWidth="153.0" text="customer" />
+            <TableColumn fx:id="start" prefWidth="132.0" text="start" />
+            <TableColumn fx:id="end" prefWidth="143.0" text="end" />
+        </columns>
+      </TableView>
+      <Pane fx:id="reportsPane" layoutX="321.0" layoutY="104.0" prefHeight="385.0" prefWidth="598.0" />
    </children>
 </AnchorPane>

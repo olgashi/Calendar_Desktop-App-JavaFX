@@ -6,13 +6,13 @@ import java.util.regex.Pattern;
 public class InputValidation {
     public static boolean checkForAllEmptyInputs(TextField... inputs) {
         for (TextField inputField: inputs){
-            if (inputField.getText().isEmpty()) return false;
+            if (!inputField.getText().isEmpty()) return false;
         }
         return true;
     }
     public static boolean checkForAnyEmptyInputs(TextField... inputs) {
         for (TextField inputField: inputs){
-            if (!inputField.getText().isEmpty()) return true;
+            if (inputField.getText().isEmpty()) return true;
         }
         return false;
     }

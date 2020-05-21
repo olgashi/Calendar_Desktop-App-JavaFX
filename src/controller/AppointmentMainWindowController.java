@@ -38,8 +38,6 @@ public class AppointmentMainWindowController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> appointmentType;
     @FXML
-    private TableColumn<Appointment, String> appointmentUrl;
-    @FXML
     private TableColumn<Appointment, String> appointmentStart;
     @FXML
     private TableColumn<Appointment, String> appointmentEnd;
@@ -69,7 +67,7 @@ public class AppointmentMainWindowController implements Initializable {
     public void deleteAppointment() throws SQLException {
         Appointment appointment = appointmentTable.getSelectionModel().getSelectedItem();
         if (appointment != null) {
-            if (AlertMessage.display("Are you sure you want to delete appointment with " + appointment.getAppointmentCustomerName(), "confirmation")){
+            if (AlertMessage.display("Are you sure you want to delete appointment with " + appointment.getAppointmentCustomerName() + "?", "confirmation")){
                 DBQuery.createQuery("DELETE FROM appointment WHERE appointmentId = " + "'" + appointment.getAppointmentId()  + "'");
                 Schedule.deleteAppointment(appointment);
             }
@@ -115,11 +113,9 @@ public class AppointmentMainWindowController implements Initializable {
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
         appointmentContact.setCellValueFactory(new PropertyValueFactory<>("appointmentContact"));
         appointmentType.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
-        appointmentUrl.setCellValueFactory(new PropertyValueFactory<>("appointmentUrl"));
         appointmentStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
         appointmentCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
-        ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
-        appointmentTable.setItems(allAppointments);
+        appointmentTable.setItems(Appointment.getAppointmentList());
     }
 }
