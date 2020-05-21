@@ -21,6 +21,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class AppointmentModifyController implements Initializable {
@@ -101,6 +103,10 @@ public class AppointmentModifyController implements Initializable {
     private TextField modifyAppointmentTypeTextField;
     @FXML
     private ComboBox modifyAppointmentTypeComboBox;
+    @FXML
+    private ComboBox modifyAppointmentHoursComboBox;
+    @FXML
+    private ComboBox modifyAppointmentMinutesComboBox;
     @FXML
     private TextField modifyAppointmentDescriptionTextField;
     @FXML
@@ -184,43 +190,15 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime createDate = LocalDateTime.now();
         LocalDateTime lastUpdate = LocalDateTime.now();
 
-//        LocalDateTime existingAppointmentEnd = LocalDateTime.parse(appointmentEndDateTime, dtf);
-        if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField,
-                modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField, modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField,
-                modifyAppointmentTimeMinutesTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
+        if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField,
+                modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField) &&
+                selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
                 modifyAppointmentDurationComboBox.getValue() == null && modifyAppointmentTypeComboBox.getValue() == null &&
                 modifyAppointmentContactComboBox.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
             return;
         }
-        if (!modifyAppointmentTimeHoursTextField.getText().isEmpty()) {
-            if (!InputValidation.timeInputNumbersOnly(modifyAppointmentTimeHoursTextField)) {
-                AlertMessage.display("Hours field has to be numbers only. Please correct and try again.", "warning");
-                return;
-            } else {
-                if (!InputValidation.timeInputProperLength(modifyAppointmentTimeHoursTextField)) {
-                    AlertMessage.display("Hours value should be not longer than 2 digits. Please correct and try again.", "warning");
-                    return;
-                } else {
-                    existingAppointmentHours = modifyAppointmentTimeHoursTextField.getText();
 
-                }
-            }
-        }
-
-        if (!modifyAppointmentTimeMinutesTextField.getText().isEmpty()) {
-            if (!InputValidation.timeInputNumbersOnly(modifyAppointmentTimeMinutesTextField)) {
-                AlertMessage.display("Minutes field has to be numbers only. Please correct and try again.", "warning");
-                return;
-            } else {
-                if (!InputValidation.timeInputProperLength(modifyAppointmentTimeMinutesTextField)) {
-                    AlertMessage.display("Minutes value should be not longer than 2 digits. Please correct and try again.", "warning");
-                    return;
-                } else {
-                    existingAppointmentMinutes = modifyAppointmentTimeMinutesTextField.getText();
-                }
-            }
-        }
         updatedContact = (modifyAppointmentContactComboBox.getValue() == null) ?  selectedAppointment.getAppointmentContact() : modifyAppointmentContactComboBox.getValue().toString();
 
         updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
@@ -228,8 +206,10 @@ public class AppointmentModifyController implements Initializable {
         updatedType = modifyAppointmentTypeComboBox.getValue() == null ? selectedAppointment.getAppointmentType() : modifyAppointmentLocationTextField.getText();
         updatedDescription = modifyAppointmentDescriptionTextField.getText().isEmpty() ? selectedAppointment.getAppointmentDescription() : modifyAppointmentDescriptionTextField.getText();
         updatedCustomerId = selectedAppointmentCustomer == null ? selectedAppointment.getAppointmentCustomerId() : selectedAppointmentCustomer.getCustomerId();
-        updatedHours = modifyAppointmentTimeHoursTextField.getText().isEmpty() ? existingAppointmentHours : modifyAppointmentTimeHoursTextField.getText();
-        updatedMinutes = modifyAppointmentTimeMinutesTextField.getText().isEmpty() ? existingAppointmentMinutes : modifyAppointmentTimeMinutesTextField.getText();
+
+        updatedHours = modifyAppointmentHoursComboBox.getValue() == null ? existingAppointmentHours : modifyAppointmentHoursComboBox.getValue().toString();
+        updatedMinutes = modifyAppointmentMinutesComboBox.getValue() == null ? existingAppointmentMinutes : modifyAppointmentMinutesComboBox.getValue().toString();
+
         updatedAppointmentYear = modifyAppointmentNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyAppointmentNewDate.getValue().getYear());
         updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyAppointmentNewDate.getValue().getMonth();
         updatedAppointmentDay = modifyAppointmentNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyAppointmentNewDate.getValue().getDayOfMonth());
@@ -251,15 +231,11 @@ public class AppointmentModifyController implements Initializable {
             int appointmentDuration = Integer.parseInt(durationTempArr[0]);
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
         }
-        if (!Schedule.outsideOfBusinessHoursCheck(fullAppointmentStartDateTime, fullAppointmentEndDateTime)){
-            AlertMessage.display("Scheduling appointments outside of business hours is not allowed, please select different time and try again", "warning");
-            return;
-        }
 
 // TODO figure out fields that are not in the view, like url, contact
         try {
             DBQuery.createQuery("UPDATE appointment SET customerId = " + "'" + updatedCustomerId + "'" + ", title = " + "'" + updatedTitle + "'" + ", description = " + "'" + updatedDescription + "'" +
-                    ", location = " + "'" + updatedLocation + "'" + ", contact = " + "'" + updatedContact + "'" + ", type = " + "'" + updatedType + "'" + ", start = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", end = " + "'" + ConvertTime.convertToUTCTime(fullAppointmentEndDateTime) + "'" +
+                    ", location = " + "'" + updatedLocation + "'" + ", contact = " + "'" + updatedContact + "'" + ", type = " + "'" + updatedType + "'" + ", start = " + "'" + DateTimeUtils.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", end = " + "'" + DateTimeUtils.convertToUTCTime(fullAppointmentEndDateTime) + "'" +
                     ", createDate = " + "'" + createDate + "'" + ", createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = " + "'" + lastUpdate + "'" + ", lastUpdateBy = " + "'" + loggedInUserName + "'" +
                     " WHERE appointmentId = " + "'" + selectedAppointment.getAppointmentId() + "'");
         } catch (SQLException e) {
@@ -292,14 +268,11 @@ public class AppointmentModifyController implements Initializable {
         Callback<DatePicker, DateCell> dayCellFactory = Calendar.customDayCellFactory();
         modifyAppointmentNewDate.setDayCellFactory(dayCellFactory);
         modifyAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
-        modifyAppointmentTypeComboBox.getItems().addAll("Initial w/customer", "Recurring w/customer", "Recurring internal");
-        modifyAppointmentContactComboBox.getItems().addAll("Heleentje Tacita", "Meintje Hedy", "Dora Lisanne", "Benjamim Angélica", "Klaos Floriana");
-
+        modifyAppointmentTypeComboBox.getItems().addAll(Reports.allExistingAppointmentTypes());
+        modifyAppointmentContactComboBox.getItems().addAll(Reports.allExistingConsultants());
+        modifyAppointmentHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16", "17");
+        modifyAppointmentMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
         //        TODO extract this to a method?
-        modifyAppointmentAmPMtoggleGroup = new ToggleGroup();
-        this.modifyAppointmentTimeAM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
-        this.modifyAppointmentTimePM.setToggleGroup(modifyAppointmentAmPMtoggleGroup);
-        modifyAppointmentTimeAM.setSelected(true);
         modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
         modifyAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
