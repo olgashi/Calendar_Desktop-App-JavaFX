@@ -21,8 +21,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class AppointmentModifyController implements Initializable {
@@ -90,18 +88,6 @@ public class AppointmentModifyController implements Initializable {
     @FXML
     private DatePicker modifyAppointmentNewDate;
     @FXML
-    private RadioButton modifyAppointmentTimeAM;
-    @FXML
-    private RadioButton modifyAppointmentTimePM;
-    @FXML
-    private ToggleGroup modifyAppointmentAmPMtoggleGroup;
-    @FXML
-    private TextField modifyAppointmentTimeHoursTextField;
-    @FXML
-    private TextField modifyAppointmentTimeMinutesTextField;
-    @FXML
-    private TextField modifyAppointmentTypeTextField;
-    @FXML
     private ComboBox modifyAppointmentTypeComboBox;
     @FXML
     private ComboBox modifyAppointmentHoursComboBox;
@@ -152,6 +138,9 @@ public class AppointmentModifyController implements Initializable {
         selectedAppointment = appointment;
         appointmentStartDateTime = selectedAppointment.getAppointmentStart();
         appointmentEndDateTime = selectedAppointment.getAppointmentEnd();
+        LocalDateTime apptStart = LocalDateTime.parse(appointmentStartDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
+        LocalDateTime apptEnd = LocalDateTime.parse(appointmentEndDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
+        Duration duration = Duration.between(apptStart, apptEnd);
 
         String dateTimeArr[] = appointmentStartDateTime.split(" |T");
         existingAppointmentStartDate = dateTimeArr[0];
@@ -173,7 +162,7 @@ public class AppointmentModifyController implements Initializable {
         existingAppointmentDateValue.setText(existingAppointmentStartDate);
         existingAppointmentTimeValue.setText(existingAppointmentStartTime);
         existingAppointmentContactValue.setText(selectedAppointment.getAppointmentContact());
-//        existingAppointmentDurationValue.setText();
+        existingAppointmentDurationValue.setText(String.valueOf(duration.toMinutes()) + " mins");
         existingAppointmentLocationValue.setText(selectedAppointment.getAppointmentLocation());
         existingAppointmentTypeValue.setText(selectedAppointment.getAppointmentType());
         existingAppointmentDescriptionValue.setText(selectedAppointment.getAppointmentDescription());
@@ -191,8 +180,7 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime lastUpdate = LocalDateTime.now();
 
         if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField,
-                modifyAppointmentLocationTextField, modifyAppointmentTimeHoursTextField, modifyAppointmentTimeMinutesTextField) &&
-                selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
+                modifyAppointmentLocationTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
                 modifyAppointmentDurationComboBox.getValue() == null && modifyAppointmentTypeComboBox.getValue() == null &&
                 modifyAppointmentContactComboBox.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
