@@ -38,8 +38,6 @@ public class ReportsMainWindowController implements Initializable {
     @FXML
     private AnchorPane reportsWindow;
     @FXML
-    private Text yearText;
-    @FXML
     private Text secondComboBoxText;
     @FXML
     private Text reportNameHeader;
@@ -70,13 +68,11 @@ public class ReportsMainWindowController implements Initializable {
     private void apptTypesReportOnSelect(){
         consultantScheduleTable.setVisible(false);
         reportNameHeader.setText("");
-        yearText.setText("");
         if (reportListComboBox.getValue().equals(apptTypesReport) ||
                 reportListComboBox.getValue().equals(apptTotalReport)) {
             yearListComboBox.setVisible(true);
             consultantNamesComboBox.setVisible(false);
             secondComboBoxText.setText("Pick a year");
-            if (reportsPane.getChildren().size()>0) reportsPane.getChildren().clear();
         }
         else {
             reportsPane.getChildren().clear();
@@ -129,8 +125,6 @@ public class ReportsMainWindowController implements Initializable {
     private void showAppointmentTypesByMonth(int year) {
         consultantScheduleTable.setVisible(false);
         reportsPane.setVisible(true);
-        yearText.setText(String.valueOf(year));
-        yearText.setVisible(true);
         int posIncrement = 30;
         for (Month month : months) {
         Map<String, Long> reportsForTheMonth = Reports.appointmentTypesByMonth(month, year);
@@ -147,15 +141,10 @@ public class ReportsMainWindowController implements Initializable {
 
     private void showScheduleForConsultant(String consultantName){
         yearListComboBox.setVisible(false);
-        int posIncrement = 30;
         Map<String, List<Appointment>> allAppointments = Reports.allAppointmentByConsultant();
         List<Appointment> appointmentsForConsultant = allAppointments.get(consultantName);
         ObservableList<Appointment> list = FXCollections.observableArrayList(appointmentsForConsultant);
         appointmentsForConsultant.sort(Comparator.comparing(appt -> appt.getAppointmentStart()));
-//        for(Appointment appt: appointmentsForConsultant){
-//            String textToShow = appt.getAppointmentType() + " with " + appt.getAppointmentCustomerName() + " on " + appt.getAppointmentStart();
-//            posIncrement = showReportOutput(posIncrement, textToShow);
-//        }
         consultantScheduleTable.setVisible(true);
         reportsPane.setVisible(false);
         name.setCellValueFactory(new PropertyValueFactory<>("appointmentContact"));
@@ -168,8 +157,6 @@ public class ReportsMainWindowController implements Initializable {
 
     private void showAppointmentTotalByMonth(int year) {
         consultantScheduleTable.setVisible(false);
-        yearText.setText(String.valueOf(year));
-        yearText.setVisible(true);
         reportsPane.setVisible(true);
         int posIncrement = 30;
         for (Month month : months) {
