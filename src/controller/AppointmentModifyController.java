@@ -219,6 +219,7 @@ public class AppointmentModifyController implements Initializable {
             e.printStackTrace();
         }
         if (DBQuery.queryNumRowsAffected() > 0) {
+            AlertMessage.display("Appointment was updated successfully!", "information");
             Appointment appointmentToUpdate = selectedAppt;
             appointmentToUpdate.setAppointmentCustomerId(updatedCustomerId);
             appointmentToUpdate.setAppointmentCustomerName(updatedCustomerName);
