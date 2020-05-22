@@ -6,17 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import model.Appointment;
-import model.Customer;
 import model.Schedule;
-import utilities.Calendar;
 import utilities.NewWindow;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -59,12 +53,14 @@ public class CalendarMainWindowController implements Initializable {
     private Text currentTimeFrameLabel;
     @FXML
     private Text currentWeekLabel;
+    @FXML
+    private Text yearViewByMonth;
 
-    LocalDate currentDate = LocalDate.now();
-    int thisYearInt = currentDate.getYear();
-    Month thisMonth = currentDate.getMonth();
-    Month nextMonth = thisMonth;
-    boolean byWeekTimeFrame;
+    private LocalDate currentDate = LocalDate.now();
+    private int thisYearInt = currentDate.getYear();
+    private Month thisMonth = currentDate.getMonth();
+    private Month nextMonth = thisMonth;
+    private boolean byWeekTimeFrame;
 
     public void loadMainWindow(ActionEvent event) throws IOException {
         NewWindow.display((Stage) calendarMainWindowLabel.getScene().getWindow(),
@@ -75,7 +71,8 @@ public class CalendarMainWindowController implements Initializable {
         if (thisMonth.equals(Month.DECEMBER) && nextMonth.equals(Month.JANUARY)) thisYearInt += 1;
         if (nextMonth.equals(Month.DECEMBER) && thisMonth.equals(Month.JANUARY)) thisYearInt -= 1;
     }
-    public String calculateWeekRange(LocalDate currentDate){
+
+    public String calculateAndCreateWeekRangeString(LocalDate currentDate){
         int daysSinceSunday = currentDate.getDayOfWeek().getValue();
         LocalDate weekStartDay = currentDate.minus(Period.ofDays(daysSinceSunday));
         LocalDate weekEndDay = weekStartDay.plus(Period.ofDays(6));
@@ -84,59 +81,67 @@ public class CalendarMainWindowController implements Initializable {
         return formattedStringStart + " - " + formattedStringEnd;
     }
 
-
-    public void calendarByWeekOnClick(){
+    public void displayCalendarByWeek(){
+        yearViewByMonth.setText("");
         byWeekTimeFrame = true;
         currentDate = currentDate.plus(Period.ofDays(6));
-        currentTimeFrameLabel.setText(calculateWeekRange(currentDate.plus(Period.ofDays(6))));
-        combineApptAndPopulateTable();
+        currentTimeFrameLabel.setText(calculateAndCreateWeekRangeString(currentDate.plus(Period.ofDays(6))));
+        ObservableList<Appointment> appointments = combineApptAndPopulateTable();
+        populateTable(appointments);
     }
 
-    public void combineApptAndPopulateTable(){
+    public ObservableList<Appointment> combineApptAndPopulateTable(){
         String[] weekRangeSplit = currentTimeFrameLabel.getText().split(" - ");
         LocalDate parsedStartDate = LocalDate.parse(weekRangeSplit[0], DateTimeFormatter.ofPattern("dd MMMM, yyyy"));
         LocalDate parsedEndDate = LocalDate.parse(weekRangeSplit[1], DateTimeFormatter.ofPattern("dd MMMM, yyyy"));
-        appointmentTable.setItems(Schedule.combineAppointmentsByWeek(parsedStartDate, parsedEndDate));
+        return Schedule.combineAppointmentsByWeek(parsedStartDate, parsedEndDate);
+    }
+
+    public void populateTable(ObservableList<Appointment> appointments) {
+        appointmentTable.setItems(appointments);
     }
 
     public void calendarByMonthOnClick(){
         byWeekTimeFrame = false;
         currentTimeFrameLabel.setText(nextMonth.toString());
-        appointmentTable.setItems(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
+        yearViewByMonth.setText(String.valueOf(thisYearInt));
+        populateTable(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
     }
     public void nextTimeFrame(ActionEvent event) {
         if (byWeekTimeFrame){
             currentDate = currentDate.plus(Period.ofDays(6));
-            currentTimeFrameLabel.setText(calculateWeekRange(currentDate.plus(Period.ofDays(6))));
-            combineApptAndPopulateTable();
+            currentTimeFrameLabel.setText(calculateAndCreateWeekRangeString(currentDate.plus(Period.ofDays(6))));
+            populateTable(combineApptAndPopulateTable());
         } else {
             thisMonth = Month.valueOf(currentTimeFrameLabel.getText());
             nextMonth = thisMonth.plus(1);
             incrementDecrementYear(thisMonth, nextMonth);
+            yearViewByMonth.setText(String.valueOf(thisYearInt));
             currentTimeFrameLabel.setText(nextMonth.toString());
-            appointmentTable.setItems(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
+            populateTable(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
         }
     }
 
     public void previousTimeFrame(ActionEvent event) {
         if (byWeekTimeFrame){
             currentDate = currentDate.minus(Period.ofDays(6));
-            currentTimeFrameLabel.setText(calculateWeekRange(currentDate.minus(Period.ofDays(6))));
-            combineApptAndPopulateTable();
+            currentTimeFrameLabel.setText(calculateAndCreateWeekRangeString(currentDate.minus(Period.ofDays(6))));
+            populateTable(combineApptAndPopulateTable());
         } else {
             thisMonth = Month.valueOf(currentTimeFrameLabel.getText());
             nextMonth = thisMonth.minus(1);
             incrementDecrementYear(thisMonth, nextMonth);
-            appointmentTable.setItems(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
+            yearViewByMonth.setText(String.valueOf(thisYearInt));
+            populateTable(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
             currentTimeFrameLabel.setText(nextMonth.toString());
         }
     }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         byWeekTimeFrame = false;
         currentTimeFrameLabel.setText(thisMonth.toString());
+        yearViewByMonth.setText(String.valueOf(thisYearInt));
         appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
         appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
         appointmentConsultant.setCellValueFactory(new PropertyValueFactory<>("appointmentContact"));
@@ -144,6 +149,6 @@ public class CalendarMainWindowController implements Initializable {
         appointmentStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
         appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
         appointmentCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
-        appointmentTable.setItems(Schedule.combineAppointmentsByMonth(thisMonth, thisYearInt));
+        populateTable(Schedule.combineAppointmentsByMonth(thisMonth, thisYearInt));
     }
 }
