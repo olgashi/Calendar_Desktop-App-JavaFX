@@ -23,53 +23,53 @@ import java.util.ResourceBundle;
 
 public class AppointmentAddNewController implements Initializable {
     @FXML
-    private Text appointmentAddNewMainWindowLabel;
+    private Text apptAddNewMainWindowLabel;
     @FXML
-    private Text newAppointmentTitleText;
+    private Text newApptTitleText;
     @FXML
-    private Text newAppointmentDateText;
+    private Text newApptmentDateText;
     @FXML
-    private Text newAppointmentTimeText;
+    private Text newApptTimeText;
     @FXML
-    private Text newAppointmentLocationText;
+    private Text newApptLocationText;
     @FXML
-    private Text newAppointmentTypeText;
+    private Text newApptTypeText;
     @FXML
-    private Text newAppointmentDescriptionText;
+    private Text newApptDescriptionText;
     @FXML
-    private Text newAppointmentDurationText;
+    private Text newApptDurationText;
     @FXML
-    private Text newAppointmentContactText;
+    private Text newApptContactText;
     @FXML
-    private ComboBox<String> addNewAppointmentDurationComboBox;
+    private ComboBox<String> addNewApptDurationComboBox;
     @FXML
-    private ComboBox<String> addNewAppointmentHoursComboBox;
+    private ComboBox<String> addNewApptHoursComboBox;
     @FXML
-    private ComboBox<String> addNewAppointmentMinutesComboBox;
+    private ComboBox<String> addNewApptMinutesComboBox;
     @FXML
-    private DatePicker addNewAppointmentDatePicker;
+    private DatePicker addNewApptDatePicker;
     @FXML
-    private ComboBox<String> addNewAppointmentTypeComboBox;
+    private ComboBox<String> addNewApptTypeComboBox;
     @FXML
-    private ComboBox<String> addNewAppointmentContactComboBox;
+    private ComboBox<String> addNewApptContactComboBox;
     @FXML
-    private TextField addNewAppointmentDescriptionTextField;
+    private TextField addNewApptDescriptionTextField;
     @FXML
-    private TextField addNewAppointmentTitleTextField;
+    private TextField addNewApptTitleTextField;
     @FXML
-    private TextField addNewAppointmentLocationTextField;
+    private TextField addNewApptLocationTextField;
     @FXML
-    private TableView<Customer> addNewAppointmentCustomerTable;
+    private TableView<Customer> addNewApptCustomerTable;
     @FXML
-    private TableColumn<Customer,String> addNewAppointmentCustomerNameColumn;
+    private TableColumn<Customer,String> addNewApptCustomerNameColumn;
     @FXML
-    private TableColumn<Customer,String> addNewAppointmentCustomerLocationColumn;
+    private TableColumn<Customer,String> addNewApptCustomerLocationColumn;
     @FXML
-    private TableColumn<Customer,String> addNewAppointmentCustomerPhoneNumberColumn;
+    private TableColumn<Customer,String> addNewApptCustomerPhoneNumberColumn;
     @FXML
-    private Button addNewAppointmentCancelButton;
+    private Button addNewApptCancelButton;
     @FXML
-    private Button addNewAppointmentCreateButton;
+    private Button addNewApptCreateButton;
     private Customer selectedCustomer;
     private int selectedCustomerId;
     private int userId = 1;
@@ -79,64 +79,69 @@ public class AppointmentAddNewController implements Initializable {
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
 
     public void createAppointment(ActionEvent event) throws SQLException, IOException {
-        LocalDateTime fullAppointmentStartDateTime, fullAppointmentEndDateTime;
-        selectedCustomer = addNewAppointmentCustomerTable.getSelectionModel().getSelectedItem();
-        String durationTempStr = addNewAppointmentDurationComboBox.getValue();
-        String durationTempArr[]= durationTempStr.split(" ");
-        int appointmentDuration = Integer.parseInt(durationTempArr[0]);
+        LocalDateTime fullApptStartDateTime, fullApptEndDateTime;
+        selectedCustomer = addNewApptCustomerTable.getSelectionModel().getSelectedItem();
 
-        if (InputValidation.checkForAnyEmptyInputs(addNewAppointmentDescriptionTextField, addNewAppointmentTitleTextField, addNewAppointmentLocationTextField)) {
+        if (InputValidation.checkForAnyEmptyInputs(addNewApptDescriptionTextField, addNewApptTitleTextField, addNewApptLocationTextField)) {
             AlertMessage.display("All fields are required. Please make changes and try again.", "warning");
             return;
         }
-        if (addNewAppointmentTypeComboBox.getValue() == null) {
+        if (addNewApptTypeComboBox.getValue() == null) {
             AlertMessage.display("Please select appointment type", "warning");
         }
-        if (addNewAppointmentDatePicker.getValue() == null) {
+        if (addNewApptDatePicker.getValue() == null) {
             AlertMessage.display("Date cannot be empty", "warning");
             return;
         }
-        if (addNewAppointmentContactComboBox.getValue() == null) {
+        if (addNewApptContactComboBox.getValue() == null) {
             AlertMessage.display("Contact cannot be empty", "warning");
             return;
         }
-        if (addNewAppointmentHoursComboBox.getValue() == null && addNewAppointmentMinutesComboBox.getValue() == null) {
+        if (addNewApptHoursComboBox.getValue() == null && addNewApptMinutesComboBox.getValue() == null) {
             AlertMessage.display("Please specify time for the appointment", "warning");
             return;
         }
-        if (addNewAppointmentHoursComboBox.getValue() == null) {
+        if (addNewApptHoursComboBox.getValue() == null) {
             AlertMessage.display("Please select hours for the appointment", "warning");
             return;
         }
-        if (addNewAppointmentMinutesComboBox.getValue() == null) {
+        if (addNewApptMinutesComboBox.getValue() == null) {
             AlertMessage.display("Please select minutes for the appointment", "warning");
             return;
         }
-
         if (selectedCustomer == null) {
             AlertMessage.display("Please select a customer for this appointment.", "warning");
             return;
         }
         else {
-            fullAppointmentStartDateTime = LocalDateTime.of(
-                    addNewAppointmentDatePicker.getValue().getYear(),
-                    addNewAppointmentDatePicker.getValue().getMonthValue(),
-                    addNewAppointmentDatePicker.getValue().getDayOfMonth(),
-                    Integer.parseInt(addNewAppointmentHoursComboBox.getValue()),
-                    Integer.parseInt(addNewAppointmentMinutesComboBox.getValue()));
+            fullApptStartDateTime = LocalDateTime.of(
+                    addNewApptDatePicker.getValue().getYear(),
+                    addNewApptDatePicker.getValue().getMonthValue(),
+                    addNewApptDatePicker.getValue().getDayOfMonth(),
+                    Integer.parseInt(addNewApptHoursComboBox.getValue()),
+                    Integer.parseInt(addNewApptMinutesComboBox.getValue()));
 
-            fullAppointmentStartDateTime = LocalDateTime.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s").format(fullAppointmentStartDateTime), dtf);
-            fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
+            String durationTempStr = addNewApptDurationComboBox.getValue();
+            String durationTempArr[]= durationTempStr.split(" ");
+            int apptDuration = Integer.parseInt(durationTempArr[0]);
+
+            fullApptStartDateTime = LocalDateTime.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s").format(fullApptStartDateTime), dtf);
+            fullApptEndDateTime = fullApptStartDateTime.plus(Duration.ofMinutes(apptDuration));
+
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
-            contact = addNewAppointmentContactComboBox.getValue();
+            contact = addNewApptContactComboBox.getValue();
 
-            if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, selectedCustomerId, Integer.parseInt(Schedule.setAppointmentId()))){
+            if (Schedule.overlappingAppointmentsCheck(fullApptStartDateTime, selectedCustomerId, Integer.parseInt(Schedule.setAppointmentId()))){
                 AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
                 return;
             }
-            createAppointmentDB(fullAppointmentStartDateTime, fullAppointmentEndDateTime);
+            if(!Schedule.outsideOfBusinessHoursCheck(fullApptStartDateTime, fullApptEndDateTime)) {
+                AlertMessage.display("The appointment is outside of business hours please correct and try again", "warning");
+                return;
+            }
+            createAppointmentDB(fullApptStartDateTime, fullApptEndDateTime);
             if (DBQuery.queryNumRowsAffected() > 0) {
-                addAppointmentToSchedule(fullAppointmentStartDateTime, fullAppointmentEndDateTime);
+                addAppointmentToSchedule(fullApptStartDateTime, fullApptEndDateTime);
                 AlertMessage.display("Appointment was created successfully!", "information");
                 loadMainWindowAppointmentAddNew(event);
             }
@@ -145,17 +150,17 @@ public class AppointmentAddNewController implements Initializable {
     }
 
     public void addAppointmentToSchedule(LocalDateTime fullAppointmentStartDateTime, LocalDateTime fullAppointmentEndDateTime) {
-        Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewAppointmentTitleTextField.getText(), addNewAppointmentDescriptionTextField.getText(),
-                addNewAppointmentLocationTextField.getText(), contact, addNewAppointmentTypeComboBox.getValue().toString(), url, fullAppointmentStartDateTime.format(dtf),
+        Schedule.addAppointment(new Appointment(Schedule.setAppointmentId(), addNewApptTitleTextField.getText(), addNewApptDescriptionTextField.getText(),
+                addNewApptLocationTextField.getText(), contact, addNewApptTypeComboBox.getValue(), url, fullAppointmentStartDateTime.format(dtf),
                 fullAppointmentEndDateTime.format(dtf), selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName()));
     }
 
     public void createAppointmentDB(LocalDateTime fullAppointmentStartDateTime, LocalDateTime fullAppointmentEndDateTime) throws SQLException {
         DBQuery.createQuery("INSERT INTO appointment (customerId, userId, title, description, location, contact, " +
                 "type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) values(" +
-                "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + addNewAppointmentTitleTextField.getText() + "'" + ", " +
-                "'" + addNewAppointmentDescriptionTextField.getText() +"'" + ", " + "'" + addNewAppointmentLocationTextField.getText() + "'" + ", " +
-                "'" + contact + "'" + ", "+ "'" + addNewAppointmentTypeComboBox.getValue().toString() + "'" + ", " + "'" + url + "'" + ", " + "'" +
+                "'" + selectedCustomerId + "'" + ", " + "'" + userId + "'" + ", " + "'" + addNewApptTitleTextField.getText() + "'" + ", " +
+                "'" + addNewApptDescriptionTextField.getText() +"'" + ", " + "'" + addNewApptLocationTextField.getText() + "'" + ", " +
+                "'" + contact + "'" + ", "+ "'" + addNewApptTypeComboBox.getValue() + "'" + ", " + "'" + url + "'" + ", " + "'" +
                 DateTimeUtils.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", " + "'" + DateTimeUtils.convertToUTCTime(fullAppointmentEndDateTime) +
                 "'" + ", " + "'" + LocalDateTime.now() + "'"+ ", "+ "'" + loggedInUserName + "'" + ", " +
                 "'" + LocalDateTime.now() + "'" + ", " + "'"+ loggedInUserName +"'"+")");
@@ -163,24 +168,24 @@ public class AppointmentAddNewController implements Initializable {
 
     @FXML
     private void loadMainWindowAppointmentAddNew(ActionEvent event) throws IOException {
-        NewWindow.display((Stage) appointmentAddNewMainWindowLabel.getScene().getWindow(),
+        NewWindow.display((Stage) apptAddNewMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("/view/AppointmentsMainWindow.fxml"));
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Callback<DatePicker, DateCell> dayCellFactory= Calendar.customDayCellFactory();
-        addNewAppointmentDatePicker.setDayCellFactory(dayCellFactory);
+        addNewApptDatePicker.setDayCellFactory(dayCellFactory);
 
-        addNewAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
-        addNewAppointmentTypeComboBox.getItems().addAll(Reports.allExistingAppointmentTypes());
-        addNewAppointmentContactComboBox.getItems().addAll(Reports.allExistingConsultants());
-        addNewAppointmentHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16", "17");
-        addNewAppointmentMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
+        addNewApptDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
+        addNewApptTypeComboBox.getItems().addAll(Reports.allExistingAppointmentTypes());
+        addNewApptContactComboBox.getItems().addAll(Reports.allExistingConsultants());
+        addNewApptHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16");
+        addNewApptMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
 
-        addNewAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        addNewAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
-        addNewAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
-        addNewAppointmentCustomerTable.setItems(Customer.getCustomerList());
+        addNewApptCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        addNewApptCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
+        addNewApptCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
+        addNewApptCustomerTable.setItems(Customer.getCustomerList());
     }
 }

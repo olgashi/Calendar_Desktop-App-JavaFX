@@ -23,47 +23,47 @@ import java.util.ResourceBundle;
 
 public class AppointmentMainWindowController implements Initializable {
     @FXML
-    private Text appointmentMainWindowLabel;
+    private Text apptMainWindowLabel;
     @FXML
-    private TableView<Appointment> appointmentTable;
+    private TableView<Appointment> apptTable;
     @FXML
-    private TableColumn<Appointment, String> appointmentTitle;
+    private TableColumn<Appointment, String> apptTitle;
     @FXML
-    private TableColumn<Appointment, String> appointmentDescription;
+    private TableColumn<Appointment, String> apptDescription;
     @FXML
-    private TableColumn<Appointment, String> appointmentLocation;
+    private TableColumn<Appointment, String> apptLocation;
     @FXML
-    private TableColumn<Appointment, String> appointmentContact;
+    private TableColumn<Appointment, String> apptContact;
     @FXML
-    private TableColumn<Appointment, String> appointmentType;
+    private TableColumn<Appointment, String> apptType;
     @FXML
-    private TableColumn<Appointment, String> appointmentStart;
+    private TableColumn<Appointment, String> apptStart;
     @FXML
-    private TableColumn<Appointment, String> appointmentEnd;
+    private TableColumn<Appointment, String> apptEnd;
     @FXML
-    private TableColumn<Appointment, String> appointmentCustomerName;
+    private TableColumn<Appointment, String> apptCustomerName;
     @FXML
-    private Button addAppointmentButton;
+    private Button addApptButton;
     @FXML
-    private Button modifyAppointmentButton;
+    private Button modifyApptButton;
     @FXML
-    private Button deleteAppointmentButton;
+    private Button deleteApptButton;
     @FXML
     private Button returnToMainWindowButton;
 
     @FXML
     public void loadMainWindow(ActionEvent event) throws IOException {
-        NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
+        NewWindow.display((Stage) apptMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("/view/MainWindow.fxml"));
     }
 
     public void openAddAppointmentWindow(ActionEvent event) throws IOException {
-        NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
+        NewWindow.display((Stage) apptMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("/view/AppointmentAddNew.fxml"));
     }
 
     public void deleteAppointment() throws SQLException {
-        Appointment appointment = appointmentTable.getSelectionModel().getSelectedItem();
+        Appointment appointment = apptTable.getSelectionModel().getSelectedItem();
         if (appointment != null) {
             if (AlertMessage.display("Are you sure you want to delete appointment with " + appointment.getAppointmentCustomerName() + "?", "confirmation")){
                 DBQuery.createQuery("DELETE FROM appointment WHERE appointmentId = " + "'" + appointment.getAppointmentId()  + "'");
@@ -75,14 +75,14 @@ public class AppointmentMainWindowController implements Initializable {
 
     @FXML
     private void loadMainWindow() throws IOException {
-        NewWindow.display((Stage) appointmentMainWindowLabel.getScene().getWindow(),
+        NewWindow.display((Stage) apptMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("/view/AppointmentMainWindowController.fxml"));
     }
 
     public void openModifyAppointmentWindow(ActionEvent event) throws IOException {
         Appointment appointment = null;
         try {
-            appointment = appointmentTable.getSelectionModel().getSelectedItem();
+            appointment = apptTable.getSelectionModel().getSelectedItem();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -105,14 +105,14 @@ public class AppointmentMainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        appointmentTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
-        appointmentDescription.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
-        appointmentLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
-        appointmentContact.setCellValueFactory(new PropertyValueFactory<>("appointmentContact"));
-        appointmentType.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
-        appointmentStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
-        appointmentEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
-        appointmentCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
-        appointmentTable.setItems(Appointment.getAppointmentList());
+        apptTitle.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+        apptDescription.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
+        apptLocation.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+        apptContact.setCellValueFactory(new PropertyValueFactory<>("appointmentContact"));
+        apptType.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        apptStart.setCellValueFactory(new PropertyValueFactory<>("appointmentStart"));
+        apptEnd.setCellValueFactory(new PropertyValueFactory<>("appointmentEnd"));
+        apptCustomerName.setCellValueFactory(new PropertyValueFactory<>("appointmentCustomerName"));
+        apptTable.setItems(Appointment.getAppointmentList());
     }
 }

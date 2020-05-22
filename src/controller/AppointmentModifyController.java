@@ -26,212 +26,201 @@ import java.util.ResourceBundle;
 public class AppointmentModifyController implements Initializable {
 
     @FXML
-    private Text appointmentModifyMainWindowLabel;
+    private Text apptModifyMainWindowLabel;
     @FXML
-    private Text modifyAppointmentTitleText;
+    private Text modifyApptTitleText;
     @FXML
-    private Text modifyAppointmentDateText;
+    private Text modifyApptmentDateText;
     @FXML
-    private Text modifyAppointmentTimeText;
+    private Text modifyApptTimeText;
     @FXML
-    private Text modifyAppointmentLocationText;
+    private Text modifyApptLocationText;
     @FXML
-    private Text modifyAppointmentTypeText;
+    private Text modifyApptTypeText;
     @FXML
-    private Text modifyAppointmentDescriptionText;
+    private Text modifyApptDescriptionText;
     @FXML
-    private Text modifyAppointmentDatePickerCurrentDateText;
+    private Text modifyApptDatePickerCurrentDateText;
     @FXML
-    private Text modifyAppointmentContactText;
+    private Text modifyApptContactText;
     @FXML
-    private ComboBox modifyAppointmentContactComboBox;
+    private ComboBox<String> modifyApptContactComboBox;
     @FXML
-    private Text existingAppointmentTitleText;
+    private Text existingApptTitleText;
     @FXML
-    private Text existingAppointmentDateText;
+    private Text existingApptDateText;
     @FXML
-    private Text existingAppointmentTimeText;
+    private Text existingApptTimeText;
     @FXML
-    private Text existingAppointmentLocationText;
+    private Text existingApptLocationText;
     @FXML
-    private Text existingAppointmentTypeText;
+    private Text existingApptTypeText;
     @FXML
-    private Text existingAppointmentDescriptionText;
+    private Text existingApptDescriptionText;
     @FXML
-    private Text existingAppointmentCustomerText;
+    private Text existingApptCustomerText;
     @FXML
-    private Text existingAppointmentTitleValue;
+    private Text existingApptTitleValue;
     @FXML
-    private Text existingAppointmentDateValue;
+    private Text existingApptDateValue;
     @FXML
-    private Text existingAppointmentTimeValue;
+    private Text existingApptTimeValue;
     @FXML
-    private Text existingAppointmentLocationValue;
+    private Text existingApptLocationValue;
     @FXML
-    private Text existingAppointmentTypeValue;
+    private Text existingApptTypeValue;
     @FXML
-    private Text existingAppointmentDescriptionValue;
+    private Text existingApptDescriptionValue;
     @FXML
-    private Text existingAppointmentCustomerValue;
+    private Text existingApptCustomerValue;
     @FXML
-    private Text existingAppointmentDurationText;
+    private Text existingApptDurationText;
     @FXML
-    private Text existingAppointmentDurationValue;
+    private Text existingApptDurationValue;
     @FXML
-    private Text modifyAppointmentDurationText;
+    private Text modifyApptDurationText;
     @FXML
-    private Text existingAppointmentContactText;
+    private Text existingApptContactText;
     @FXML
-    private Text existingAppointmentContactValue;
+    private Text existingApptContactValue;
     @FXML
-    private ComboBox modifyAppointmentDurationComboBox;
+    private ComboBox<String> modifyApptDurationComboBox;
     @FXML
-    private DatePicker modifyAppointmentNewDate;
+    private DatePicker modifyApptNewDate;
     @FXML
-    private ComboBox modifyAppointmentTypeComboBox;
+    private ComboBox<String> modifyApptTypeComboBox;
     @FXML
-    private ComboBox modifyAppointmentHoursComboBox;
+    private ComboBox<String> modifyApptHoursComboBox;
     @FXML
-    private ComboBox modifyAppointmentMinutesComboBox;
+    private ComboBox<String> modifyApptMinutesComboBox;
     @FXML
-    private TextField modifyAppointmentDescriptionTextField;
+    private TextField modifyApptDescriptionTextField;
     @FXML
-    private TextField modifyAppointmentTitleTextField;
+    private TextField modifyApptTitleTextField;
     @FXML
-    private TextField modifyAppointmentLocationTextField;
+    private TextField modifyApptLocationTextField;
     @FXML
-    private TableView<Customer> modifyAppointmentCustomerTable;
+    private TableView<Customer> modifyApptCustomerTable;
     @FXML
-    private TableColumn<Customer,String> modifyAppointmentCustomerNameColumn;
+    private TableColumn<Customer,String> modifyApptCustomerNameColumn;
     @FXML
-    private TableColumn<Customer,String> modifyAppointmentCustomerLocationColumn;
+    private TableColumn<Customer,String> modifyApptCustomerLocationColumn;
     @FXML
-    private TableColumn<Customer,String> modifyAppointmentCustomerPhoneNumberColumn;
+    private TableColumn<Customer,String> modifyApptCustomerPhoneNumberColumn;
     @FXML
-    private Button modifyAppointmentCancelButton;
+    private Button modifyApptCancelButton;
     @FXML
-    private Button modifyAppointmentCreateButton;
-    private Appointment selectedAppointment;
-    private Customer selectedCustomer;
-    private int selectedCustomerId, userId;
-//    TODO these variables are a mess, rename/refactor
-    private String updatedCustomerId;
-    private String updatedTitle;
-    private String updatedHours;
-    private String updatedMinutes;
-    private String updatedAppointmentYear;
-    private String updatedAppointmentDay;
-    private String updatedLocation;
-    private String updatedType;
-    private String updatedDescription;
-    private String updatedContact;
-    private String updatedDuration;
-    private Month updatedAppointmentMonth;
+    private Button modifyApptCreateButton;
+    private Appointment selectedAppt;
     private String existingAppointmentMonth;
-    private String existingAppointmentYear, existingAppointmentDay, existingAppointmentHours,
-            existingAppointmentMinutes, existingAppointmentStartDate, existingAppointmentStartTime, appointmentStartDateTime;
-    String appointmentEndDateTime;
-    String loggedInUserName = User.getUserName();
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
-
+    private String existingAppointmentYear;
+    private String existingAppointmentDay;
+    private String existingAppointmentHours;
+    private String existingAppointmentMinutes;
+    private String appointmentStartDateTime;
+    private String appointmentEndDateTime;
+    private String loggedInUserName = User.getUserName();
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
+//TODO: limit field size for title, location and description in both modify and add
     public void initModifyAppointmentData(Appointment appointment) {
-        selectedAppointment = appointment;
-        appointmentStartDateTime = selectedAppointment.getAppointmentStart();
-        appointmentEndDateTime = selectedAppointment.getAppointmentEnd();
+        selectedAppt = appointment;
+        appointmentStartDateTime = selectedAppt.getAppointmentStart();
+        appointmentEndDateTime = selectedAppt.getAppointmentEnd();
         LocalDateTime apptStart = LocalDateTime.parse(appointmentStartDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
         LocalDateTime apptEnd = LocalDateTime.parse(appointmentEndDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
         Duration duration = Duration.between(apptStart, apptEnd);
 
         String dateTimeArr[] = appointmentStartDateTime.split(" |T");
-        existingAppointmentStartDate = dateTimeArr[0];
-        existingAppointmentStartTime = dateTimeArr[1];
+        String existingAppointmentStartDate = dateTimeArr[0];
+        String existingAppointmentStartTime = dateTimeArr[1];
         // get existing appointment start year, day, month
         String yearDayMonthArr[] = existingAppointmentStartDate.split("-");
         existingAppointmentYear = yearDayMonthArr[0];
         existingAppointmentDay = yearDayMonthArr[2];
 
-        String temp[] = existingAppointmentStartDate.split("-");
-        int mnth = Integer.parseInt(temp[1]);
-        existingAppointmentMonth = new DateFormatSymbols().getMonths()[mnth-1];
+        String[] existingApptStartTempArr = existingAppointmentStartDate.split("-");
+        int month = Integer.parseInt(existingApptStartTempArr[1]);
+        existingAppointmentMonth = new DateFormatSymbols().getMonths()[month-1];
         // get existing appointment start year, day, month
-        String hourMinArr[] = existingAppointmentStartTime.split(":");
+        String[] hourMinArr = existingAppointmentStartTime.split(":");
         existingAppointmentHours = hourMinArr[0];
         existingAppointmentMinutes = hourMinArr[1];
 
-        existingAppointmentTitleValue.setText(selectedAppointment.getAppointmentTitle());
-        existingAppointmentDateValue.setText(existingAppointmentStartDate);
-        existingAppointmentTimeValue.setText(existingAppointmentStartTime);
-        existingAppointmentContactValue.setText(selectedAppointment.getAppointmentContact());
-        existingAppointmentDurationValue.setText(String.valueOf(duration.toMinutes()) + " mins");
-        existingAppointmentLocationValue.setText(selectedAppointment.getAppointmentLocation());
-        existingAppointmentTypeValue.setText(selectedAppointment.getAppointmentType());
-        existingAppointmentDescriptionValue.setText(selectedAppointment.getAppointmentDescription());
-        existingAppointmentCustomerValue.setText(selectedAppointment.getAppointmentCustomerName());
+        existingApptTitleValue.setText(selectedAppt.getAppointmentTitle());
+        existingApptDateValue.setText(existingAppointmentStartDate);
+        existingApptTimeValue.setText(existingAppointmentStartTime);
+        existingApptContactValue.setText(selectedAppt.getAppointmentContact());
+        existingApptDurationValue.setText(duration.toMinutes() + " mins");
+        existingApptLocationValue.setText(selectedAppt.getAppointmentLocation());
+        existingApptTypeValue.setText(selectedAppt.getAppointmentType());
+        existingApptDescriptionValue.setText(selectedAppt.getAppointmentDescription());
+        existingApptCustomerValue.setText(selectedAppt.getAppointmentCustomerName());
     }
 
     public void updateAppointment(ActionEvent event) throws SQLException, IOException {
-        Customer selectedAppointmentCustomer = modifyAppointmentCustomerTable.getSelectionModel().getSelectedItem();
+        Customer selectedAppointmentCustomer = modifyApptCustomerTable.getSelectionModel().getSelectedItem();
         LocalDateTime fullAppointmentStartDateTime;
         LocalDateTime fullAppointmentEndDateTime;
-        LocalDateTime start = LocalDateTime.parse(appointmentStartDateTime, dtf);
-        LocalDateTime end = LocalDateTime.parse(appointmentEndDateTime, dtf);
-        Duration existingApptDuration = Duration.between(start, end);
+        LocalDateTime apptStartDateTimeParsed = LocalDateTime.parse(appointmentStartDateTime, dtf);
+        LocalDateTime apptEndDateTimeParsed = LocalDateTime.parse(appointmentEndDateTime, dtf);
+        Duration existingApptDuration = Duration.between(apptStartDateTimeParsed, apptEndDateTimeParsed);
         LocalDateTime createDate = LocalDateTime.now();
         LocalDateTime lastUpdate = LocalDateTime.now();
 
-        if (!InputValidation.checkForAnyEmptyInputs(modifyAppointmentDescriptionTextField, modifyAppointmentTitleTextField,
-                modifyAppointmentLocationTextField) && selectedAppointmentCustomer == null && modifyAppointmentNewDate.getValue() == null &&
-                modifyAppointmentDurationComboBox.getValue() == null && modifyAppointmentTypeComboBox.getValue() == null &&
-                modifyAppointmentContactComboBox.getValue() == null) {
+        if (!InputValidation.checkForAnyEmptyInputs(modifyApptDescriptionTextField, modifyApptTitleTextField,
+                modifyApptLocationTextField) && selectedAppointmentCustomer == null && modifyApptNewDate.getValue() == null &&
+                modifyApptDurationComboBox.getValue() == null && modifyApptTypeComboBox.getValue() == null &&
+                modifyApptContactComboBox.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
             return;
         }
 
-        updatedContact = (modifyAppointmentContactComboBox.getValue() == null) ?  selectedAppointment.getAppointmentContact() : modifyAppointmentContactComboBox.getValue().toString();
-
-        updatedTitle = modifyAppointmentTitleTextField.getText().isEmpty() ? selectedAppointment.getAppointmentTitle() : modifyAppointmentTitleTextField.getText();
-        updatedLocation = modifyAppointmentLocationTextField.getText().isEmpty() ? selectedAppointment.getAppointmentLocation() : modifyAppointmentLocationTextField.getText();
-        updatedType = modifyAppointmentTypeComboBox.getValue() == null ? selectedAppointment.getAppointmentType() : modifyAppointmentLocationTextField.getText();
-        updatedDescription = modifyAppointmentDescriptionTextField.getText().isEmpty() ? selectedAppointment.getAppointmentDescription() : modifyAppointmentDescriptionTextField.getText();
-        updatedCustomerId = selectedAppointmentCustomer == null ? selectedAppointment.getAppointmentCustomerId() : selectedAppointmentCustomer.getCustomerId();
-
-        updatedHours = modifyAppointmentHoursComboBox.getValue() == null ? existingAppointmentHours : modifyAppointmentHoursComboBox.getValue().toString();
-        updatedMinutes = modifyAppointmentMinutesComboBox.getValue() == null ? existingAppointmentMinutes : modifyAppointmentMinutesComboBox.getValue().toString();
-
-        updatedAppointmentYear = modifyAppointmentNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyAppointmentNewDate.getValue().getYear());
-        updatedAppointmentMonth = modifyAppointmentNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyAppointmentNewDate.getValue().getMonth();
-        updatedAppointmentDay = modifyAppointmentNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyAppointmentNewDate.getValue().getDayOfMonth());
-        updatedDuration = modifyAppointmentDurationComboBox.getValue() == null ? String.valueOf(existingApptDuration.toMinutes()) : modifyAppointmentDurationComboBox.getValue().toString().split(" ")[0];
-        updatedType = modifyAppointmentTypeComboBox.getValue() == null ? selectedAppointment.getAppointmentType() : modifyAppointmentTypeComboBox.getValue().toString();
+        String updatedContact = (modifyApptContactComboBox.getValue() == null) ? selectedAppt.getAppointmentContact() : modifyApptContactComboBox.getValue().toString();
+        String updatedTitle = modifyApptTitleTextField.getText().isEmpty() ? selectedAppt.getAppointmentTitle() : modifyApptTitleTextField.getText();
+        String updatedLocation = modifyApptLocationTextField.getText().isEmpty() ? selectedAppt.getAppointmentLocation() : modifyApptLocationTextField.getText();
+        String updatedDescription = modifyApptDescriptionTextField.getText().isEmpty() ? selectedAppt.getAppointmentDescription() : modifyApptDescriptionTextField.getText();
+        String updatedCustomerId = selectedAppointmentCustomer == null ? selectedAppt.getAppointmentCustomerId() : selectedAppointmentCustomer.getCustomerId();
+        String updatedCustomerName = selectedAppointmentCustomer == null ? selectedAppt.getAppointmentCustomerName() : selectedAppointmentCustomer.getCustomerName();
+        String updatedHours = modifyApptHoursComboBox.getValue() == null ? existingAppointmentHours : modifyApptHoursComboBox.getValue().toString();
+        String updatedMinutes = modifyApptMinutesComboBox.getValue() == null ? existingAppointmentMinutes : modifyApptMinutesComboBox.getValue().toString();
+        String updatedAppointmentYear = modifyApptNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyApptNewDate.getValue().getYear());
+        Month updatedAppointmentMonth = modifyApptNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyApptNewDate.getValue().getMonth();
+        String updatedAppointmentDay = modifyApptNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyApptNewDate.getValue().getDayOfMonth());
+        String updatedDuration = modifyApptDurationComboBox.getValue() == null ? String.valueOf(existingApptDuration.toMinutes()) : modifyApptDurationComboBox.getValue().toString().split(" ")[0];
+        String updatedType = modifyApptTypeComboBox.getValue() == null ? selectedAppt.getAppointmentType() : modifyApptTypeComboBox.getValue().toString();
 
         fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
                 Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
-        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, Integer.parseInt(updatedCustomerId), Integer.parseInt(selectedAppointment.getAppointmentId()))) {
+        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, Integer.parseInt(updatedCustomerId), Integer.parseInt(selectedAppt.getAppointmentId()))) {
             AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
             return;
         }
+        if(!Schedule.outsideOfBusinessHoursCheck(fullAppointmentStartDateTime, fullAppointmentStartDateTime.plus(Duration.ofMinutes(Integer.parseInt(updatedDuration))))) {
+            AlertMessage.display("The appointment is outside of business hours please correct and try again", "warning");
+            return;
+        }
 
-        if (modifyAppointmentDurationComboBox.getValue() == null) {
+        if (modifyApptDurationComboBox.getValue() == null) {
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(existingApptDuration);
         }  else {
-            String durationTempStr = modifyAppointmentDurationComboBox.getValue().toString();
+            String durationTempStr = modifyApptDurationComboBox.getValue();
             String durationTempArr[]= durationTempStr.split(" ");
             int appointmentDuration = Integer.parseInt(durationTempArr[0]);
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
         }
 
-// TODO figure out fields that are not in the view, like url, contact
         try {
             DBQuery.createQuery("UPDATE appointment SET customerId = " + "'" + updatedCustomerId + "'" + ", title = " + "'" + updatedTitle + "'" + ", description = " + "'" + updatedDescription + "'" +
                     ", location = " + "'" + updatedLocation + "'" + ", contact = " + "'" + updatedContact + "'" + ", type = " + "'" + updatedType + "'" + ", start = " + "'" + DateTimeUtils.convertToUTCTime(fullAppointmentStartDateTime) + "'" + ", end = " + "'" + DateTimeUtils.convertToUTCTime(fullAppointmentEndDateTime) + "'" +
                     ", createDate = " + "'" + createDate + "'" + ", createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = " + "'" + lastUpdate + "'" + ", lastUpdateBy = " + "'" + loggedInUserName + "'" +
-                    " WHERE appointmentId = " + "'" + selectedAppointment.getAppointmentId() + "'");
+                    " WHERE appointmentId = " + "'" + selectedAppt.getAppointmentId() + "'");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         if (DBQuery.queryNumRowsAffected() > 0) {
-            Appointment appointmentToUpdate = selectedAppointment;
+            Appointment appointmentToUpdate = selectedAppt;
             appointmentToUpdate.setAppointmentCustomerId(updatedCustomerId);
+            appointmentToUpdate.setAppointmentCustomerName(updatedCustomerName);
             appointmentToUpdate.setAppointmentTitle(updatedTitle);
             appointmentToUpdate.setAppointmentDescription(updatedDescription);
             appointmentToUpdate.setAppointmentLocation(updatedLocation);
@@ -247,23 +236,22 @@ public class AppointmentModifyController implements Initializable {
 
     @FXML
     private void loadMainWindowAppointmentModify(ActionEvent event) throws IOException {
-        NewWindow.display((Stage) appointmentModifyMainWindowLabel.getScene().getWindow(),
+        NewWindow.display((Stage) apptModifyMainWindowLabel.getScene().getWindow(),
                 getClass().getResource("/view/AppointmentsMainWindow.fxml"));
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Callback<DatePicker, DateCell> dayCellFactory = Calendar.customDayCellFactory();
-        modifyAppointmentNewDate.setDayCellFactory(dayCellFactory);
-        modifyAppointmentDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
-        modifyAppointmentTypeComboBox.getItems().addAll(Reports.allExistingAppointmentTypes());
-        modifyAppointmentContactComboBox.getItems().addAll(Reports.allExistingConsultants());
-        modifyAppointmentHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16", "17");
-        modifyAppointmentMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
-        //        TODO extract this to a method?
-        modifyAppointmentCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        modifyAppointmentCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
-        modifyAppointmentCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
-        modifyAppointmentCustomerTable.setItems(Customer.getCustomerList());
+        modifyApptNewDate.setDayCellFactory(dayCellFactory);
+        modifyApptDurationComboBox.getItems().addAll("15 mins", "30 mins", "45 mins", "60 mins");
+        modifyApptTypeComboBox.getItems().addAll(Reports.allExistingAppointmentTypes());
+        modifyApptContactComboBox.getItems().addAll(Reports.allExistingConsultants());
+        modifyApptHoursComboBox.getItems().addAll("09","10", "11", "12", "13", "14", "15", "16");
+        modifyApptMinutesComboBox.getItems().addAll("00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55");
+        modifyApptCustomerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        modifyApptCustomerLocationColumn.setCellValueFactory(new PropertyValueFactory<>("customerCity"));
+        modifyApptCustomerPhoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("customerPhoneNumber"));
+        modifyApptCustomerTable.setItems(Customer.getCustomerList());
     }
 }
