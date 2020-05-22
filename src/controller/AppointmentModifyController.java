@@ -130,11 +130,11 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime apptEnd = LocalDateTime.parse(appointmentEndDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
         Duration duration = Duration.between(apptStart, apptEnd);
 
-        String dateTimeArr[] = appointmentStartDateTime.split(" |T");
+        String[] dateTimeArr = appointmentStartDateTime.split(" |T");
         String existingAppointmentStartDate = dateTimeArr[0];
         String existingAppointmentStartTime = dateTimeArr[1];
         // get existing appointment start year, day, month
-        String yearDayMonthArr[] = existingAppointmentStartDate.split("-");
+        String[] yearDayMonthArr = existingAppointmentStartDate.split("-");
         existingAppointmentYear = yearDayMonthArr[0];
         existingAppointmentDay = yearDayMonthArr[2];
 
@@ -157,7 +157,7 @@ public class AppointmentModifyController implements Initializable {
         existingApptCustomerValue.setText(selectedAppt.getAppointmentCustomerName());
     }
 
-    public void updateAppointment(ActionEvent event) throws SQLException, IOException {
+    public void updateAppointment(ActionEvent event) throws IOException {
         Customer selectedAppointmentCustomer = modifyApptCustomerTable.getSelectionModel().getSelectedItem();
         LocalDateTime fullAppointmentStartDateTime;
         LocalDateTime fullAppointmentEndDateTime;
@@ -167,27 +167,28 @@ public class AppointmentModifyController implements Initializable {
         LocalDateTime createDate = LocalDateTime.now();
         LocalDateTime lastUpdate = LocalDateTime.now();
 
-        if (!InputValidation.checkForAnyEmptyInputs(modifyApptDescriptionTextField, modifyApptTitleTextField,
+        if (InputValidation.checkForAllEmptyInputs(modifyApptDescriptionTextField, modifyApptTitleTextField,
                 modifyApptLocationTextField) && selectedAppointmentCustomer == null && modifyApptNewDate.getValue() == null &&
                 modifyApptDurationComboBox.getValue() == null && modifyApptTypeComboBox.getValue() == null &&
-                modifyApptContactComboBox.getValue() == null) {
+                modifyApptContactComboBox.getValue() == null && modifyApptHoursComboBox.getValue() == null &&
+                modifyApptMinutesComboBox.getValue() == null) {
             AlertMessage.display("Please provide new values for an appointment and try again.", "warning");
             return;
         }
 
-        String updatedContact = (modifyApptContactComboBox.getValue() == null) ? selectedAppt.getAppointmentContact() : modifyApptContactComboBox.getValue().toString();
+        String updatedContact = (modifyApptContactComboBox.getValue() == null) ? selectedAppt.getAppointmentContact() : modifyApptContactComboBox.getValue();
         String updatedTitle = modifyApptTitleTextField.getText().isEmpty() ? selectedAppt.getAppointmentTitle() : modifyApptTitleTextField.getText();
         String updatedLocation = modifyApptLocationTextField.getText().isEmpty() ? selectedAppt.getAppointmentLocation() : modifyApptLocationTextField.getText();
         String updatedDescription = modifyApptDescriptionTextField.getText().isEmpty() ? selectedAppt.getAppointmentDescription() : modifyApptDescriptionTextField.getText();
         String updatedCustomerId = selectedAppointmentCustomer == null ? selectedAppt.getAppointmentCustomerId() : selectedAppointmentCustomer.getCustomerId();
         String updatedCustomerName = selectedAppointmentCustomer == null ? selectedAppt.getAppointmentCustomerName() : selectedAppointmentCustomer.getCustomerName();
-        String updatedHours = modifyApptHoursComboBox.getValue() == null ? existingAppointmentHours : modifyApptHoursComboBox.getValue().toString();
-        String updatedMinutes = modifyApptMinutesComboBox.getValue() == null ? existingAppointmentMinutes : modifyApptMinutesComboBox.getValue().toString();
+        String updatedHours = modifyApptHoursComboBox.getValue() == null ? existingAppointmentHours : modifyApptHoursComboBox.getValue();
+        String updatedMinutes = modifyApptMinutesComboBox.getValue() == null ? existingAppointmentMinutes : modifyApptMinutesComboBox.getValue();
         String updatedAppointmentYear = modifyApptNewDate.getValue() == null ? existingAppointmentYear : String.valueOf(modifyApptNewDate.getValue().getYear());
         Month updatedAppointmentMonth = modifyApptNewDate.getValue() == null ? Month.valueOf(existingAppointmentMonth.toUpperCase()) : modifyApptNewDate.getValue().getMonth();
         String updatedAppointmentDay = modifyApptNewDate.getValue() == null ? existingAppointmentDay : String.valueOf(modifyApptNewDate.getValue().getDayOfMonth());
-        String updatedDuration = modifyApptDurationComboBox.getValue() == null ? String.valueOf(existingApptDuration.toMinutes()) : modifyApptDurationComboBox.getValue().toString().split(" ")[0];
-        String updatedType = modifyApptTypeComboBox.getValue() == null ? selectedAppt.getAppointmentType() : modifyApptTypeComboBox.getValue().toString();
+        String updatedDuration = modifyApptDurationComboBox.getValue() == null ? String.valueOf(existingApptDuration.toMinutes()) : modifyApptDurationComboBox.getValue().split(" ")[0];
+        String updatedType = modifyApptTypeComboBox.getValue() == null ? selectedAppt.getAppointmentType() : modifyApptTypeComboBox.getValue();
 
         fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
                 Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
@@ -195,7 +196,7 @@ public class AppointmentModifyController implements Initializable {
             AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
             return;
         }
-        if(!Schedule.outsideOfBusinessHoursCheck(fullAppointmentStartDateTime, fullAppointmentStartDateTime.plus(Duration.ofMinutes(Integer.parseInt(updatedDuration))))) {
+        if (!Schedule.checkIfWithinNormalBusinessHours(fullAppointmentStartDateTime, fullAppointmentStartDateTime.plus(Duration.ofMinutes(Integer.parseInt(updatedDuration))))) {
             AlertMessage.display("The appointment is outside of business hours please correct and try again", "warning");
             return;
         }
@@ -204,7 +205,7 @@ public class AppointmentModifyController implements Initializable {
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(existingApptDuration);
         }  else {
             String durationTempStr = modifyApptDurationComboBox.getValue();
-            String durationTempArr[]= durationTempStr.split(" ");
+            String[] durationTempArr = durationTempStr.split(" ");
             int appointmentDuration = Integer.parseInt(durationTempArr[0]);
             fullAppointmentEndDateTime = fullAppointmentStartDateTime.plus(Duration.ofMinutes(appointmentDuration));
         }
