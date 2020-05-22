@@ -87,26 +87,26 @@ public class AppointmentAddNewController implements Initializable {
             return;
         }
         if (addNewApptTypeComboBox.getValue() == null) {
-            AlertMessage.display("Please select appointment type", "warning");
+            AlertMessage.display("Please select appointment type.", "warning");
         }
         if (addNewApptDatePicker.getValue() == null) {
-            AlertMessage.display("Date cannot be empty", "warning");
+            AlertMessage.display("Date cannot be empty.", "warning");
             return;
         }
         if (addNewApptContactComboBox.getValue() == null) {
-            AlertMessage.display("Contact cannot be empty", "warning");
+            AlertMessage.display("Contact cannot be empty.", "warning");
             return;
         }
         if (addNewApptHoursComboBox.getValue() == null && addNewApptMinutesComboBox.getValue() == null) {
-            AlertMessage.display("Please specify time for the appointment", "warning");
+            AlertMessage.display("Please specify time for the appointment.", "warning");
             return;
         }
         if (addNewApptHoursComboBox.getValue() == null) {
-            AlertMessage.display("Please select hours for the appointment", "warning");
+            AlertMessage.display("Please select hours for the appointment.", "warning");
             return;
         }
         if (addNewApptMinutesComboBox.getValue() == null) {
-            AlertMessage.display("Please select minutes for the appointment", "warning");
+            AlertMessage.display("Please select minutes for the appointment.", "warning");
             return;
         }
         if (selectedCustomer == null) {
@@ -132,11 +132,11 @@ public class AppointmentAddNewController implements Initializable {
             contact = addNewApptContactComboBox.getValue();
 
             if (Schedule.overlappingAppointmentsCheck(fullApptStartDateTime, selectedCustomerId, Integer.parseInt(Schedule.setAppointmentId()))){
-                AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
+                AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again.", "warning");
                 return;
             }
             if(!Schedule.checkIfWithinNormalBusinessHours(fullApptStartDateTime, fullApptEndDateTime)) {
-                AlertMessage.display("The appointment is outside of business hours please correct and try again", "warning");
+                AlertMessage.display("The appointment is outside of business hours please correct and try again.", "warning");
                 return;
             }
             createAppointmentDB(fullApptStartDateTime, fullApptEndDateTime);
@@ -145,7 +145,7 @@ public class AppointmentAddNewController implements Initializable {
                 AlertMessage.display("Appointment was created successfully!", "information");
                 loadMainWindowAppointmentAddNew(event);
             }
-            else AlertMessage.display("There was a problem creating an appointment", "warning");
+            else AlertMessage.display("There was a problem creating an appointment.", "warning");
         }
     }
 

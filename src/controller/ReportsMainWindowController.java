@@ -53,9 +53,9 @@ public class ReportsMainWindowController implements Initializable {
 
     private Month[] months = { Month.DECEMBER, Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL, Month.MAY,
             Month.JUNE, Month.JULY, Month.AUGUST, Month.SEPTEMBER, Month.OCTOBER, Month.NOVEMBER };
-    private final String apptTypesReport = "Types by month";
-    private final String apptTotalReport = "Total by month";
-    private final String apptScheduleByConsultant = "Schedule by consultant";
+    private final String apptTypesReport = "Type of Appointment by Month";
+    private final String apptTotalReport = "Appointment Total by Month";
+    private final String apptScheduleByConsultant = "Schedule by Consultant";
 
     @FXML
     private void loadMainWindow(ActionEvent event) throws IOException {

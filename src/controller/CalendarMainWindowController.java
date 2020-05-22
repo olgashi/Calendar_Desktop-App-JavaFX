@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +18,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class CalendarMainWindowController implements Initializable {
@@ -82,12 +85,21 @@ public class CalendarMainWindowController implements Initializable {
     }
 
     public void displayCalendarByWeek(){
-        yearViewByMonth.setText("");
-        byWeekTimeFrame = true;
-        currentDate = currentDate.plus(Period.ofDays(6));
-        currentTimeFrameLabel.setText(calculateAndCreateWeekRangeString(currentDate.plus(Period.ofDays(6))));
-        ObservableList<Appointment> appointments = combineApptAndPopulateTable();
-        populateTable(appointments);
+        if (!byWeekTimeFrame) {
+            yearViewByMonth.setText("");
+            byWeekTimeFrame = true;
+            currentDate = currentDate.plus(Period.ofDays(6));
+            currentTimeFrameLabel.setText(calculateAndCreateWeekRangeString(currentDate.plus(Period.ofDays(6))));
+            ObservableList<Appointment> appointments = combineApptAndPopulateTable();
+            populateTable(appointments);
+        }
+    }
+
+    public void displayCalendarByMonth(){
+        byWeekTimeFrame = false;
+        currentTimeFrameLabel.setText(nextMonth.toString());
+        yearViewByMonth.setText(String.valueOf(thisYearInt));
+        populateTable(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
     }
 
     public ObservableList<Appointment> combineApptAndPopulateTable(){
@@ -101,12 +113,7 @@ public class CalendarMainWindowController implements Initializable {
         appointmentTable.setItems(appointments);
     }
 
-    public void calendarByMonthOnClick(){
-        byWeekTimeFrame = false;
-        currentTimeFrameLabel.setText(nextMonth.toString());
-        yearViewByMonth.setText(String.valueOf(thisYearInt));
-        populateTable(Schedule.combineAppointmentsByMonth(nextMonth, thisYearInt));
-    }
+
     public void nextTimeFrame(ActionEvent event) {
         if (byWeekTimeFrame){
             currentDate = currentDate.plus(Period.ofDays(6));

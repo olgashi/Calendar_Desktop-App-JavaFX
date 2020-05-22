@@ -122,7 +122,7 @@ public class Schedule {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
         FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
         appointments.setPredicate(appt -> {
-            String temp[] = appt.getAppointmentStart().split(" ");
+            String[] temp = appt.getAppointmentStart().split(" ");
             LocalDate localDate = LocalDate.parse(temp[0] , formatter);
             Month apptMonth = localDate.getMonth();
             int apptYear = localDate.getYear();
