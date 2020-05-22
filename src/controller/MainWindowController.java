@@ -1,6 +1,7 @@
 
 package controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +16,6 @@ import utilities.NewWindow;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-//TODO populate database with fun/realistic names and places before submission
 
 public class MainWindowController implements Initializable {
     @FXML
@@ -28,6 +28,14 @@ public class MainWindowController implements Initializable {
     private Button calendarMainWindowViewButton;
     @FXML
     private Button reportsMainWindowViewButton;
+    @FXML
+    private Button exitButton;
+
+    @FXML
+    public void exitButtonClickEvent(){
+        Platform.exit();
+        System.exit(0);
+    }
 
     @FXML
     private void loadCustomersWindow(ActionEvent event) throws IOException {

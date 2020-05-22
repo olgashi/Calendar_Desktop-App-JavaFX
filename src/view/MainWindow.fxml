@@ -9,5 +9,6 @@
       <Button fx:id="appointmentsMainWindowViewButton" layoutX="75.0" layoutY="108.0" mnemonicParsing="false" onAction="#loadAppointmentsWindow" prefHeight="27.0" prefWidth="137.0" text="Appointments" />
       <Button fx:id="reportsMainWindowViewButton" layoutX="75.0" layoutY="190.0" mnemonicParsing="false" onAction="#loadReportsWindow" prefHeight="27.0" prefWidth="137.0" text="Reports" />
       <Button fx:id="calendarMainWindowViewButton" layoutX="75.0" layoutY="149.0" mnemonicParsing="false" onAction="#loadCalendarWindow" prefHeight="27.0" prefWidth="137.0" text="Calendar" />
+      <Button fx:id="exitButton" layoutX="779.0" layoutY="533.0" mnemonicParsing="false" onAction="#exitButtonClickEvent" prefHeight="27.0" prefWidth="137.0" text="Exit" />
    </children>
 </AnchorPane>
