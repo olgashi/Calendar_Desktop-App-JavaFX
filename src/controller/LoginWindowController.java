@@ -1,5 +1,5 @@
 package controller;
-//TODO: style with css when finished
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,8 +28,6 @@ public class LoginWindowController implements Initializable {
     @FXML
     private Button loginButton;
     @FXML
-    private Button clearLoginButton;
-    @FXML
     private Button exitButton;
     @FXML
     private TextField usernameTextField;
@@ -44,17 +42,17 @@ public class LoginWindowController implements Initializable {
     @FXML
     private Pane loginWindowPane;
 
-    public static User loggedInUser;
-    Locale currentLocale;
+    private static User loggedInUser;
+    private Locale currentLocale;
 
-    public boolean determineIfUserExists(String userN, String pass) throws SQLException {
+    private boolean determineIfUserExists(String userN, String pass) throws SQLException {
         DBQuery.createQuery("SELECT userId, userName FROM user WHERE userName = " + "'" + userN + "'" + " AND password = " + "'" + pass + "'");
         if (DBQuery.getQueryResultSet().next()) return true;
         else return false;
     }
 
     @FXML
-        public void loadDataFromDB() throws SQLException {
+    private void loadDataFromDB() throws SQLException {
         LoadDataQuery.getCustomerData();
         LoadDataQuery.getAppointmentData();
     }
