@@ -14,12 +14,9 @@ import utilities.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.Month;
 import java.util.ResourceBundle;
-//TODO check everywhere if any if can be substituted with one liners or ternary
-// TODO update all NOW() to proper datetime (format) method
+
 public class CustomerModifyController implements Initializable {
-    //TODO change all zip code naming to postalCode
     @FXML
     private Text customerModifyMainWindowLabel;
     @FXML
@@ -74,8 +71,8 @@ public class CustomerModifyController implements Initializable {
     private Button modifyCustomerCancelButton;
     @FXML
     private Button modifyCustomerUpdateButton;
-    Customer selectedCustomer;
-// TODO check Java style guide and make sure everything is formatted accordingly
+    private Customer selectedCustomer;
+
     public void updateCustomer(ActionEvent event) throws SQLException, IOException {
         int countryId = -1;
         int cityId = -1;
@@ -156,6 +153,7 @@ public class CustomerModifyController implements Initializable {
             updateCustomerDB(addressId, updatedCustomerName, existingCustomerId);
 
             if (DBQuery.queryNumRowsAffected() > 0) {
+                AlertMessage.display("Customer was updated successfully!", "information");
                 String customerId = String.valueOf(existingCustomerId);
                 Customer customerToUpdate = Schedule.lookupCustomerById(customerId);
                 customerToUpdate.setCustomerName(updatedCustomerName);
@@ -171,25 +169,24 @@ public class CustomerModifyController implements Initializable {
         loadMainWindow(event);
     }
 
-    public void updateCustomerDB(int addressId, String updatedCustomerName, int existingCustomerId) throws SQLException {
+    private void updateCustomerDB(int addressId, String updatedCustomerName, int existingCustomerId) throws SQLException {
         DBQuery.createQuery("UPDATE customer SET customerName = " + "'" + updatedCustomerName + "'" + ", addressId = " + "'" + addressId + "'" +
                     " WHERE customerId = " + "'" + existingCustomerId + "'");
     }
 
-    public void createCustomerAddressDB(int cityId, String updatedCustomerAddress, String updatedCustomerPhone, String updatedCustomerZip, String loggedInUserName) throws SQLException {
+    private void createCustomerAddressDB(int cityId, String updatedCustomerAddress, String updatedCustomerPhone, String updatedCustomerZip, String loggedInUserName) throws SQLException {
         DBQuery.createQuery("INSERT INTO address SET address = " + "'" + updatedCustomerAddress +"'" +
                 ", address2 = '', cityId = " + "'" + cityId + "'" + ", postalCode = " + "'" + updatedCustomerZip + "'" +
                 ", phone = " + "'" + updatedCustomerPhone + "'" + ", createDate = NOW(), createdBy = " +"'"+ loggedInUserName +
                 "'" +", lastUpdateBy = " + "'" + loggedInUserName + "'");
     }
 
-    public void createCountryDB(String updatedCustomerCountry, String loggedInUserName) throws SQLException {
+    private void createCountryDB(String updatedCustomerCountry, String loggedInUserName) throws SQLException {
         DBQuery.createQuery("INSERT INTO country SET country = " + "'" + updatedCustomerCountry + "'"
                 + ", createDate = NOW(), createdBy = " + "'" + loggedInUserName + "'" + ", lastUpdate = NOW(), lastUpdateBy = " + "'" + loggedInUserName + "'");
     }
 
-
-    public void initModifyCustomerData(Customer customer) {
+    void initModifyCustomerData(Customer customer) {
         selectedCustomer = customer;
         existingCustomerNameValue.setText(selectedCustomer.getCustomerName());
         existingCustomerAddressValue.setText(selectedCustomer.getCustomerAddress());
