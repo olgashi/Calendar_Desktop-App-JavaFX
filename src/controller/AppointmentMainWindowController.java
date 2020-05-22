@@ -65,7 +65,7 @@ public class AppointmentMainWindowController implements Initializable {
     public void deleteAppointment() throws SQLException {
         Appointment appointment = apptTable.getSelectionModel().getSelectedItem();
         if (appointment != null) {
-            if (AlertMessage.display("Are you sure you want to delete appointment with " + appointment.getAppointmentCustomerName() + "?", "confirmation")){
+            if (AlertMessage.display("Please confirm that you want to delete an appointment with " + appointment.getAppointmentCustomerName() + ".", "confirmation")){
                 DBQuery.createQuery("DELETE FROM appointment WHERE appointmentId = " + "'" + appointment.getAppointmentId()  + "'");
                 Schedule.deleteAppointment(appointment);
             }
