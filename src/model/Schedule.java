@@ -1,5 +1,6 @@
 package model;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import java.time.*;
@@ -129,7 +130,11 @@ public class Schedule {
                 return true;
             } else return false;
         });
-        if (appointments.size() > 0) return appointments;
+        if (appointments.size() > 0) {
+            ObservableList<Appointment> apptList = FXCollections.observableArrayList(appointments);
+            apptList.sort(Comparator.comparing(Appointment::getAppointmentStart));
+            return apptList;
+        }
         else return null;
     }
 
@@ -144,7 +149,11 @@ public class Schedule {
                 return true;
             } else return false;
         });
-        if (appointments.size() > 0) return appointments;
+        if (appointments.size() > 0) {
+            ObservableList<Appointment> apptList = FXCollections.observableArrayList(appointments);
+            apptList.sort(Comparator.comparing(Appointment::getAppointmentStart));
+            return apptList;
+        }
         else return null;
     }
 
