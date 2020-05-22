@@ -16,8 +16,6 @@ public class Appointment {
     private SimpleStringProperty appointmentEnd;
     private SimpleStringProperty appointmentCustomerName;
     private SimpleStringProperty appointmentCustomerId;
-
-
     private static ObservableList<Appointment> appointmentList = FXCollections.observableArrayList();
 
     public Appointment(String appId, String appTitle, String appDescription, String appLocation, String appContact,
@@ -34,19 +32,23 @@ public class Appointment {
         this.appointmentCustomerId = new SimpleStringProperty(customerId);
         this.appointmentCustomerName = new SimpleStringProperty(customerName);
     }
-    //TODO move to schedule class
+
     public static ObservableList<Appointment> getAppointmentList() {
         return appointmentList;
     }
+
     public String getAppointmentId() {
         return appointmentId.get();
     }
+
     public void setAppointmentId(String appId) {
         appointmentId.set(appId);
     }
+
     public String getAppointmentTitle() {
         return appointmentTitle.get();
     }
+
     public void setAppointmentTitle(String appTitle) {
         appointmentTitle.set(appTitle);
     }

@@ -12,7 +12,6 @@ public class Customer {
     private SimpleStringProperty customerCountry;
     private SimpleStringProperty customerPhoneNumber;
     private SimpleStringProperty customerId;
-
     private static ObservableList<Customer> customerList = FXCollections.observableArrayList();
 
     public Customer(String cId, String cName, String cAddress, String cCity, String cZipCode, String cCountry, String cPhoneNumber) {
@@ -28,9 +27,11 @@ public class Customer {
     public static ObservableList<Customer> getCustomerList() {
         return customerList;
     }
+
     public String getCustomerId() {
         return customerId.get();
     }
+
     public void setCustomerId(String cId) {
         customerId.set(cId);
     }
@@ -38,6 +39,7 @@ public class Customer {
     public String getCustomerName() {
         return customerName.get();
     }
+
     public void setCustomerName(String cName) {
         customerName.set(cName);
     }
@@ -45,6 +47,7 @@ public class Customer {
     public String getCustomerAddress() {
         return customerAddress.get();
     }
+
     public void setCustomerAddress(String cAddress) {
         customerAddress.set(cAddress);
     }
@@ -52,6 +55,7 @@ public class Customer {
     public String getCustomerCity() {
         return customerCity.get();
     }
+
     public void setCustomerCity(String cCity) {
         customerCity.set(cCity);
     }
@@ -59,6 +63,7 @@ public class Customer {
     public String getCustomerZipCode() {
         return customerZipCode.get();
     }
+
     public void setCustomerZipCode(String cZipCode) {
         customerZipCode.set(cZipCode);
     }
@@ -66,6 +71,7 @@ public class Customer {
     public String getCustomerCountry() {
         return customerCountry.get();
     }
+
     public void setCustomerCountry(String cCountry) {
         customerCountry.set(cCountry);
     }
@@ -73,6 +79,7 @@ public class Customer {
     public String getCustomerPhoneNumber() {
         return customerPhoneNumber.get();
     }
+
     public void setCustomerPhoneNumber(String cPhoneNumber) {
         customerPhoneNumber.set(cPhoneNumber);
     }

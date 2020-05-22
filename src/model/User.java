@@ -7,8 +7,8 @@ public class User {
     public static SimpleStringProperty userId;
 
     public User(String uName, String uId){
-        this.userName = new SimpleStringProperty(uName);
-        this.userId = new SimpleStringProperty(uId);
+        userName = new SimpleStringProperty(uName);
+        userId = new SimpleStringProperty(uId);
     }
 
     public User(){

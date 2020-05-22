@@ -1,33 +1,16 @@
 package model;
 
-import com.sun.tools.javadoc.Start;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.chrono.ChronoLocalDate;
-import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static javafx.collections.FXCollections.observableArrayList;
 
-
-// we should only get customers from the database once and only do updates and deletes
-// at the same time
-//class Schedule would contain a list of appointments associated with customers, just like in software I project
-// with Inventory class. Look at all the methods there and use it as an example.
 public class Schedule {
     private static ObservableList<Appointment> allAppointments = observableArrayList();
     private static ObservableList<Customer> allCustomers = observableArrayList();
 
-    // add new customer to schedule
     public static void addCustomer(Customer customer) {
         Customer.getCustomerList().add(customer);
     }
@@ -55,7 +38,6 @@ public class Schedule {
         } else return false;
     }
 
-
     // look up customer by id
     public static Customer lookupCustomerById(String customerId) {
         FilteredList<Customer> customers = new FilteredList<>(Customer.getCustomerList(), pre -> true);
@@ -63,23 +45,29 @@ public class Schedule {
         if (customers.size() > 0) return customers.get(0);
         else return null;
     }
+
     // look up appointment by id
-    public static Appointment lookupAppointmentById(String appointmentId) {
+    private static Appointment lookupAppointmentById(String appointmentId) {
         FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
+        //predicate lambda expression to efficiently look up appointment in appointment list (by appointment id)
         appointments.setPredicate(appt -> appt.getAppointmentId().equals(appointmentId));
         if (appointments.size() > 0) return appointments.get(0);
         else return null;
     }
+
     // look up customer by name
     public ObservableList<Customer> lookupCustomerByName(String customerName) {
         FilteredList<Customer> customers = new FilteredList<>(Customer.getCustomerList(), pre -> true);
+        //predicate lambda expression to efficiently look up customer in customer list (by customer name)
         customers.setPredicate(cust -> cust.getCustomerName().equals(customerName));
         if (customers.size() > 0) return customers;
         else return null;
     }
+
     // return all appointments for customer (by name)
     public ObservableList<Appointment> lookupAppointmentsByCustomerName(String customerName) {
         FilteredList<Appointment> appointments = new FilteredList<>(Appointment.getAppointmentList(), pre -> true);
+        //predicate lambda expression to efficiently look up customer appointments in appointment list (by customer name)
         appointments.setPredicate(appt -> appt.getAppointmentCustomerName().equals(customerName));
         if (appointments.size() > 0) return appointments;
         else return null;
@@ -89,7 +77,7 @@ public class Schedule {
         Appointment.getAppointmentList().clear();
     }
 
-    public static Integer lookupCustomerWithHighestID() {
+    private static Integer lookupCustomerWithHighestID() {
         ObservableList<Customer> allCustomers = Customer.getCustomerList();
         if (allCustomers.size() > 0) {
             Customer max = allCustomers.get(0);
@@ -103,7 +91,8 @@ public class Schedule {
             return 0;
         }
     }
-    public static Integer lookupAppointmentWithHighestID() {
+
+    private static Integer lookupAppointmentWithHighestID() {
         ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
         if (allAppointments.size() > 0) {
             Appointment max = allAppointments.get(0);
@@ -127,7 +116,6 @@ public class Schedule {
         String id = String.valueOf(lookupAppointmentWithHighestID() + 1);
         return id;
     }
-// TODO combine to methods into one, combine just by timeframe
 
     public static ObservableList<Appointment> combineAppointmentsByMonth(Month month, int year){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
@@ -190,7 +178,6 @@ public class Schedule {
                 LocalDateTime existingApptStartParsed = LocalDateTime.parse(appointmentStart, existingAppointmentFormatter);
                 LocalDateTime existingApptEndParsed = LocalDateTime.parse(appointmentEnd, existingAppointmentFormatter);
                 LocalDate existingApptDate = existingApptStartParsed.toLocalDate();
-
                 LocalTime existingApptStartTime = existingApptStartParsed.toLocalTime();
                 LocalTime existingApptEndTime = existingApptEndParsed.toLocalTime();
                 if (apptId != Integer.parseInt(appt.getAppointmentId()) && customerId == appointmentCustomerId && existingApptDate.equals(newApptStart.toLocalDate()) &&
@@ -204,7 +191,7 @@ public class Schedule {
             return overlappingAppt;
         }
 
-        public static boolean outsideOfBusinessHoursCheck(LocalDateTime newAppptStart, LocalDateTime newApptEnd) {
+        public static boolean checkIfWithinNormalBusinessHours(LocalDateTime newAppptStart, LocalDateTime newApptEnd) {
             LocalTime start = newAppptStart.toLocalTime();
             LocalTime end = newApptEnd.toLocalTime();
             LocalTime businessHoursStart = LocalTime.parse( "08:59:00" );
@@ -215,7 +202,7 @@ public class Schedule {
         public static List<String> existingYears(){
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
             ObservableList<Appointment> allAppointments = Appointment.getAppointmentList();
-            Set<String> years = new HashSet<>(Arrays.asList(String.valueOf(LocalDateTime.now().getYear())));
+            Set<String> years = new HashSet<>(Collections.singletonList(String.valueOf(LocalDateTime.now().getYear())));
             for (Appointment appt: allAppointments) {
                 LocalDateTime existingApptEndParsed = LocalDateTime.parse(appt.getAppointmentEnd(), dateTimeFormatter);
                 int year = existingApptEndParsed.getYear();
@@ -224,7 +211,7 @@ public class Schedule {
                 }
             }
             if (years.size() > 0) {
-                List<String> yearsSorted = new ArrayList<String>(years);
+                List<String> yearsSorted = new ArrayList<>(years);
                 Collections.sort(yearsSorted);
                 return yearsSorted;
             } else return null;
