@@ -135,7 +135,7 @@ public class AppointmentAddNewController implements Initializable {
                 AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
                 return;
             }
-            if(!Schedule.outsideOfBusinessHoursCheck(fullApptStartDateTime, fullApptEndDateTime)) {
+            if(!Schedule.checkIfWithinNormalBusinessHours(fullApptStartDateTime, fullApptEndDateTime)) {
                 AlertMessage.display("The appointment is outside of business hours please correct and try again", "warning");
                 return;
             }

@@ -42,7 +42,6 @@ public class LoginWindowController implements Initializable {
     @FXML
     private Pane loginWindowPane;
 
-    private static User loggedInUser;
     private Locale currentLocale;
 
     private boolean determineIfUserExists(String userN, String pass) throws SQLException {
@@ -67,7 +66,7 @@ public class LoginWindowController implements Initializable {
         Appointment upcomingAppointments = null;
         if (!usernameTextField.getText().isEmpty() && !passwordTextField.getText().isEmpty()) {
             if (determineIfUserExists(usernameTextField.getText(), passwordTextField.getText())) {
-                loggedInUser = new User(DBQuery.getQueryResultSet().getString("userName"), DBQuery.getQueryResultSet().getString("userId"));
+                User loggedInUser = new User(DBQuery.getQueryResultSet().getString("userName"), DBQuery.getQueryResultSet().getString("userId"));
                 loadDataFromDB();
                 LocalDateTime userLoginTime = LocalDateTime.now();
                 if (Schedule.appointmentsWithinFifteenMinutes(userLoginTime) != null) {

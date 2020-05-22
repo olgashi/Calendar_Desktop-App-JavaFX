@@ -23,7 +23,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class CustomersMainWindowController implements Initializable {
+public class CustomerMainWindowController implements Initializable {
     @FXML
     private Text customerMainWindowLabel;
     @FXML
