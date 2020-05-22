@@ -26,7 +26,6 @@ public class DBQuery {
         catch(SQLException ex) {
             ex.printStackTrace();
         }
-//        DBConnection.closeConnection();
     }
 
     public static ResultSet getQueryResultSet() {
@@ -39,12 +38,8 @@ public class DBQuery {
 
     public static int getInsertedRowId() throws SQLException {
         try (ResultSet generatedKeys = duiStmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                return generatedKeys.getInt(1);
-            }
-            else {
-                throw new SQLException("Executing query failed, no ID obtained.");
-            }
+            if (generatedKeys.next()) return generatedKeys.getInt(1);
+            else throw new SQLException("Executing query failed, no ID obtained.");
         }
     }
 }

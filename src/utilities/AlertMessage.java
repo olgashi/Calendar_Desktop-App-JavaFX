@@ -3,7 +3,7 @@ package utilities;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
-// TODO refactor
+
 public class AlertMessage {
     public static boolean display(String messageToDisplay, String alertType) {
         Alert.AlertType alertTypeMethodCall = getAlertType(alertType);

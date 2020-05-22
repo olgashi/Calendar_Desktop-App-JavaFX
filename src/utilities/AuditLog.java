@@ -5,10 +5,8 @@ import model.User;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class AuditLog {
 private final static String logFileName = "audit-log.txt";
@@ -26,7 +24,7 @@ private final static String logFileName = "audit-log.txt";
                 String userName = user.getUserName();
                 String userId = user.getUserId();
                 LocalDateTime currentTimeDate = LocalDateTime.now();
-                Timestamp timeLogged = ConvertTime.convertToUTCTime(currentTimeDate);
+                Timestamp timeLogged = DateTimeUtils.convertToUTCTime(currentTimeDate);
                 FileWriter fileLogger = new FileWriter(logFileName, true);
                 fileLogger.write("User name: " + userName + ", user id: " + userId + ", logged in " + timeLogged + "\n");
                 fileLogger.close();

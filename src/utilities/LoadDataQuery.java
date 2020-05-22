@@ -11,7 +11,7 @@ public class LoadDataQuery {
                 "WHERE customer.addressId = address.addressId AND address.cityId = city.cityId AND city.countryId = country.countryId");
         ResultSet rs = DBQuery.getQueryResultSet();
         try {
-            while(DBQuery.getQueryResultSet().next()) {
+            while(rs.next()) {
                 Customer.getCustomerList().add(new Customer(rs.getString("customerId"), rs.getString("customerName"),
                         rs.getString("address"), rs.getString("city"), rs.getString("postalCode"),
                         rs.getString("country"), rs.getString("phone")));
@@ -26,9 +26,9 @@ public class LoadDataQuery {
                 "customerName, customer.customerId FROM appointment, customer where appointment.customerId = customer.customerId");
         ResultSet rs = DBQuery.getQueryResultSet();
         try {
-            while (DBQuery.getQueryResultSet().next()) {
-                String updatedStartTime = ConvertTime.convertToLocalTime(rs.getString("start")).toString();
-                String updatedEndTime = ConvertTime.convertToLocalTime(rs.getString("end")).toString();
+            while (rs.next()) {
+                String updatedStartTime = DateTimeUtils.convertToLocalTime(rs.getString("start")).toString();
+                String updatedEndTime = DateTimeUtils.convertToLocalTime(rs.getString("end")).toString();
 
                 Appointment.getAppointmentList().add(new Appointment(rs.getString("appointmentId"),
                         rs.getString("title"), rs.getString("description"), rs.getString("location"),

@@ -5,11 +5,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class ConvertTime {
+public class DateTimeUtils {
     public static Timestamp convertToLocalTime (String stringTime) {
         LocalDateTime convertToUTC = LocalDateTime.parse(stringTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return Timestamp.valueOf(convertToUTC.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime());
-
     }
 
     public static Timestamp convertToUTCTime (LocalDateTime tme) {

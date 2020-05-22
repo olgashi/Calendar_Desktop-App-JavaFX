@@ -25,7 +25,6 @@ public class LoginLanguage {
                 exitButton.setText("Salida");
                 break;
         }
-
     }
 
     public static void userNamePassInvalidComboMessage(String userRegion, Text errorMessageText) {
@@ -41,6 +40,7 @@ public class LoginLanguage {
                 break;
         }
     }
+
     public static void userNamePassEmptyMessage(String userRegion, Text errorMessageText) {
         switch (userRegion) {
             case "FR":
