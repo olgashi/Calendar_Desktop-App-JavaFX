@@ -192,7 +192,7 @@ public class AppointmentModifyController implements Initializable {
 
         fullAppointmentStartDateTime = LocalDateTime.of(Integer.parseInt(updatedAppointmentYear), updatedAppointmentMonth,
                 Integer.parseInt(updatedAppointmentDay), Integer.parseInt(updatedHours), Integer.parseInt(updatedMinutes));
-        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, Integer.parseInt(updatedCustomerId), Integer.parseInt(selectedAppt.getAppointmentId()))) {
+        if (Schedule.overlappingAppointmentsCheck(fullAppointmentStartDateTime, fullAppointmentStartDateTime.plusMinutes(Integer.parseInt(updatedDuration)))) {
             AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again", "warning");
             return;
         }

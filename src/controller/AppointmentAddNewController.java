@@ -131,7 +131,7 @@ public class AppointmentAddNewController implements Initializable {
             selectedCustomerId = Integer.parseInt(selectedCustomer.getCustomerId());
             contact = addNewApptContactComboBox.getValue();
 
-            if (Schedule.overlappingAppointmentsCheck(fullApptStartDateTime, selectedCustomerId, Integer.parseInt(Schedule.setAppointmentId()))){
+            if (Schedule.overlappingAppointmentsCheck(fullApptStartDateTime, fullApptEndDateTime)){
                 AlertMessage.display("Creating overlapping appointments is not allowed, please select different time and try again.", "warning");
                 return;
             }
