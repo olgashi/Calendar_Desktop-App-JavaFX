@@ -16,6 +16,8 @@ Scheduling desktop user interface application aimed to support an international 
 
 - Advanced Exception Control
 
+- Activity Logs
+
 ### Entity Relationship Diagram
 
 ![Entity Relationship Diagram](https://github.com/olgashi/Appointment_Scheduling_Application/blob/master/Database_ERD_Update.png)
