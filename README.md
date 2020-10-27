@@ -6,13 +6,13 @@ Scheduling desktop user interface application aimed to support an international 
 
 ### Notable features
 
-- Database and File Server Applications 
+- MySQL Database 
 
-- Incorporation of lambda expressions.
+- Incorporation of lambda expressions
 
-- Streams and filters to manipulate data more efficiently.
+- Streams and filters to manipulate data more efficiently
 
-- Java date/time API to support end-users in various geographical regions.
+- Java date/time API to support end-users in various geographical regions
 
 - Advanced Exception Control
 
