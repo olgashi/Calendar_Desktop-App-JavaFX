@@ -1,6 +1,29 @@
 # Appointment Scheduling Application
 
-Functionality overview:
+## Overview
+
+Scheduling desktop user interface application aimed to support an international consulting organization. The application uses MySQL database to store all data. 
+
+### Notable features
+
+- Database and File Server Applications 
+
+- Incorporation of lambda expressions.
+
+- Streams and filters to manipulate data more efficiently.
+
+- Java date/time API to support end-users in various geographical regions.
+
+- Advanced Exception Control
+
+### Entity Relationship Diagram
+
+![Entity Relationship Diagram](https://github.com/olgashi/Appointment_Scheduling_Application/blob/master/Database_ERD_Update.png)
+
+### Main View
+
+
+### Functionality overview:
 
 - log-in form that can determine the user’s location and translate log-in and error control messages into two languages.
 - ability to add, update, and delete customer records in the database, including name, address, and phone number.
