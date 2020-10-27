@@ -1,4 +1,4 @@
-# scheduling_app
+# Appointment Scheduling Application
 
 Functionality overview:
 
