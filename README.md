@@ -16,7 +16,7 @@ Scheduling desktop user interface application aimed to support an international 
 
 - Advanced Exception Control
 
-- Activity Logs
+- Activity Log
 
 ### Entity Relationship Diagram
 
