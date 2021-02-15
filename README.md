@@ -2,7 +2,7 @@
 
 ## Overview
 
-Scheduling desktop user interface application aimed to support an international consulting organization. The application uses MySQL database to store all data. 
+Desktop calendar application. The application uses MySQL database to store all data. 
 
 ### Notable features
 
