@@ -1,4 +1,4 @@
-# Appointment Scheduling Application
+# Appointment Scheduling Application - Java FX
 
 ## Overview
 
