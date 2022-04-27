@@ -1,3 +1,8 @@
+<div align="center">
+  <img width="105" src="https://user-images.githubusercontent.com/41551585/165627769-9e6d0466-28e0-4b6f-bad9-d4d6fb159407.svg"/>
+  <img width="105" src="https://user-images.githubusercontent.com/41551585/165627761-ffbd1af9-8fb7-4444-8593-8d31d3e93a6d.svg"/>
+</div>
+
 # Appointment Scheduling Application - Java FX, MySQL
 
 ## Overview
