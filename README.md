@@ -1,8 +1,8 @@
-# Appointment Scheduling Application - Java FX
+# Appointment Scheduling Application - Java FX, MySQL
 
 ## Overview
 
-Desktop calendar application. The application uses MySQL database to store all data. 
+Desktop calendar application. 
 
 ### Notable features
 
